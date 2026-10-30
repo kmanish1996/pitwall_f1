@@ -107,6 +107,21 @@ nav.tabs a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--red)}
 
 .sessions{position:relative;z-index:1;margin-top:18px;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .sess{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:12px;align-items:center;background:var(--panel);padding:9px 12px}
+@media (max-width:600px){
+  .next{padding:18px 16px 16px}
+  .count{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .cd-sep{display:none}
+  .cd-unit{min-width:0}
+  .cd-num{width:100%;min-width:0;font-size:clamp(28px,9.5vw,44px);padding:8px 2px 6px}
+  .sess{grid-template-columns:36px minmax(0,1fr) auto;grid-template-areas:"k n c" "k w w";column-gap:10px;row-gap:2px;padding:9px 12px}
+  .sess>.k{grid-area:k;align-self:center}
+  .sess>span:nth-child(2){grid-area:n;font-weight:600}
+  .sess>.when{grid-area:w;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sess>.chip{grid-area:c;justify-self:end;align-self:start}
+  .lights{gap:10px}
+  .gantry{gap:6px;padding:7px 8px}
+  .bulb{width:15px;height:15px}
+}
 .sess .k{font-family:var(--f-display);font-weight:800;font-size:15px}
 .sess .when{color:var(--muted);font-size:13px}
 .sess.is-next{background:color-mix(in srgb,var(--red) 10%,var(--panel))}
