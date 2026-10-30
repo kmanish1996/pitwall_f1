@@ -18,6 +18,7 @@ CACHE = os.path.join(ROOT, ".cache", "openf1")
 SETTLE_MIN = 40          # wait this long after a session ends before importing it
 BACKFILL_HOURS = 12      # if laps look incomplete, keep waiting this long for OpenF1 to fill gaps
 RACE_KINDS = ("Race", "Sprint")
+WEEKEND = ("Practice 1", "Practice 2", "Practice 3", "Sprint Qualifying", "Qualifying", "Sprint", "Race")  # skips pre-season testing
 ENDPOINTS = ["drivers", "laps", "position", "stints", "pit", "race_control", "team_radio", "weather", "session_result", "overtakes"]
 
 
@@ -185,12 +186,12 @@ def pack(sk, meta, raw, track):
 
     res = raw["session_result"]
     R = []
-    for r in sorted(res, key=lambda r: (r.get("position") or 99)):
+    for r in sorted(res, key=lambda r: r["position"] if isinstance(r.get("position"), int) else 99):
         st = "DNF" if r.get("dnf") else "DNS" if r.get("dns") else "DSQ" if r.get("dsq") else None
         dur = r.get("duration"); gap = r.get("gap_to_leader")
         dur = [r3(num(x)) for x in dur] if isinstance(dur, list) else r3(num(dur))
         gap = [r3(num(x)) if num(x) is not None else x for x in gap] if isinstance(gap, list) else (r3(gap) if num(gap) is not None else gap)
-        R.append([r.get("position"), r["driver_number"], r.get("number_of_laps"), gap, st, r.get("points") or 0, dur])
+        R.append([r.get("position") if isinstance(r.get("position"), int) else None, r["driver_number"], r.get("number_of_laps"), gap, st, r.get("points") or 0, dur])
     if kind == "race":
         for n, rows in L.items():
             if rows and rows[-1][2] is None:
@@ -207,6 +208,9 @@ def pack(sk, meta, raw, track):
 
     start = ts(meta["date_start"]) - T0; end = ts(meta["date_end"]) - T0
     starts = sorted(r[1] for v in L.values() for r in v if r[1] is not None)
+    if kind == "timed":  # sessions that overran (red flags) end when the last lap does, not at the scheduled time
+        last_lap = max((r[1] + (r[2] or 0) for v in L.values() for r in v if r[1] is not None), default=end)
+        end = max(end, last_lap + 5)
     out = {
         "sk": sk, "mk": meta["meeting_key"], "type": meta["session_name"], "kind": kind,
         "loc": meta["location"], "cc": meta["country_code"], "date": meta["date_start"],
@@ -272,7 +276,7 @@ def main():
     except LiveBlock as e:
         print("OpenF1 is limiting free access while a session is live. Nothing to do yet."); return 0
 
-    todo = [s for s in sessions if not s.get("is_cancelled") and s["session_key"] not in have
+    todo = [s for s in sessions if not s.get("is_cancelled") and s["session_name"] in WEEKEND and s["session_key"] not in have
             and datetime.fromisoformat(s["date_end"]) + timedelta(minutes=SETTLE_MIN) < now
             and (not a.only or s["session_key"] in a.only)]
     todo.sort(key=lambda s: s["date_start"])
@@ -293,6 +297,8 @@ def main():
             out = pack(sk, meta, raw, track)
         except LiveBlock:
             print("OpenF1 started limiting free access (a session went live). Stopping for now."); break
+        except Exception as e:  # one odd session shouldn't stop the rest; it is retried on the next run
+            print(f"  skipped this run: {type(e).__name__}: {e}"); continue
         json.dump(out, open(os.path.join(DATA, f"{sk}.json"), "w"), separators=(",", ":"))
         laps_max = max([r[2] or 0 for r in out["result"]] or [0])
         index = [s for s in index if s["sk"] != sk] + [{"sk": sk, "type": out["type"], "kind": out["kind"], "date": out["date"],

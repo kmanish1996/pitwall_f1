@@ -460,8 +460,8 @@ button.t-row:hover{background:color-mix(in srgb,var(--team) 12%,var(--panel))}
 .rc-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;align-items:start}
 @media (max-width:1060px){.rc-grid{grid-template-columns:1fr}}
 .rc-towerwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow-x:auto;min-width:0}
-.rc-tower{min-width:862px;font-size:13px}
-.rt-row{display:grid;grid-template-columns:36px 84px 38px 76px 90px 72px 76px 50px 50px 50px 82px 26px 40px;gap:6px;align-items:center;height:38px;padding-right:10px}
+.rc-tower{min-width:868px;font-size:13px}
+.rt-row{display:grid;grid-template-columns:36px 84px 38px 76px 90px 72px 76px 50px 50px 50px 82px 32px 40px;gap:6px;align-items:center;height:38px;padding-right:10px}
 .rt-head{height:30px;background:var(--panel-2);font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;color:var(--muted);border-bottom:1px solid var(--line)}
 .rt-head span:nth-child(n+3){text-align:right}.rt-head span:nth-child(11){text-align:left}
 .rt-body{position:relative}
@@ -1674,7 +1674,9 @@ function rcPrep(d){
   d.P={};d.pos.forEach(([t,n,p])=>{(d.P[n]=d.P[n]||[]).push([t,p])});
   d.grid={};for(const n in d.P){const arr=d.P[n];const i=bs(arr,0.5);d.grid[n]=(i>=0?arr[i]:arr[0])[1]}
   // completion events for best lap / sector tracking: [time, n, kind(0..2 sector,3 lap), value]
-  d.ev=[];for(const n in d.L)d.L[n].forEach(l=>{let c=l.st;l.s.forEach((s,i)=>{if(s!=null){c+=s;d.ev.push([i===2?l.end:c,+n,i,s,l.n])}});if(!l.est&&(l.n>1||d.timed))d.ev.push([l.end,+n,3,l.du,l.n])});
+  // laps deleted by race control (track limits etc.) stop counting from the moment the deletion is announced
+  (d.rc||[]).forEach(m=>{const g=/CAR (\d+)\b.*DELETED.*\bLAP (\d+)\b/.exec(m[4]||"");if(g){const l=d.byLap[g[1]]&&d.byLap[g[1]][+g[2]];if(l&&(l.delAt==null||m[0]<l.delAt))l.delAt=m[0]}});
+  d.ev=[];for(const n in d.L)d.L[n].forEach(l=>{let c=l.st;l.s.forEach((s,i)=>{if(s!=null){c+=s;d.ev.push([i===2?l.end:c,+n,i,s,l.n,i===2?l.delAt:null])}});if(!l.est&&(l.n>1||d.timed))d.ev.push([l.end,+n,3,l.du,l.n,l.delAt])});
   if(d.timed){
     const lastLap=Math.max(...Object.values(d.L).map(v=>v.length?v[v.length-1].end:0));
     d.tMin=Math.min(d.start??0,0)-30;d.tFinish=d.end??lastLap;d.tMax=Math.max(d.tFinish,lastLap)+60;
@@ -1784,9 +1786,9 @@ function rcRenderTimed(force){
   const now=performance.now();if(!force&&now-RCX.lastTowerTs<110)return;RCX.lastTowerTs=now;
   // personal and overall bests so far (all laps, for sector colours)
   const ei=bs(d.ev,t);const ob=[null,null,null,null];const pb={};
-  for(let i=0;i<=ei;i++){const e=d.ev[i];const k=e[2];if(ob[k]==null||e[3]<ob[k])ob[k]=e[3];const P=pb[e[1]]=pb[e[1]]||[null,null,null,null];if(P[k]==null||e[3]<P[k])P[k]=e[3]}
+  for(let i=0;i<=ei;i++){const e=d.ev[i];if(e[5]!=null&&e[5]<=t)continue;const k=e[2];if(ob[k]==null||e[3]<ob[k])ob[k]=e[3];const P=pb[e[1]]=pb[e[1]]||[null,null,null,null];if(P[k]==null||e[3]<P[k])P[k]=e[3]}
   // best lap per driver within a phase (0 = whole session), using laps finished by tLimit
-  const best=(n,phase,tLimit)=>{let b=null;(d.L[n]||[]).forEach(l=>{if(!l.est&&l.end<=tLimit&&(phase===0||l.ph===phase)&&(b==null||l.du<b))b=l.du});return b};
+  const best=(n,phase,tLimit)=>{let b=null;(d.L[n]||[]).forEach(l=>{if(!l.est&&l.end<=tLimit&&!(l.delAt!=null&&l.delAt<=Math.max(tLimit,t))&&(phase===0||l.ph===phase)&&(b==null||l.du<b))b=l.du});return b};
   const rank=(ns,phase,tLimit)=>ns.map(n=>({n,b:best(n,phase,tLimit)})).sort((a,b)=>(a.b==null)-(b.b==null)||(a.b??0)-(b.b??0)||a.n-b.n);
   let rows=[];const all=d.drivers.map(x=>x.n);
   if(d.phases.length&&ph){
@@ -1855,7 +1857,7 @@ function rcRender(force){
   if(!force&&now-RCX.lastTowerTs<110)return;RCX.lastTowerTs=now;
   // bests up to t
   const ei=bs(d.ev,t);const ob=[null,null,null,null];const pb={};
-  for(let i=0;i<=ei;i++){const e=d.ev[i];const k=e[2];if(ob[k]==null||e[3]<ob[k])ob[k]=e[3];const P=pb[e[1]]=pb[e[1]]||[null,null,null,null];if(P[k]==null||e[3]<P[k])P[k]=e[3]}
+  for(let i=0;i<=ei;i++){const e=d.ev[i];if(e[5]!=null&&e[5]<=t)continue;const k=e[2];if(ob[k]==null||e[3]<ob[k])ob[k]=e[3];const P=pb[e[1]]=pb[e[1]]||[null,null,null,null];if(P[k]==null||e[3]<P[k])P[k]=e[3]}
   const cross=(n,k)=>{const l=d.byLap[n]&&d.byLap[n][k];return l?l.end:null};
   let prev=null;const fastest=ob[3]!=null?Object.keys(pb).find(n=>pb[n][3]===ob[3]):null;
   const battles=[];
