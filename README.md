@@ -28,18 +28,22 @@ Open `index.html`, search for `SITE SETTINGS` and fill in your name, domain and 
 
 - `radioPlayer`: team radio is never hosted here. With `true`, clips play in the page but stream straight from Formula 1's own servers. With `false`, each clip opens on F1's site instead. If F1's server refuses a clip, the page falls back to links automatically.
 
-## Data pipeline (`scripts/`)
+## Data pipeline
 
-Replay data comes from the [OpenF1 API](https://openf1.org). To add a new session (Python 3 and ffmpeg needed):
+Replay data comes from the free [OpenF1 API](https://openf1.org). Every practice, qualifying, sprint and race session is added automatically:
+
+- `.github/workflows/update-sessions.yml` runs every 30 minutes from Friday to Monday (UTC), and on demand from the Actions tab.
+- It runs `scripts/update_sessions.py`, which finds 2026 sessions that ended at least 40 minutes ago and aren't in `data/index.json`, packs each into `data/<session_key>.json`, and commits the result. Your host redeploys from that commit.
+- While a session is live, OpenF1 limits free access, so the script just exits and tries again on the next run. If OpenF1's lap data is incomplete, it waits up to 12 hours for the gaps to be filled.
+
+To run it yourself (Python 3, no extra packages):
 
 ```bash
-cd scripts
-python3 fetch.py <session_key>       # laps, positions, stints, pits, race control, radio, weather, results
-python3 fetchloc.py <session_key>    # one reference lap of car positions for the track map
-python3 compact.py <session_key>     # writes site/data/<session_key>.json
+python3 scripts/update_sessions.py               # add every finished session that's missing
+python3 scripts/update_sessions.py --only 11404  # add specific session keys
 ```
 
-Then copy the output into `data/`, add the session to `data/index.json`, and add the round to `REPLAY` in `index.html`.
+Standings, results and the calendar's winners are still edited by hand in `index.html`.
 
 ## Disclaimer
 
