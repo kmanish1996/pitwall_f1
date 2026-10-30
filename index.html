@@ -540,7 +540,8 @@ button.t-row:hover{background:color-mix(in srgb,var(--team) 12%,var(--panel))}
 .lg-body h3{font-family:var(--f-body);text-transform:none;font-size:16px;font-weight:700;margin:18px 0 4px}
 .lg-body p,.lg-body li{color:color-mix(in srgb,var(--fg) 88%,var(--muted))}
 .lg-body ul{padding-left:20px;display:grid;gap:6px}
-.lg-body a{color:var(--fg);text-decoration-color:var(--red);text-underline-offset:3px}
+.lg-body a{color:var(--red);font-weight:700;text-decoration:none;transition:color .15s}
+.lg-body a:hover{color:color-mix(in srgb,var(--red) 70%,#fff);text-decoration:underline;text-underline-offset:3px}
 .lg-upd{font-family:var(--f-mono);font-size:12px;color:var(--muted)!important;margin-top:0}
 .lg-lead{font-size:18px;line-height:1.6}
 mark.ph{background:color-mix(in srgb,var(--amber) 22%,transparent);color:var(--amber);border-radius:2px;padding:0 3px;font-family:var(--f-mono);font-size:.88em}
@@ -1873,9 +1874,9 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-replay]");
 /* ================= SITE SETTINGS — edit these before you go live ================= */
 const SITE={
   name:"Pit Wall F1",                      // site name shown in the footer and legal pages
-  owner:"[Your full name or company name]", // who runs the site (the legal operator)
+  owner:"Kanathil Manish Nair",            // who runs the site (the legal operator)
   email:"kmanish1996@gmail.com",           // public contact address
-  domain:"[yourdomain.com]",                // your domain, without https://
+  domain:"pitwallf1.in",                   // your domain, without https://
   country:"India",                          // where you (the operator) are based; governs the Terms
   city:"[Your city]",                       // courts with jurisdiction under the Terms
   updated:"30 October 2026",                // "last updated" date for all legal pages
