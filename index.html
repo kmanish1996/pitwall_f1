@@ -9,7 +9,7 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Pit Wall F1 2026</title>
+<title>Pit Wall · Formula 1 standings, race replays and calendar (unofficial)</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,7 +54,10 @@ h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;margin:0;text-wra
 .strip-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;min-height:56px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:.02em;text-transform:uppercase;font-style:italic;color:var(--fg);text-decoration:none}
 .brand:hover i{transform:skewX(-12deg) rotate(-8deg)}
-.brand i{transition:transform .2s}
+.brand i{transition:transform .2s;flex:none}
+.brand-txt{display:grid;line-height:1}
+.brand-tag{font-family:var(--f-body);font-style:normal;font-weight:500;text-transform:none;letter-spacing:.02em;font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap}
+@media (max-width:360px){.brand-tag{font-size:10px}}
 .brand i{display:block;width:22px;height:22px;background:conic-gradient(var(--fg) 25%,var(--carbon) 0 50%,var(--fg) 0 75%,var(--carbon) 0) 0 0/11px 11px;border:1px solid var(--fg);transform:skewX(-12deg)}
 .brand b{color:var(--red)}
 nav.tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
@@ -585,7 +588,7 @@ footer a{color:var(--muted)}
 
 <header class="strip">
   <div class="strip-in">
-    <a class="brand" href="./" aria-label="Pit Wall F1 home"><i aria-hidden="true"></i>Pit Wall F1 <b>26</b></a>
+    <a class="brand" href="./" aria-label="Pit Wall home"><i aria-hidden="true"></i><span class="brand-txt"><span class="brand-name">Pit Wall <b>26</b></span><span class="brand-tag">The unofficial Formula 1 fan hub</span></span></a>
     <nav class="tabs" aria-label="Sections">
       <a href="#standings">Standings</a>
       <a href="#race-centre">Race centre</a>
@@ -1890,7 +1893,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-replay]");
 
 /* ================= SITE SETTINGS — edit these before you go live ================= */
 const SITE={
-  name:"Pit Wall F1",                      // site name shown in the footer and legal pages
+  name:"Pit Wall",                         // site name shown in the footer and legal pages
   owner:"Kanathil Manish Nair",            // who runs the site (the legal operator)
   email:"kmanish1996@gmail.com",           // public contact address
   domain:"pitwallf1.in",                   // your domain, without https://

@@ -1,4 +1,4 @@
-# Pit Wall F1
+# Pit Wall
 
 An unofficial Formula 1 fan hub for the 2026 season. It's a single static page, with no build step and no backend.
 
