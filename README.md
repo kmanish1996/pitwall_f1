@@ -20,13 +20,13 @@ python3 -m http.server 8000
 
 ## Deploy
 
-Upload the repo root (`index.html`, `data/`, `radio/`) to any static host: GitHub Pages, Netlify, Vercel or Cloudflare Pages.
+Upload the repo root (`index.html`, `data/`) to any static host: GitHub Pages, Netlify, Vercel or Cloudflare Pages.
 
 ## Before going live
 
 Open `index.html`, search for `SITE SETTINGS` and fill in your name, domain and city. Unfilled values show as yellow placeholders on the legal pages.
 
-- `hostRadio`: set to `false` to link team radio to F1's servers instead of serving `radio/*.mp3` yourself. The recordings belong to Formula 1, so re-hosting them publicly carries copyright risk.
+- `radioPlayer`: team radio is never hosted here. With `true`, clips play in the page but stream straight from Formula 1's own servers. With `false`, each clip opens on F1's site instead. If F1's server refuses a clip, the page falls back to links automatically.
 
 ## Data pipeline (`scripts/`)
 
@@ -37,10 +37,9 @@ cd scripts
 python3 fetch.py <session_key>       # laps, positions, stints, pits, race control, radio, weather, results
 python3 fetchloc.py <session_key>    # one reference lap of car positions for the track map
 python3 compact.py <session_key>     # writes site/data/<session_key>.json
-python3 radio.py <session_key>       # joins radio clips into site/radio/<session_key>.mp3
 ```
 
-Then copy the outputs into `data/` and `radio/`, add the session to `data/index.json`, and add the round to `REPLAY` in `index.html`.
+Then copy the output into `data/`, add the session to `data/index.json`, and add the round to `REPLAY` in `index.html`.
 
 ## Disclaimer
 

@@ -749,7 +749,7 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <audio id="rcAudio" preload="none"></audio>
-    <p class="rc-note">Built from Formula 1 live timing data published by OpenF1. Australia has no team radio in the data. Cars move along a reference lap using each driver's real lap and sector times, so positions between timing lines are interpolated. Team radio is the official audio released during each session.</p>
+    <p class="rc-note">Built from Formula 1 live timing data published by OpenF1. Australia has no team radio in the data. Cars move along a reference lap using each driver's real lap and sector times, so positions between timing lines are interpolated. Team radio is the official audio published during each session, played directly from Formula 1's servers.</p>
   </section>
 
   <!-- TRAVEL -->
@@ -1696,7 +1696,7 @@ function rcBuildShell(d){
     d.radio.map(r=>`<b class="rmark" style="left:${(r[0]-d.tMin)/span*100}%"></b>`).join("");
   const rng=$("#rcRange");rng.min=d.tMin;rng.max=d.tMax;rng.step=1;
   // radio audio
-  const au=$("#rcAudio");au.removeAttribute("src");delete au.dataset.blob;RCX.audioOK=true;if(d.radioFile){au.src=d.radioFile;au.load()}
+  const au=$("#rcAudio");try{au.pause()}catch(e){}au.removeAttribute("src");RCX.audioOK=true;
   RCX.lastFeedKey="";
 }
 function rcSectorClass(val,pb,ob){if(val==null)return "";if(ob!=null&&val<=ob+1e-6)return "pu";if(pb!=null&&val<=pb+1e-6)return "gr";return "yl"}
@@ -1795,7 +1795,7 @@ function rcFeeds(force){
     const items=d.radio.map((r,i)=>[r,i]).slice(0,nra+1).reverse();
     html=items.map(([r,i])=>{const x=d.dm[r[1]]||{c:"?",col:"#888",f:"",l:"",n:r[1]};const on=RCX.playingRadio===i;
       return `<div class="fe rad${on?" on":""}" style="--team:${x.col}">${helmet("",x.n,34,x.col)}<div class="rad-b"><b>${esc(x.f)} ${esc(x.l)}</b><span class="fe-t mono">${lapOf(r[0])} · ${fmtClock(r[0])}${r[3]?` · ${Math.round(r[3])}s`:""}</span></div>
-        ${d.radioFile&&RCX.audioOK&&SITE.hostRadio?`<button type="button" class="rad-play" data-i="${i}" aria-label="${on?"Stop":"Play"} radio from ${esc(x.l)}">${on?'<span class="eq"><i></i><i></i><i></i></span>':"▶"}</button>`:`<a class="rad-play" href="${esc(r[4]||r[2])}" target="_blank" rel="noopener" aria-label="Open clip">↗</a>`}</div>`}).join("")||'<p class="note">No team radio yet.</p>';
+        ${RCX.audioOK&&SITE.radioPlayer?`<button type="button" class="rad-play" data-i="${i}" aria-label="${on?"Stop":"Play"} radio from ${esc(x.l)}">${on?'<span class="eq"><i></i><i></i><i></i></span>':"▶"}</button>`:`<a class="rad-play" href="${esc(r[2])}" target="_blank" rel="noopener" aria-label="Open clip">↗</a>`}</div>`}).join("")||'<p class="note">No team radio yet.</p>';
   }else{
     const ev=[...d.ovt.slice(0,nov+1).map(o=>["o",...o]),...d.pits.slice(0,np+1).map(p=>["p",...p])].sort((a,b)=>b[1]-a[1]).slice(0,40);
     html=ev.map(e=>{if(e[0]==="o"){const a=d.dm[e[2]],b=d.dm[e[3]];if(!a||!b)return "";return `<div class="fe ov"><span class="fe-t mono">${lapOf(e[1])} · ${fmtClock(e[1])}</span><span class="fe-m"><b style="color:${a.col}">${a.c}</b> passes <b style="color:${b.col}">${b.c}</b>${e[4]?` for P${e[4]}`:""}</span></div>`}
@@ -1809,17 +1809,16 @@ function rcPlayRadio(i){
   if(RCX.inRadio)return;RCX.inRadio=true;try{rcPlayRadio_(i)}finally{RCX.inRadio=false}
 }
 function rcPlayRadio_(i){
-  const d=RCX.d,r=d&&d.radio[i];if(!r||!d.radioFile)return;const au=$("#rcAudio");
-  clearTimeout(radioTimer);
-  const go=()=>{try{au.currentTime=r[2]}catch(e){}const p=au.play();if(p&&p.catch)p.catch(()=>{RCX.audioOK=false;RCX.playingRadio=null;rcFeeds(true)});RCX.playingRadio=i;rcFeeds(true);
-    radioTimer=setTimeout(rcStopRadio,(r[3]+.15)*1000);
-    // if the host ignored the seek, load the whole clip file into memory and retry once
-    setTimeout(()=>{if(RCX.playingRadio===i&&r[2]>2&&Math.abs(au.currentTime-r[2])>1.5&&!au.dataset.blob){au.pause();clearTimeout(radioTimer);
-      fetch(d.radioFile).then(x=>x.blob()).then(bl=>{au.dataset.blob="1";au.src=URL.createObjectURL(bl);au.addEventListener("loadedmetadata",()=>rcPlayRadio(i),{once:true});au.load()}).catch(()=>{})}},450)};
-  if(au.readyState>=1)go();else{au.addEventListener("loadedmetadata",go,{once:true});au.load()}
+  const d=RCX.d,r=d&&d.radio[i];if(!r||!r[2])return;const au=$("#rcAudio");
+  clearTimeout(radioTimer);try{au.pause()}catch(e){}
+  au.src=r[2];RCX.playingRadio=i;rcFeeds(true);
+  const p=au.play();if(p&&p.catch)p.catch(err=>{if(err&&err.name==="AbortError")return;RCX.audioOK=false;RCX.playingRadio=null;rcFeeds(true)});
+  radioTimer=setTimeout(rcStopRadio,((r[3]||30)+2)*1000);
 }
 function rcStopRadio(){clearTimeout(radioTimer);const au=$("#rcAudio");try{au.pause()}catch(e){}RCX.playingRadio=null;rcFeeds(true)}
-$("#rcAudio").addEventListener("error",()=>{RCX.audioOK=false;rcFeeds(true)});
+// if F1's server refuses the clip, every radio item falls back to a link that opens it on F1's site
+$("#rcAudio").addEventListener("error",()=>{if(!$("#rcAudio").getAttribute("src"))return;RCX.audioOK=false;RCX.playingRadio=null;clearTimeout(radioTimer);rcFeeds(true)});
+$("#rcAudio").addEventListener("ended",()=>{if(RCX.playingRadio!=null)rcStopRadio()});
 
 function rcTick(ts){
   if(!RCX.playing){RCX.raf=null;return}
@@ -1882,7 +1881,7 @@ const SITE={
   updated:"30 October 2026",                // "last updated" date for all legal pages
   otherAffiliates:"[e.g. ticket or hotel partners, or delete this line's text]", // other affiliate programmes you use
   analytics:"",                             // analytics tool you add later, e.g. "Google Analytics"; leave "" if none
-  hostRadio:true                            // false = link team radio to F1's servers instead of hosting the audio yourself
+  radioPlayer:true                          // true = play team radio in the page, streamed from F1's servers; false = each clip opens on F1's site
 };
 /* ============================================================================ */
 const ph=v=>/^\[.*\]$/.test(String(v))?`<mark class="ph" title="Placeholder: edit SITE settings">${esc(v)}</mark>`:esc(v);
@@ -1910,6 +1909,7 @@ ${SITE.analytics?`<p>We use ${esc(SITE.analytics)} to understand how many people
 <h2>Third-party services</h2>
 <ul>
 <li><b>Google Fonts.</b> Our typefaces load from Google's servers, so your browser sends your IP address to Google when the page loads. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+<li><b>Formula 1 team radio.</b> When you play a team radio clip, your browser loads it straight from Formula 1's servers (livetiming.formula1.com), which receive your IP address as part of that request.</li>
 <li><b>External links.</b> Links to other sites, including any affiliate links and the official team radio clips, take you to services with their own privacy policies. We are not responsible for how they handle your data.</li>
 </ul>
 <h2>Why we process information</h2>
@@ -1966,7 +1966,7 @@ LEGAL.terms=()=>`
 <li>scrape or copy the site in bulk, or present its content as your own</li>
 </ul>
 <h2>5. Intellectual property</h2>
-<p>The site's design, code, written content and illustrations (including the helmet badges and flag artwork) belong to ${ph(SITE.owner)} unless stated otherwise. Timing data is provided through the OpenF1 project. Official team radio recordings remain the property of their rights holders and are included only for fan commentary and reference. If you are a rights holder and want material removed, email ${ph(SITE.email)} and we will act promptly.</p>
+<p>The site's design, code, written content and illustrations (including the helmet badges and flag artwork) belong to ${ph(SITE.owner)} unless stated otherwise. Timing data is provided through the OpenF1 project. Official team radio recordings remain the property of their rights holders. We do not host or copy them: clips play directly from Formula 1's own servers, where they are published. If you are a rights holder and want material removed, email ${ph(SITE.email)} and we will act promptly.</p>
 <h2>6. Third-party links</h2>
 <p>The site links to other websites, including affiliate partners. We don't control those sites and aren't responsible for their content, products or practices.</p>
 <h2>7. No warranty</h2>
