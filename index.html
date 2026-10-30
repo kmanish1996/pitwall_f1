@@ -9,7 +9,7 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Pit Wall 2026</title>
+<title>Pit Wall F1 2026</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -567,7 +567,7 @@ footer a{color:var(--muted)}
 
 <header class="strip">
   <div class="strip-in">
-    <div class="brand"><i aria-hidden="true"></i>Pit Wall <b>26</b></div>
+    <div class="brand"><i aria-hidden="true"></i>Pit Wall F1 <b>26</b></div>
     <nav class="tabs" aria-label="Sections">
       <a href="#standings">Standings</a>
       <a href="#race-centre">Race centre</a>
@@ -1873,14 +1873,13 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-replay]");
 
 /* ================= SITE SETTINGS — edit these before you go live ================= */
 const SITE={
-  name:"Pit Wall",                         // site name shown in the footer and legal pages
+  name:"Pit Wall F1",                      // site name shown in the footer and legal pages
   owner:"[Your full name or company name]", // who runs the site (the legal operator)
-  email:"[contact@yourdomain.com]",         // public contact address
+  email:"kmanish1996@gmail.com",           // public contact address
   domain:"[yourdomain.com]",                // your domain, without https://
   country:"India",                          // where you (the operator) are based; governs the Terms
   city:"[Your city]",                       // courts with jurisdiction under the Terms
   updated:"30 October 2026",                // "last updated" date for all legal pages
-  amazonAssociate:true,                     // true only if you are enrolled in the Amazon Associates programme
   otherAffiliates:"[e.g. ticket or hotel partners, or delete this line's text]", // other affiliate programmes you use
   analytics:"",                             // analytics tool you add later, e.g. "Google Analytics"; leave "" if none
   hostRadio:true                            // false = link team radio to F1's servers instead of hosting the audio yourself
@@ -1912,7 +1911,6 @@ ${SITE.analytics?`<p>We use ${esc(SITE.analytics)} to understand how many people
 <ul>
 <li><b>Google Fonts.</b> Our typefaces load from Google's servers, so your browser sends your IP address to Google when the page loads. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
 <li><b>External links.</b> Links to other sites, including any affiliate links and the official team radio clips, take you to services with their own privacy policies. We are not responsible for how they handle your data.</li>
-${SITE.amazonAssociate?`<li><b>Amazon.</b> If you follow an Amazon link, Amazon may set cookies to credit us with a referral. This happens on Amazon's site under <a href="https://www.amazon.com/privacy" target="_blank" rel="noopener">Amazon's privacy notice</a>.</li>`:""}
 </ul>
 <h2>Why we process information</h2>
 <p>We process the limited data above to run and secure the site, to answer your messages, and to meet legal obligations. Where the EU or UK GDPR applies, our legal bases are legitimate interests (running and securing the site), your consent (when you contact us) and legal obligation.</p>
@@ -1937,7 +1935,6 @@ LEGAL.affiliate=()=>`
 <p>${esc(SITE.name)} is a free, independent fan project. To help cover hosting and data costs, some links on this site may be affiliate links.</p>
 <h2>What that means</h2>
 <p>If you click an affiliate link and then buy something, we may earn a small commission from the seller. <b>This costs you nothing extra.</b> The price you pay is the same as if you went to the seller directly.</p>
-${SITE.amazonAssociate?`<h2>Amazon Associates</h2><p>${esc(SITE.name)} is a participant in the Amazon Services LLC Associates Program, an affiliate advertising programme designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com and other Amazon stores. <b>As an Amazon Associate, I earn from qualifying purchases.</b></p>`:""}
 ${SITE.otherAffiliates&&!/^\[e\.g/.test(SITE.otherAffiliates)?`<h2>Other partners</h2><p>We may also earn commissions through: ${esc(SITE.otherAffiliates)}.</p>`:`<h2>Other partners</h2><p>We may also join affiliate programmes for race tickets, travel or accommodation: ${ph(SITE.otherAffiliates)}.</p>`}
 <h2>Our editorial promise</h2>
 <ul>
@@ -2056,7 +2053,6 @@ function selectText(node){try{const r=document.createRange();r.selectNodeContent
 function renderFooter(){
   $("#siteFoot").innerHTML=`
     <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-    ${SITE.amazonAssociate?"<p>As an Amazon Associate, I earn from qualifying purchases.</p>":""}
     <nav class="lg-links" aria-label="Legal">${Object.entries(LEGAL_ROUTES).map(([k,v])=>`<a href="#${k}">${v}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
     <p>©${new Date().getFullYear()} ${esc(SITE.name)}. All rights reserved.</p>`;
 }

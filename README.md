@@ -1,4 +1,4 @@
-# Pit Wall
+# Pit Wall F1
 
 An unofficial Formula 1 fan hub for the 2026 season. It's a single static page, with no build step and no backend.
 
@@ -24,9 +24,8 @@ Upload the repo root (`index.html`, `data/`, `radio/`) to any static host: GitHu
 
 ## Before going live
 
-Open `index.html`, search for `SITE SETTINGS` and fill in your name, email, domain and city. Unfilled values show as yellow placeholders on the legal pages.
+Open `index.html`, search for `SITE SETTINGS` and fill in your name, domain and city. Unfilled values show as yellow placeholders on the legal pages.
 
-- `amazonAssociate`: set to `false` unless you're enrolled in Amazon Associates.
 - `hostRadio`: set to `false` to link team radio to F1's servers instead of serving `radio/*.mp3` yourself. The recordings belong to Formula 1, so re-hosting them publicly carries copyright risk.
 
 ## Data pipeline (`scripts/`)
