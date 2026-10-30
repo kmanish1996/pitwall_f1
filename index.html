@@ -52,7 +52,9 @@ h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;margin:0;text-wra
 .strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--carbon) 88%,transparent);backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
 .strip-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;min-height:56px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:.02em;text-transform:uppercase;font-style:italic}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:.02em;text-transform:uppercase;font-style:italic;color:var(--fg);text-decoration:none}
+.brand:hover i{transform:skewX(-12deg) rotate(-8deg)}
+.brand i{transition:transform .2s}
 .brand i{display:block;width:22px;height:22px;background:conic-gradient(var(--fg) 25%,var(--carbon) 0 50%,var(--fg) 0 75%,var(--carbon) 0) 0 0/11px 11px;border:1px solid var(--fg);transform:skewX(-12deg)}
 .brand b{color:var(--red)}
 nav.tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
@@ -568,7 +570,7 @@ footer a{color:var(--muted)}
 
 <header class="strip">
   <div class="strip-in">
-    <div class="brand"><i aria-hidden="true"></i>Pit Wall F1 <b>26</b></div>
+    <a class="brand" href="./" aria-label="Pit Wall F1 home"><i aria-hidden="true"></i>Pit Wall F1 <b>26</b></a>
     <nav class="tabs" aria-label="Sections">
       <a href="#standings">Standings</a>
       <a href="#race-centre">Race centre</a>
