@@ -83,7 +83,7 @@ nav.tabs a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--red)}
 .chip.live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1s steps(2) infinite}
 .chip.sprint{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 50%,transparent)}
 .chip.done{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
-.chip.next{color:#fff;border-color:var(--red);background:color-mix(in srgb,var(--red) 22%,transparent)}
+.chip.nextup{color:#fff;border-color:var(--red);background:color-mix(in srgb,var(--red) 22%,transparent)}
 @keyframes blink{50%{opacity:0}}
 
 /* start lights */
@@ -129,6 +129,27 @@ nav.tabs a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--red)}
 .sess .when{color:var(--muted);font-size:13px}
 .sess.is-next{background:color-mix(in srgb,var(--red) 10%,var(--panel))}
 .sess.is-done{opacity:.55}
+button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;cursor:pointer}
+.sess.has-res{opacity:1;transition:background .15s}
+.sess.has-res:hover{background:color-mix(in srgb,var(--red) 12%,var(--panel))}
+.sess.has-res .chip.res{color:#fff;background:var(--red);border-color:var(--red)}
+.sess.has-res .chip.res::after{content:" ›";font-weight:900}
+.sr-head{display:grid;gap:4px;margin:6px 0 14px}
+.sr-head h3{font-size:30px;font-weight:900;font-style:italic;display:flex;align-items:center;gap:10px}
+.sr-head .sr-kind{display:inline-block;width:max-content;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:#fff;background:var(--red);padding:3px 8px}
+.sr-tab{width:100%;border-collapse:collapse;font-size:13px}
+.sr-tab th{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;color:var(--muted);text-align:right;padding:6px 6px;border-bottom:1px solid var(--line)}
+.sr-tab th:nth-child(-n+2){text-align:left}
+.sr-tab td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sr-tab td.p{font-family:var(--f-display);font-weight:900;font-style:italic;font-size:16px;text-align:left;width:28px}
+.sr-tab td.dv{text-align:left;font-family:var(--f-body)}
+.sr-tab td.dv b{font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.03em;border-left:3px solid var(--team);padding-left:6px;margin-right:6px}
+.sr-tab td.dv span{color:var(--muted);font-size:12px}
+.sr-tab tr.top td.t{color:var(--purple);font-weight:700}
+.sr-tab td.m{color:var(--muted)}
+.sr-tab tr.ko td{opacity:.6}
+.sr-scroll{overflow-x:auto;margin:0 -4px}
+.sr-act{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .tzline{position:relative;z-index:1;margin-top:8px;font-size:12px;color:var(--muted)}
 
 .pulse-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:16px;align-content:start;min-width:0}
@@ -1087,11 +1108,14 @@ function renderSessions(now){
   const list=SESSIONS.filter(s=>s.rd===rd.rd);
   const st=currentState(now);
   const box=$("#sessions");box.innerHTML="";
+  const have=sessionsFor(rd.rd);
   list.forEach(s=>{
     const done=now>=s.end, live=now>=s.start&&now<s.end, isNext=st.next===s&&!st.live;
-    const row=el("div",{className:"sess"+(done?" is-done":"")+(isNext||live?" is-next":"")});
+    const res=done&&have.find(x=>x.type===s.n);
+    const row=el(res?"button":"div",{className:"sess"+(done?" is-done":"")+(isNext||live?" is-next":"")+(res?" has-res":"")});
+    if(res){row.type="button";row.dataset.sess=res.sk;row.setAttribute("aria-label",`${s.n}: show results`)}
     row.innerHTML=`<span class="k">${s.k}</span><span>${s.n}</span><span class="when mono">${fmtDay.format(s.start)} · ${fmtTime.format(s.start)}</span>`+
-      `<span class="chip ${live?"live":done?"done":isNext?"next":""}">${live?"Live":done?"Done":isNext?"Next":"Upcoming"}</span>`;
+      `<span class="chip ${live?"live":res?"res":done?"done":isNext?"nextup":""}"${done&&!res?' title="Results appear about 30 to 45 minutes after the session ends"':""}>${live?"Live":res?"Results":done?"Results soon":isNext?"Next":"Upcoming"}</span>`;
     box.appendChild(row);
   });
   if(list.length===1){box.appendChild(el("div",{className:"sess"},`<span class="k"></span><span class="when" style="grid-column:2/-1">Practice and qualifying times for this weekend arrive with the next data update.</span>`))}
@@ -1264,6 +1288,33 @@ function openDriver(code,from){
   drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");$("#scrim").classList.add("open");
   $("#drClose").focus();
 }
+
+/* session results from the next-race card */
+const fmtRaceTime=s=>{if(s==null)return "";const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=(s%60).toFixed(3).padStart(6,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`};
+async function openSessionResults(sk,from){
+  lastFocus=from||null;
+  const drawer=$("#drawer");$("#drBody").innerHTML='<p class="note" style="margin-top:40px">Loading results…</p>';
+  drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");drawer.setAttribute("aria-label","Session results");$("#scrim").classList.add("open");$("#drClose").focus();
+  let d;try{await rcLoadIndex();d=await rcLoad(sk)}catch(e){$("#drBody").innerHTML='<p class="note" style="margin-top:40px">These results couldn\'t load. Check your connection and try again.</p>';return}
+  const meta=(RCX.idx||[]).find(x=>x.sk==sk)||{};const R=meta.round||{};
+  const isQ=/Qualifying/.test(d.type),isRace=!d.timed,sq=d.type==="Sprint Qualifying"?"SQ":"Q";
+  const lead=d.result[0]&&d.dm[d.result[0][1]];drawer.style.setProperty("--team",lead?lead.col:"var(--red)");
+  const rows=d.result.filter(r=>d.dm[r[1]]).map((r,i)=>{
+    const x=d.dm[r[1]];const pos=r[0]??"–";let cells="";
+    if(isQ){const q=Array.isArray(r[6])?r[6]:[];cells=[0,1,2].map(k=>`<td class="${q[k]!=null?"t":"m"}">${q[k]!=null?fmtLap(q[k]):"—"}</td>`).join("")}
+    else if(d.timed){cells=`<td class="t">${r[6]!=null?fmtLap(r[6]):"—"}</td><td class="m">${i&&typeof r[3]==="number"?"+"+r[3].toFixed(3):""}</td>`}
+    else{const g=r[4]?r[4]:i===0?fmtRaceTime(r[6]):typeof r[3]==="number"?"+"+r[3].toFixed(3):(r[3]||"");cells=`<td class="${i===0?"t":""}">${esc(String(g))}</td><td class="m">${r[5]||""}</td>`}
+    const ko=isQ&&r[0]>(d.drivers.length>20?16:15)?" ko":"";
+    return `<tr class="${i===0?"top":""}${ko}" style="--team:${x.col}"><td class="p">${pos}</td><td class="dv"><b>${x.c}</b><span>${esc(x.l)}</span></td>${cells}<td class="m">${r[2]??""}</td></tr>`}).join("");
+  const head=isQ?`<th>${sq}1</th><th>${sq}2</th><th>${sq}3</th>`:d.timed?"<th>Best lap</th><th>Gap</th>":"<th>Time / gap</th><th>Pts</th>";
+  const nm=R.rd?(LONG_NAMES[R.rd]||R.name).replace(/ GP$/," Grand Prix"):d.loc;
+  $("#drBody").innerHTML=`<div class="sr-head"><span class="sr-kind">${esc(d.type)}</span><h3>${R.short?FLAG(GP_FLAG[R.short],30):""}<span>${esc(nm)}</span></h3>
+    <span class="note">${R.circuit?esc(R.circuit)+" · ":""}${new Date(d.date).toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"})}${lead?` · ${isRace?"Winner":"Fastest"}: <b style="color:var(--fg)">${esc(lead.f)} ${esc(lead.l)}</b>`:""}</span></div>
+    <div class="sr-scroll"><table class="sr-tab"><thead><tr><th>Pos</th><th>Driver</th>${head}<th>Laps</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="sr-act"><a href="#race-centre" class="btn primary" data-replay="${sk}">Watch the replay</a><span class="note">Official classification from F1 timing via OpenF1.</span></div>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("#sessions [data-sess]");if(!b)return;openSessionResults(+b.dataset.sess,b)});
+document.addEventListener("click",e=>{if(e.target.closest("#drBody [data-replay]"))closeDriver()});
 function closeDriver(){$("#drawer").classList.remove("open");$("#drawer").setAttribute("aria-hidden","true");$("#scrim").classList.remove("open");if(lastFocus)lastFocus.focus()}
 $("#drClose").onclick=closeDriver;$("#scrim").onclick=closeDriver;
 addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer").classList.contains("open"))closeDriver()});
@@ -1356,7 +1407,7 @@ function renderCalendar(animate){
     c.innerHTML=`<span class="rn">${String(r.rd).padStart(2,"0")}</span>
       <h3>${FLAG(GP_FLAG[r.short],26)}<span>${esc(r.name)}</span></h3><div class="cir">${esc(r.circuit)} · ${esc(r.place)}</div>
       ${(()=>{const L=LAP_RECORD[r.rd];if(!L)return "";return `<div class="lrec" style="--team:${L[4]}" title="Fastest lap ever set in a Grand Prix at this circuit"><span class="lrec-ic" aria-hidden="true"></span><span class="label">Lap record</span><b class="mono">${L[0]}</b><span class="lrec-who">${esc(L[1])} · ${esc(L[2])} · ${L[3]}</span>${L[3]===2026?'<em class="lrec-new">Set in 2026</em>':""}</div>`})()}
-      <div class="row"><span class="dates">${r.dates}</span>${r.sprint?'<span class="chip sprint">Sprint</span>':""}${done?'<span class="chip done">Result</span>':isNext?'<span class="chip next">Next</span>':""}</div>${foot}`;
+      <div class="row"><span class="dates">${r.dates}</span>${r.sprint?'<span class="chip sprint">Sprint</span>':""}${done?'<span class="chip done">Result</span>':isNext?'<span class="chip nextup">Next</span>':""}</div>${foot}`;
     box.appendChild(c);
   });
 }
@@ -2216,7 +2267,7 @@ addEventListener("hashchange",()=>{route();const p=document.querySelector("secti
 
 /* ================= BOOT ================= */
 renderFooter();renderPulse();renderPicks();
-rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-calendar").hidden)renderCalendar(false)}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());
+rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-calendar").hidden)renderCalendar(false);renderSessions(new Date())}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());
 route();tickCountdown();setInterval(tickCountdown,1000);
 if(!reduce)setTimeout(()=>runLights(false),400);
 })();
