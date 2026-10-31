@@ -4,8 +4,9 @@ name: Add finished sessions
 # and commits their replay data to data/. Your host redeploys from the new commit.
 on:
   schedule:
-    # every 30 minutes, Friday to Monday (UTC), which covers every race weekend in every time zone
-    - cron: "7,37 * * * 5,6,0,1"
+    # every 10 minutes, Friday to Monday (UTC), which covers every race weekend in every time zone.
+    # New sessions usually appear 30-45 minutes after they end: OpenF1 opens free access about 30 minutes after a session.
+    - cron: "*/10 * * * 5,6,0,1"
   workflow_dispatch: {}
 
 permissions:

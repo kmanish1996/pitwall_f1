@@ -32,8 +32,8 @@ Open `index.html`, search for `SITE SETTINGS` and fill in your name, domain and 
 
 Replay data comes from the free [OpenF1 API](https://openf1.org). Every practice, qualifying, sprint and race session is added automatically:
 
-- `.github/workflows/update-sessions.yml` runs every 30 minutes from Friday to Monday (UTC), and on demand from the Actions tab.
-- It runs `scripts/update_sessions.py`, which finds 2026 sessions that ended at least 40 minutes ago and aren't in `data/index.json`, packs each into `data/<session_key>.json`, and commits the result. Your host redeploys from that commit.
+- `.github/workflows/update-sessions.yml` runs every 10 minutes from Friday to Monday (UTC), and on demand from the Actions tab.
+- It runs `scripts/update_sessions.py`, which finds 2026 sessions that ended at least 20 minutes ago and aren't in `data/index.json`, packs each into `data/<session_key>.json`, and commits the result. Your host redeploys from that commit.
 - While a session is live, OpenF1 limits free access, so the script just exits and tries again on the next run. If OpenF1's lap data is incomplete, it waits up to 12 hours for the gaps to be filled.
 
 To run it yourself (Python 3, no extra packages):
