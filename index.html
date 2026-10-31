@@ -3,14 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Unofficial Formula 1 fan hub: live countdowns, championship standings, full race replays with timing and team radio, calendar with lap records, and race travel planning.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Pit Wall · Formula 1 standings, race replays and calendar (unofficial)</title>
+<meta name="description" content="Unofficial Formula 1 fan hub for the 2026 season: live countdowns, drivers' and constructors' standings, lap-by-lap replays of every race, qualifying and practice session, the F1 calendar with lap records, and race travel planning.">
+<link rel="canonical" href="https://pitwallf1.in/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pit Wall">
+<meta property="og:title" content="Pit Wall · The unofficial Formula 1 fan hub">
+<meta property="og:description" content="Unofficial Formula 1 fan hub for the 2026 season: live countdowns, drivers' and constructors' standings, lap-by-lap replays of every race, qualifying and practice session, the F1 calendar with lap records, and race travel planning.">
+<meta property="og:url" content="https://pitwallf1.in/">
+<meta property="og:image" content="https://pitwallf1.in/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pit Wall · The unofficial Formula 1 fan hub">
+<meta name="twitter:description" content="Unofficial Formula 1 fan hub for the 2026 season: live countdowns, drivers' and constructors' standings, lap-by-lap replays of every race, qualifying and practice session, the F1 calendar with lap records, and race travel planning.">
+<meta name="twitter:image" content="https://pitwallf1.in/assets/og-image.png">
 <meta name="theme-color" content="#0A0C11">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath d='M0 0h1v1H0zM2 0h1v1H2zM1 1h1v1H1zM3 1h1v1H3zM0 2h1v1H0zM2 2h1v1H2zM1 3h1v1H1zM3 3h1v1H3z' fill='%23111'/%3E%3Cpath d='M1 0h1v1H1zM3 0h1v1H3zM0 1h1v1H0zM2 1h1v1H2zM1 2h1v1H1zM3 2h1v1H3zM0 3h1v1H0zM2 3h1v1H2z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Pit Wall", "alternateName": ["Pit Wall F1", "pitwallf1"], "url": "https://pitwallf1.in/", "description": "Unofficial Formula 1 fan hub for the 2026 season: live countdowns, drivers' and constructors' standings, lap-by-lap replays of every race, qualifying and practice session, the F1 calendar with lap records, and race travel planning.", "inLanguage": "en"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Pit Wall", "url": "https://pitwallf1.in/", "logo": "https://pitwallf1.in/assets/apple-touch-icon.png", "sameAs": ["https://www.instagram.com/pitwall_f1_/"], "founder": {"@type": "Person", "name": "Kanathil Manish Nair"}}</script>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Pit Wall · Formula 1 standings, race replays and calendar (unofficial)</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
@@ -896,7 +912,7 @@ footer a{color:var(--muted)}
     <span id="dataStamp">Standings and results through Round 18, United States GP (25 Oct 2026). Sources: formula1.com, formula1points.com.</span>
     <span>Countdowns and session status update live in your browser.</span>
   </footer>
-  <div class="site-foot" id="siteFoot"></div>
+  <div class="site-foot" id="siteFoot"><nav class="lg-links" aria-label="Explore"><a href="/formula-1-standings-2026/">2026 standings</a> <a href="/f1-calendar-2026/">2026 calendar</a> <a href="/drivers/">Drivers</a> <a href="/teams/">Teams</a></nav></div>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -2241,6 +2257,7 @@ function renderFooter(){
   $("#siteFoot").innerHTML=`
     <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
     ${SITE.instagram?`<a class="ig" href="https://www.instagram.com/${encodeURIComponent(SITE.instagram)}/" target="_blank" rel="noopener">${IG_ICON}<span>Follow <b>@${esc(SITE.instagram)}</b> on Instagram</span></a>`:""}
+    <nav class="lg-links" aria-label="Explore">${[["/formula-1-standings-2026/","2026 standings"],["/f1-calendar-2026/","2026 calendar"],["/drivers/","Drivers"],["/teams/","Teams"]].map(([h,t])=>`<a href="${h}">${t}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
     <nav class="lg-links" aria-label="Legal">${Object.entries(LEGAL_ROUTES).map(([k,v])=>`<a href="#${k}">${v}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
     <p>©${new Date().getFullYear()} ${esc(SITE.name)}. All rights reserved.</p>`;
 }
@@ -2267,6 +2284,7 @@ addEventListener("hashchange",()=>{route();const p=document.querySelector("secti
 
 /* ================= BOOT ================= */
 renderFooter();renderPulse();renderPicks();
+try{const q=new URLSearchParams(location.search).get("replay");if(q&&/^\d+$/.test(q)){RCX.pending=+q;if(location.hash!=="#race-centre")history.replaceState(null,"",location.pathname+"#race-centre")}}catch(e){}
 rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-calendar").hidden)renderCalendar(false);renderSessions(new Date())}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());
 route();tickCountdown();setInterval(tickCountdown,1000);
 if(!reduce)setTimeout(()=>runLights(false),400);

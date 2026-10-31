@@ -43,6 +43,14 @@ python3 scripts/update_sessions.py               # add every finished session th
 python3 scripts/update_sessions.py --only 11404  # add specific session keys
 ```
 
+## Search pages
+
+`scripts/build_pages.py` generates plain HTML pages that search engines can read: `/formula-1-standings-2026/`, `/f1-calendar-2026/`, `/drivers/<name>/`, `/teams/<name>/` and `/races/<grand-prix>-2026/`, plus `sitemap.xml`. The workflow reruns it whenever a new session arrives. After editing the standings or calendar in `index.html`, run it yourself:
+
+```bash
+python3 scripts/build_pages.py   # needs Node.js to read the data in index.html
+```
+
 Standings, results and the calendar's winners are still edited by hand in `index.html`.
 
 ## Disclaimer

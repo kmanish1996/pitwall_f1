@@ -1,0 +1,363 @@
+#!/usr/bin/env python3
+"""Build crawlable HTML pages for search engines, plus sitemap.xml.
+
+Run from the repo root:  python3 scripts/build_pages.py
+
+Writes real pages (no JavaScript needed to read them) for the 2026 standings, the calendar,
+every Grand Prix, every driver and every team. Data comes from the same places the app uses:
+the constants in index.html (standings, calendar, lap records) and the session results in data/.
+Needs Node.js to read the constants from index.html.
+"""
+import html, json, os, re, subprocess, unicodedata
+from datetime import datetime, timezone
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SITE = "https://pitwallf1.in"
+YEAR = 2026
+BRAND = "Pit Wall"
+INSTAGRAM = "https://www.instagram.com/pitwall_f1_/"
+NATIONS = {"ITA": "Italy", "GBR": "United Kingdom", "NED": "Netherlands", "MON": "Monaco", "AUS": "Australia", "FRA": "France",
+           "NZL": "New Zealand", "ARG": "Argentina", "GER": "Germany", "BRA": "Brazil", "ESP": "Spain", "THA": "Thailand",
+           "JPN": "Japan", "CAN": "Canada", "FIN": "Finland", "MEX": "Mexico"}
+COUNTRY = {"AUS": "Australia", "CHN": "China", "JPN": "Japan", "MIA": "United States", "CAN": "Canada", "MON": "Monaco",
+           "BCN": "Spain", "AUT": "Austria", "GBR": "United Kingdom", "BEL": "Belgium", "HUN": "Hungary", "NED": "Netherlands",
+           "ITA": "Italy", "ESP": "Spain", "AZE": "Azerbaijan", "BHR": "Malaysia", "SGP": "Singapore", "USA": "United States",
+           "MEX": "Mexico", "BRA": "Brazil", "LVG": "United States", "QAT": "Qatar", "ABU": "United Arab Emirates"}
+SESSION_ORDER = ["Race", "Sprint", "Qualifying", "Sprint Qualifying", "Practice 3", "Practice 2", "Practice 1"]
+
+e = html.escape
+
+
+def slug(s):
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+
+def app_data():
+    js = r"""
+const fs=require('fs'),vm=require('vm');const h=fs.readFileSync(process.argv[1],'utf8');
+const a=h.indexOf('const TEAMS={'),b=h.indexOf('const POINTS=');const c={};vm.createContext(c);
+vm.runInContext(h.slice(a,b)+';this.o={TEAMS,DRIVERS,CONSTRUCTORS,PER_RACE,RACES,SPRINT_WIN,LAP_RECORD,LONG_NAMES,COMPLETED,TOTAL,SESSIONS};',c);
+process.stdout.write(JSON.stringify(c.o));"""
+    out = subprocess.run(["node", "-e", js, os.path.join(ROOT, "index.html")], capture_output=True, text=True, check=True).stdout
+    return json.loads(out)
+
+
+def fmt_lap(s):
+    if s is None: return "—"
+    m = int(s // 60); r = s - m * 60
+    return f"{m}:{r:06.3f}" if m else f"{r:.3f}"
+
+
+def fmt_race(s):
+    if s is None: return ""
+    h = int(s // 3600); m = int(s % 3600 // 60); r = s % 60
+    return f"{h}:{m:02d}:{r:06.3f}" if h else f"{m}:{r:06.3f}"
+
+
+def nice_date(iso):
+    d = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    return f"{d.day} {d.strftime('%B')} {d.year}"
+
+
+CSS = """
+:root{--bg:#0A0C11;--panel:#12161E;--panel2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;--red:#E10600;--purple:#B54BE8;
+--fd:"Saira Condensed","Arial Narrow",Impact,sans-serif;--fb:"Barlow","Segoe UI",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--fb);-webkit-font-smoothing:antialiased}
+a{color:var(--red);font-weight:700;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:3px}
+.w{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{border-bottom:1px solid var(--line);background:var(--bg)}
+header.top .w{display:flex;align-items:center;gap:20px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--fg);font:italic 900 24px/1 var(--fd);text-transform:uppercase}
+.brand:hover{text-decoration:none}.brand i{width:22px;height:22px;background:conic-gradient(#F1F3F7 25%,#0A0C11 0 50%,#F1F3F7 0 75%,#0A0C11 0) 0 0/11px 11px;border:1px solid #F1F3F7;transform:skewX(-12deg)}
+.brand b{color:var(--red)}.brand small{display:block;font:500 11px var(--fb);text-transform:none;color:var(--muted);margin-top:2px}
+nav.main{display:flex;gap:4px 16px;flex-wrap:wrap;margin-left:auto}
+nav.main a{color:var(--muted);font:700 14px var(--fd);text-transform:uppercase;letter-spacing:.08em}nav.main a:hover{color:var(--fg);text-decoration:none}
+.crumbs{font-size:13px;color:var(--muted);margin:22px 0 6px}.crumbs a{color:var(--muted);font-weight:500}
+h1,h2,h3{font-family:var(--fd);text-transform:uppercase;line-height:1;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,58px);font-weight:900;font-style:italic;margin:4px 0 8px}
+h2{font-size:clamp(24px,3.4vw,32px);font-weight:900;font-style:italic;margin:36px 0 12px}
+h3{font-size:20px;font-weight:800;margin:24px 0 8px}
+.sub{color:var(--muted);margin:0 0 18px}
+.lead{font-size:18px;max-width:72ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:18px 0}
+.tile{background:var(--panel);padding:12px 14px}.tile span{display:block;font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.tile b{font:700 24px var(--fm)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:left;padding:9px 10px;background:var(--panel2);white-space:nowrap}
+td{padding:8px 10px;border-top:1px solid var(--line);white-space:nowrap}
+td.n{font:700 14px var(--fm);text-align:right}th.n{text-align:right}
+td.pos{font:italic 900 17px var(--fd);width:40px}
+.sw{display:inline-block;width:4px;height:16px;vertical-align:-3px;margin-right:8px;background:var(--team,#888)}
+.btn{display:inline-block;background:var(--red);color:#fff;font:800 13px var(--fd);text-transform:uppercase;letter-spacing:.08em;padding:9px 14px;border-radius:3px}
+.btn:hover{text-decoration:none;filter:brightness(1.1)}
+.note{color:var(--muted);font-size:14px}
+.rec{border-left:3px solid var(--purple);padding:8px 12px;background:var(--panel);margin:16px 0}.rec b{color:var(--purple);font-family:var(--fm)}
+.pager{display:flex;justify-content:space-between;gap:12px;margin:36px 0 0;flex-wrap:wrap}
+details{margin:10px 0}summary{cursor:pointer;font:800 18px var(--fd);text-transform:uppercase}
+footer.site{margin-top:48px;border-top:1px solid var(--line);padding:24px 0 32px;text-align:center;font-size:13px;color:var(--muted)}
+footer.site p{margin:8px auto;max-width:110ch}footer.site nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px}
+footer.site nav a{color:var(--fg);font-weight:500}
+@media (max-width:640px){header.top .w{padding-block:10px}nav.main{margin-left:0}}
+"""
+
+
+def page(path, title, desc, body, crumbs, ld=None):
+    url = f"{SITE}{path}"
+    trail = [{"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + p} for i, (n, p) in enumerate([("Home", "/")] + crumbs)]
+    blocks = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": trail}] + ([ld] if ld else [])
+    crumb_html = " › ".join([f'<a href="/">Home</a>'] + [f'<a href="{p}">{e(n)}</a>' if i < len(crumbs) - 1 else e(n) for i, (n, p) in enumerate(crumbs)])
+    doc = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{e(title)}</title>
+<meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{BRAND}">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{SITE}/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0C11">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>{CSS}</style>
+{''.join(f'<script type="application/ld+json">{json.dumps(b, ensure_ascii=False)}</script>' for b in blocks)}
+</head>
+<body>
+<header class="top"><div class="w">
+<a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
+<nav class="main" aria-label="Main"><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/#race-centre">Race centre</a></nav>
+</div></header>
+<main class="w">
+<div class="crumbs">{crumb_html}</div>
+{body}
+</main>
+<footer class="site"><div class="w">
+<p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
+<nav aria-label="Site"><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
+</div></footer>
+</body>
+</html>
+"""
+    out = os.path.join(ROOT, path.strip("/"), "index.html")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    open(out, "w").write(doc)
+    return path
+
+
+def main():
+    A = app_data()
+    T, D, C, RACES = A["TEAMS"], A["DRIVERS"], A["CONSTRUCTORS"], A["RACES"]
+    done = A["COMPLETED"]; total = A["TOTAL"]
+    by_code = {d["code"]: d for d in D}
+    dslug = {d["code"]: slug(f"{d['first']} {d['last']}") for d in D}
+    tslug = {t: slug(t.replace(" F1 Team", "")) for t in T}
+    gp_long = lambda r: A["LONG_NAMES"].get(str(r["rd"])) or r["name"].replace(" GP", " Grand Prix")
+    rslug = {r["rd"]: slug(f"{gp_long(r)} {YEAR}") for r in RACES}
+    race_url = lambda rd: f"/races/{rslug[rd]}/"
+    drv = lambda code: f'<a href="/drivers/{dslug[code]}/">{e(by_code[code]["first"])} {e(by_code[code]["last"])}</a>' if code in by_code else e(code)
+    team_link = lambda t: f'<a href="/teams/{tslug[t]}/">{e(t)}</a>' if t in tslug else e(t)
+    tc = lambda t: T.get(t, {}).get("c", "#888")
+    wins = {}
+    for r in RACES:
+        if r.get("win"): wins[r["win"]] = wins.get(r["win"], 0) + 1
+    swins = {}
+    for v in A["SPRINT_WIN"].values(): swins[v[0]] = swins.get(v[0], 0) + 1
+
+    # sessions with replay data, grouped by round
+    idx = json.load(open(os.path.join(ROOT, "data", "index.json")))
+    def round_of(s):
+        dt = datetime.fromisoformat(s["date"]).timestamp()
+        best = None
+        for r in RACES:
+            diff = datetime.fromisoformat(r["race"].replace("Z", "+00:00")).timestamp() - dt
+            if -6 * 3600 < diff < 4 * 86400 and (best is None or diff < best[0]): best = (diff, r["rd"])
+        return best[1] if best else None
+    sess = {}
+    for s in idx:
+        rd = round_of(s)
+        if rd: sess.setdefault(rd, {})[s["type"]] = s["sk"]
+    cache = {}
+    def sdata(sk):
+        if sk not in cache: cache[sk] = json.load(open(os.path.join(ROOT, "data", f"{sk}.json")))
+        return cache[sk]
+    def finish(rd, code, kind="Race"):
+        sk = sess.get(rd, {}).get(kind)
+        if not sk: return None
+        d = sdata(sk); num = {x["c"]: x["n"] for x in d["drivers"]}
+        for r in d["result"]:
+            if r[1] == num.get(code): return r[4] or r[0]
+        return None
+    leader, second = D[0], D[1]
+    left = (total - done) * 25
+    pages = []
+
+    # ---------- standings ----------
+    rows = "".join(f'<tr style="--team:{tc(d["team"])}"><td class="pos">{i+1}</td><td><span class="sw"></span>{drv(d["code"])}</td><td>{e(NATIONS.get(d["nat"], d["nat"]))}</td><td>{team_link(d["team"])}</td><td class="n">{wins.get(d["code"], 0)}</td><td class="n">{d["pts"]}</td><td class="n">{"" if i == 0 else "+" + str(leader["pts"] - d["pts"])}</td></tr>' for i, d in enumerate(D))
+    trows = "".join(f'<tr style="--team:{tc(t)}"><td class="pos">{i+1}</td><td><span class="sw"></span>{team_link(t)}</td><td>{", ".join(drv(d["code"]) for d in D if d["team"] == t)}</td><td class="n">{p}</td></tr>' for i, (t, p) in enumerate(C))
+    body = f"""<h1>Formula 1 standings {YEAR}</h1>
+<p class="sub">Drivers' and constructors' championships after round {done} of {total}, the {e(gp_long(RACES[done-1]))}.</p>
+<p class="lead">{drv(leader["code"])} leads the {YEAR} drivers' championship with {leader["pts"]} points, {leader["pts"]-second["pts"]} ahead of {drv(second["code"])}. With {total-done} races left, {left} points are still available. {team_link(C[0][0])} lead the constructors' championship on {C[0][1]} points.</p>
+<h2>Drivers' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Nationality</th><th>Team</th><th class="n">Wins</th><th class="n">Points</th><th class="n">Gap</th></tr></thead><tbody>{rows}</tbody></table></div>
+<h2>Constructors' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{trows}</tbody></table></div>
+<p class="note" style="margin-top:16px">Want the title maths? <a href="/#title-fight">See who can still win the {YEAR} championship</a>, or <a href="/#replay">replay the season round by round</a>.</p>"""
+    pages.append(page(f"/formula-1-standings-{YEAR}/", f"F1 {YEAR} standings: drivers' and constructors' championship | {BRAND}",
+                      f"Formula 1 {YEAR} championship standings after round {done}: {leader['first']} {leader['last']} leads on {leader['pts']} points. Full drivers' and constructors' tables with wins and gaps.",
+                      body, [(f"{YEAR} standings", f"/formula-1-standings-{YEAR}/")]))
+
+    # ---------- calendar ----------
+    crow = []
+    for r in RACES:
+        rd = r["rd"]; res = ""
+        if r.get("win"): res = f'Winner: {drv(r["win"])}'
+        elif sess.get(rd): res = "Weekend under way"
+        crow.append(f'<tr><td class="pos">{rd}</td><td><a href="{race_url(rd)}">{e(gp_long(r))}</a>{" · Sprint" if r["sprint"] else ""}</td><td>{e(r["circuit"])}, {e(r["place"])}</td><td>{e(r["dates"])}</td><td>{res}</td></tr>')
+    body = f"""<h1>F1 calendar {YEAR}</h1>
+<p class="sub">All {total} rounds of the {YEAR} Formula 1 World Championship, with circuits, dates, winners and session results.</p>
+<p class="lead">The {YEAR} season runs from the {e(gp_long(RACES[0]))} in March to the {e(gp_long(RACES[-1]))} in December, with six sprint weekends. The Saudi Arabian Grand Prix was cancelled and the Bahrain Grand Prix moved to Sepang, Malaysia.</p>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Circuit</th><th>Dates</th><th>Result</th></tr></thead><tbody>{''.join(crow)}</tbody></table></div>
+<p class="note" style="margin-top:16px">Session times in your own time zone, with live countdowns: <a href="/#calendar">open the interactive calendar</a>.</p>"""
+    pages.append(page(f"/f1-calendar-{YEAR}/", f"F1 {YEAR} calendar: every Grand Prix, date and result | {BRAND}",
+                      f"The full {YEAR} Formula 1 calendar: all {total} Grands Prix with circuits, dates, sprint weekends, winners and results.",
+                      body, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/")]))
+
+    # ---------- races ----------
+    def result_table(sk, kind):
+        d = sdata(sk); dm = {x["n"]: x for x in d["drivers"]}
+        q = "Qualifying" in kind
+        head = "<th class='n'>Q1</th><th class='n'>Q2</th><th class='n'>Q3</th>" if q else ("<th class='n'>Best lap</th><th class='n'>Gap</th>" if kind.startswith("Practice") else "<th class='n'>Time / gap</th><th class='n'>Points</th>")
+        trs = []
+        for i, r in enumerate(d["result"]):
+            x = dm.get(r[1])
+            if not x: continue
+            name = drv(x["c"]) if x["c"] in by_code else e(f'{x["f"]} {x["l"]}')
+            if q:
+                qs = r[6] if isinstance(r[6], list) else []
+                cells = "".join(f"<td class='n'>{fmt_lap(qs[k]) if k < len(qs) and qs[k] is not None else '—'}</td>" for k in range(3))
+            elif kind.startswith("Practice"):
+                cells = f"<td class='n'>{fmt_lap(r[6]) if isinstance(r[6], (int, float)) else '—'}</td><td class='n'>{'+%.3f' % r[3] if i and isinstance(r[3], (int, float)) else ''}</td>"
+            else:
+                g = r[4] or (fmt_race(r[6]) if i == 0 else ("+%.3f" % r[3] if isinstance(r[3], (int, float)) else (r[3] or "")))
+                cells = f"<td class='n'>{e(str(g))}</td><td class='n'>{int(r[5]) if r[5] else ''}</td>"
+            trs.append(f'<tr style="--team:{x["col"]}"><td class="pos">{r[0] if r[0] is not None else "–"}</td><td><span class="sw"></span>{name}</td><td>{e(x["t"])}</td>{cells}</tr>')
+        return f'<div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Team</th>{head}</tr></thead><tbody>{"".join(trs)}</tbody></table></div><p style="margin:10px 0 0"><a class="btn" href="/?replay={sk}#race-centre">Watch the {e(kind.lower())} replay</a></p>'
+
+    for i, r in enumerate(RACES):
+        rd = r["rd"]; name = gp_long(r); have = sess.get(rd, {})
+        start = r["race"]
+        L = A["LAP_RECORD"].get(str(rd))
+        pole = None
+        if have.get("Qualifying"):
+            d = sdata(have["Qualifying"]); dm = {x["n"]: x["c"] for x in d["drivers"]}
+            if d["result"]: pole = dm.get(d["result"][0][1])
+        if r.get("win"):
+            sw = A["SPRINT_WIN"].get(str(rd))
+            lead = f'{drv(r["win"])} won the {YEAR} {e(name)} for {team_link(r["winTeam"])}, in a race time of {e(r["time"])}.'
+            if pole: lead += f' {drv(pole)} started from pole position.'
+            if sw: lead += f' {drv(sw[0])} won the sprint.'
+        else:
+            lead = f'The {YEAR} {e(name)} is round {rd} of {total}, held at {e(r["circuit"])} in {e(r["place"])} on {e(r["dates"])} {YEAR}. The race starts at {datetime.fromisoformat(start.replace("Z","+00:00")).strftime("%H:%M")} UTC on {nice_date(start)}.'
+            if pole: lead += f' {drv(pole)} took pole position.'
+        secs = []
+        for kind in SESSION_ORDER:
+            if kind in have:
+                tag = "h2" if kind in ("Race", "Qualifying", "Sprint") else "h3"
+                block = f"<{tag}>{e(kind)} results</{tag}>{result_table(have[kind], kind)}"
+                secs.append(block if tag == "h2" else f"<details><summary>{e(kind)} results</summary>{result_table(have[kind], kind)}</details>")
+        rec = f'<div class="rec">Lap record: <b>{e(L[0])}</b>, {e(L[1])} ({e(L[2])}, {L[3]})</div>' if L else ""
+        prev = f'<a href="{race_url(RACES[i-1]["rd"])}">← {e(gp_long(RACES[i-1]))}</a>' if i else "<span></span>"
+        nxt = f'<a href="{race_url(RACES[i+1]["rd"])}">{e(gp_long(RACES[i+1]))} →</a>' if i + 1 < len(RACES) else "<span></span>"
+        body = f"""<h1>{e(name)} {YEAR}</h1>
+<p class="sub">Round {rd} of {total} · {e(r["circuit"])}, {e(r["place"])} · {e(r["dates"])} {YEAR}{" · Sprint weekend" if r["sprint"] else ""}</p>
+<p class="lead">{lead}</p>{rec}
+{''.join(secs) or '<p class="note">Results appear here about 30 to 45 minutes after each session ends.</p>'}
+<div class="pager">{prev}<a href="/f1-calendar-{YEAR}/">Full calendar</a>{nxt}</div>"""
+        ld = {"@context": "https://schema.org", "@type": "SportsEvent", "name": f"{YEAR} {name}", "sport": "Formula 1",
+              "startDate": start, "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "location": {"@type": "Place", "name": r["circuit"], "address": {"@type": "PostalAddress", "addressLocality": r["place"], "addressCountry": COUNTRY.get(r["short"], "")}},
+              "url": SITE + race_url(rd)}
+        if r.get("win") and r["win"] in by_code:
+            ld["winner"] = {"@type": "Person", "name": f'{by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]}'}
+        desc = (f'{name} {YEAR} results: {by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]} won at {r["circuit"]}. Race, qualifying and practice results, lap record and full replays.'
+                if r.get("win") and r["win"] in by_code else f'{name} {YEAR} at {r["circuit"]}, {r["dates"]}: schedule, results from every session, lap record and full replays.')
+        pages.append(page(race_url(rd), f"{name} {YEAR}: results, qualifying and lap record | {BRAND}", desc, body,
+                          [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/"), (name, race_url(rd))], ld))
+
+    # ---------- drivers ----------
+    for pos, d in enumerate(D, 1):
+        code = d["code"]; full = f'{d["first"]} {d["last"]}'
+        tm = next((x for x in D if x["team"] == d["team"] and x["code"] != code), None)
+        rows = []
+        for r in RACES[:done]:
+            f = finish(r["rd"], code); q = finish(r["rd"], code, "Qualifying")
+            pts = A["PER_RACE"].get(code, [None] * done)[r["rd"] - 1] if code in A["PER_RACE"] else None
+            rows.append(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td class="n">{q if q is not None else "–"}</td><td class="n">{f if f is not None else "–"}</td><td class="n">{"" if pts is None else pts}</td></tr>')
+        lead = (f'{e(full)} drives car number {d["no"]} for {team_link(d["team"])} in the {YEAR} Formula 1 season. '
+                f'After round {done}, {e(d["first"])} is P{pos} in the drivers\' championship with {d["pts"]} points'
+                + (f', {wins[code]} Grand Prix win{"s" if wins[code] > 1 else ""}' if wins.get(code) else "")
+                + (f' and {swins[code]} sprint win{"s" if swins[code] > 1 else ""}' if swins.get(code) else "") + ".")
+        if tm: lead += f' Teammate {drv(tm["code"])} has {tm["pts"]} points.'
+        body = f"""<h1>{e(full)}</h1>
+<p class="sub">#{d["no"]} · {team_link(d["team"])} · {e(NATIONS.get(d["nat"], d["nat"]))}</p>
+<p class="lead">{lead}</p>
+<div class="tiles"><div class="tile"><span>Championship</span><b>P{pos}</b></div><div class="tile"><span>Points</span><b>{d["pts"]}</b></div><div class="tile"><span>GP wins</span><b>{wins.get(code, 0)}</b></div><div class="tile"><span>Sprint wins</span><b>{swins.get(code, 0)}</b></div><div class="tile"><span>Gap to leader</span><b>{"—" if pos == 1 else "+" + str(leader["pts"] - d["pts"])}</b></div></div>
+<h2>{YEAR} season, race by race</h2>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th class="n">Qualified</th><th class="n">Finished</th><th class="n">Points</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
+<p class="note" style="margin-top:10px">Points include sprint points. <a href="/formula-1-standings-{YEAR}/">See the full {YEAR} standings</a>.</p>"""
+        ld = {"@context": "https://schema.org", "@type": "Person", "name": full, "nationality": NATIONS.get(d["nat"], d["nat"]),
+              "jobTitle": "Racing driver", "memberOf": {"@type": "SportsTeam", "name": d["team"], "sport": "Formula 1"}, "url": f"{SITE}/drivers/{dslug[code]}/"}
+        pages.append(page(f"/drivers/{dslug[code]}/", f"{full} {YEAR}: F1 points, results and standings | {BRAND}",
+                          f"{full} in the {YEAR} Formula 1 season: P{pos} with {d['pts']} points for {d['team']}. Race-by-race qualifying and finishing positions.",
+                          body, [("Drivers", "/drivers/"), (full, f"/drivers/{dslug[code]}/")], ld))
+    rows = "".join(f'<tr style="--team:{tc(d["team"])}"><td class="pos">{i+1}</td><td><span class="sw"></span>{drv(d["code"])}</td><td class="n">{d["no"]}</td><td>{team_link(d["team"])}</td><td>{e(NATIONS.get(d["nat"], d["nat"]))}</td><td class="n">{d["pts"]}</td></tr>' for i, d in enumerate(D))
+    pages.append(page("/drivers/", f"F1 drivers {YEAR}: every driver, number and team | {BRAND}",
+                      f"All {len(D)} Formula 1 drivers in {YEAR}, with car numbers, teams, nationalities and championship points.",
+                      f'<h1>F1 drivers {YEAR}</h1><p class="sub">Every driver on the {YEAR} grid, in championship order.</p><div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th class="n">No.</th><th>Team</th><th>Nationality</th><th class="n">Points</th></tr></thead><tbody>{rows}</tbody></table></div>',
+                      [("Drivers", "/drivers/")]))
+
+    # ---------- teams ----------
+    for pos, (t, p) in enumerate(C, 1):
+        ds = [d for d in D if d["team"] == t]
+        rows = []
+        for r in RACES[:done]:
+            fs = " · ".join(f'{x["code"]} {finish(r["rd"], x["code"]) or "–"}' for x in ds)
+            rows.append(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td>{e(fs)}</td></tr>')
+        tw = sum(wins.get(x["code"], 0) for x in ds)
+        lead = f'{e(t)} are P{pos} in the {YEAR} Formula 1 constructors\' championship with {p} points' + (f' and {tw} Grand Prix win{"s" if tw > 1 else ""}' if tw else "") + f'. Drivers: {" and ".join(drv(x["code"]) + f" ({x['pts']} pts)" for x in ds)}.'
+        body = f"""<h1>{e(t)}</h1>
+<p class="sub">Formula 1 team · {YEAR} season</p>
+<p class="lead">{lead}</p>
+<div class="tiles"><div class="tile"><span>Constructors'</span><b>P{pos}</b></div><div class="tile"><span>Points</span><b>{p}</b></div><div class="tile"><span>GP wins</span><b>{tw}</b></div></div>
+<h2>Finishing positions by race</h2>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Finishes</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>"""
+        ld = {"@context": "https://schema.org", "@type": "SportsTeam", "name": t, "sport": "Formula 1",
+              "athlete": [{"@type": "Person", "name": f'{x["first"]} {x["last"]}'} for x in ds], "url": f"{SITE}/teams/{tslug[t]}/"}
+        pages.append(page(f"/teams/{tslug[t]}/", f"{t} F1 {YEAR}: points, drivers and results | {BRAND}",
+                          f"{t} in the {YEAR} Formula 1 season: P{pos} in the constructors' championship with {p} points. Drivers, wins and race-by-race results.",
+                          body, [("Teams", "/teams/"), (t, f"/teams/{tslug[t]}/")], ld))
+    rows = "".join(f'<tr style="--team:{tc(t)}"><td class="pos">{i+1}</td><td><span class="sw"></span>{team_link(t)}</td><td>{", ".join(drv(d["code"]) for d in D if d["team"] == t)}</td><td class="n">{p}</td></tr>' for i, (t, p) in enumerate(C))
+    pages.append(page("/teams/", f"F1 teams {YEAR}: every team and its drivers | {BRAND}",
+                      f"All {len(C)} Formula 1 teams in {YEAR}, with their drivers and constructors' championship points.",
+                      f'<h1>F1 teams {YEAR}</h1><p class="sub">Every team on the {YEAR} grid, in constructors\' championship order.</p><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{rows}</tbody></table></div>',
+                      [("Teams", "/teams/")]))
+
+    # ---------- sitemap ----------
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    urls = ["/"] + pages
+    sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
+        f"  <url><loc>{SITE}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n"
+    open(os.path.join(ROOT, "sitemap.xml"), "w").write(sm)
+    print(f"Built {len(pages)} pages and sitemap.xml")
+
+
+if __name__ == "__main__":
+    main()

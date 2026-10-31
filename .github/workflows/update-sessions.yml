@@ -27,10 +27,20 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Fetch finished sessions from OpenF1
         run: python3 scripts/update_sessions.py
 
-      - name: Commit new replay data
+      - name: Rebuild search pages if there is new data
+        run: |
+          if [ -n "$(git status --porcelain data)" ]; then
+            python3 scripts/build_pages.py
+          fi
+
+      - name: Commit new replay data and pages
         run: |
           if [ -z "$(git status --porcelain data)" ]; then
             echo "No new sessions."
@@ -38,6 +48,6 @@ jobs:
           fi
           git config user.name "pitwall-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
-          git commit -m "Add replay data for newly finished sessions"
+          git add -A data races drivers teams formula-1-standings-2026 f1-calendar-2026 sitemap.xml
+          git commit -m "Add replay data and pages for newly finished sessions"
           git push
