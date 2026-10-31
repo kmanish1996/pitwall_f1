@@ -8,7 +8,7 @@ from the free OpenF1 API, packs it into data/<session_key>.json and adds it to t
 It exits quietly (status 0) when OpenF1 is blocking free access because a session is live,
 and it waits for OpenF1 to finish backfilling incomplete lap data, so it is safe to run on a schedule.
 """
-import argparse, json, os, sys, time, urllib.error, urllib.parse, urllib.request
+import argparse, json, os, shutil, sys, time, urllib.error, urllib.parse, urllib.request
 from datetime import datetime, timedelta, timezone
 
 API = "https://api.openf1.org/v1/"
@@ -290,6 +290,7 @@ def main():
         try:
             raw = fetch_session(sk)
             if not complete_enough(meta, raw):
+                shutil.rmtree(os.path.join(CACHE, str(sk)), ignore_errors=True)  # refetch next time; OpenF1 is still filling it in
                 continue
             track = track_for(meta, sk, raw, index)
             if not track:
