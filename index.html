@@ -657,6 +657,24 @@ mark.ph{background:color-mix(in srgb,var(--amber) 22%,transparent);color:var(--a
 .ch-card .troph{width:56px;height:56px}
 .ch-card h3{font-size:clamp(30px,5vw,44px);font-weight:900;font-style:italic;line-height:1}
 .ch-card p{margin:0}
+
+#pulse.is-champ{cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .25s}
+#pulse.is-champ:hover{border-color:rgba(212,175,55,.6);box-shadow:0 0 0 1px rgba(212,175,55,.35),0 12px 40px -12px rgba(212,175,55,.35);transform:translateY(-2px)}
+.tap-hint{display:inline-block;margin-left:6px;color:#E9C46A;font-weight:600;animation:hintpulse 2.4s ease-in-out infinite}
+@keyframes hintpulse{50%{opacity:.45}}
+.celebr{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,rgba(10,12,17,.35),rgba(10,12,17,.82));animation:cfade .35s ease-out;cursor:pointer;padding:max(16px,env(safe-area-inset-left,0px))}
+.celebr.out{opacity:0;transition:opacity .35s}
+@keyframes cfade{from{opacity:0}}
+.celebr canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.celebr-card{position:relative;text-align:center;display:grid;justify-items:center;gap:6px;padding:28px 34px;border-radius:6px;background:linear-gradient(140deg,color-mix(in srgb,var(--team) 38%,#0A0C11),#0A0C11 75%);border:1px solid rgba(212,175,55,.7);box-shadow:0 0 0 1px rgba(212,175,55,.25),0 30px 90px rgba(0,0,0,.6),0 0 80px -10px rgba(212,175,55,.5);animation:cpop .6s cubic-bezier(.2,1.4,.4,1) .1s backwards;max-width:100%}
+@keyframes cpop{from{transform:scale(.6) rotate(-3deg);opacity:0}}
+.celebr-card .troph{width:92px;height:92px;animation:tglow 1.6s ease-in-out infinite alternate}
+@keyframes tglow{to{filter:drop-shadow(0 0 22px rgba(233,196,106,.9));transform:translateY(-3px)}}
+.celebr-k{font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.16em;font-size:14px;color:#E9C46A}
+.celebr-n{font-family:var(--f-display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(40px,9vw,84px);line-height:.95;color:var(--fg)}
+.celebr-n b{color:#E9C46A}
+.celebr-s{font-size:15px;color:color-mix(in srgb,var(--fg) 85%,var(--muted))}
+.celebr-hint{margin-top:8px;font-size:12px;color:var(--muted)}
 footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
@@ -1230,6 +1248,8 @@ function renderPulse(){
   const L=DRIVERS[0],P2=DRIVERS[1];const left=TOTAL-COMPLETED;const maxLeft=left*25;
   const lead=L.pts-P2.pts;
   const card=$("#pulse");card.style.setProperty("--team",tc(L.team));
+  const isChamp=champDecided();card.classList.toggle("is-champ",isChamp);
+  if(isChamp){card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label",`${L.first} ${L.last}, ${YEAR_NOW} World Champion. Activate to celebrate.`);card.title="Tap to celebrate"}
   card.innerHTML=`
     ${champDecided()?`<button type="button" class="champ-badge" data-champions>${TROPHY_SVG}<span>${YEAR_NOW} World Champion</span></button>`:'<div class="label">Championship leader</div>'}
     <div class="leader" style="--team:${tc(L.team)}">
@@ -1246,7 +1266,7 @@ function renderPulse(){
       <div class="recent">${RACES.slice(COMPLETED-5,COMPLETED).reverse().map(r=>`<div class="rw" style="--team:${tc(r.winTeam)}"><span class="mono">${r.short}</span><b>${r.win}</b></div>`).join("")}</div></div>
     <div><div class="label" style="margin-bottom:8px">Wins this season</div>
       <div class="winbar">${Object.entries(wins).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`<i style="flex:${n};--team:${tc(byCode[c].team)}" title="${c}: ${n}"><span>${c} ${n}</span></i>`).join("")}</div></div>
-    <div class="fresh">Standings through Round ${COMPLETED}, ${esc(RACES[COMPLETED-1].name)}.</div>`;
+    <div class="fresh">Standings through Round ${COMPLETED}, ${esc(RACES[COMPLETED-1].name)}.${champDecided()?' <span class="tap-hint">🏁 Tap the card to celebrate</span>':""}</div>`;
 }
 
 /* ================= TITLE MATHS ================= */
@@ -1293,6 +1313,53 @@ function openChampions(from){
   drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");$("#scrim").classList.add("open");$("#drClose").focus();
 }
 document.addEventListener("click",e=>{const b=e.target.closest("#champBtn,[data-champions]");if(b)openChampions(b)});
+
+/* ================= CHAMPION CELEBRATION ================= */
+let celebrating=false;
+function celebrate(ox,oy){
+  if(celebrating)return;celebrating=true;
+  const L=DRIVERS[0],col=tc(L.team);
+  const wrap=el("div",{className:"celebr",role:"dialog","aria-label":`${L.first} ${L.last}, ${YEAR_NOW} World Champion`});
+  wrap.innerHTML=`<canvas></canvas><div class="celebr-card" style="--team:${col}">${TROPHY_SVG}<div class="celebr-k">${YEAR_NOW} Formula 1 World Champion</div><div class="celebr-n">${esc(L.first)} <b>${esc(L.last)}</b></div><div class="celebr-s">${esc(L.team)} · ${L.pts} points · ${wins[L.code]||0} wins · youngest champion ever</div><div class="celebr-hint">Tap anywhere to close</div></div>`;
+  document.body.appendChild(wrap);
+  const cv=wrap.querySelector("canvas"),cx=cv.getContext("2d");
+  const dpr=Math.min(2,window.devicePixelRatio||1);let W=0,H=0;
+  const size=()=>{W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)};size();addEventListener("resize",size);
+  const EMO=["🏆","🏆","🎉","🎊","🏁","🏁","🍾","🥂","✨","🥇","👑","🏎️","🔥","🇮🇹"];
+  const COL=[col,"#E9C46A","#F1F3F7","#E10600","#FFFFFF","#D4AF37"];
+  const P=[];const rnd=(a,b)=>a+Math.random()*(b-a);
+  const add=(x,y,burst)=>{const t=Math.random();
+    P.push({x,y,vx:burst?rnd(-9,9):rnd(-1.2,1.2),vy:burst?rnd(-17,-6):rnd(1.5,4.5),r:rnd(0,6.28),vr:rnd(-.12,.12),
+      kind:t<.42?"e":t<.58?"f":"c",e:EMO[(Math.random()*EMO.length)|0],s:rnd(22,46),c:COL[(Math.random()*COL.length)|0],w:rnd(7,13),h:rnd(4,8),sway:rnd(0,6.28)})};
+  const bx=ox??W/2,by=oy??H/2;
+  for(let i=0;i<90;i++)add(bx,by,true);
+  for(let i=0;i<70;i++)add(rnd(0,W),rnd(-H,-20),false);
+  let rainUntil=performance.now()+3200,t0=performance.now(),raf;
+  const flag=(x,y,s)=>{const q=s/4;for(let i=0;i<4;i++)for(let j=0;j<3;j++){cx.fillStyle=(i+j)%2?"#111":"#fff";cx.fillRect(x+i*q,y+j*q,q,q)}cx.fillStyle="#cfd3dc";cx.fillRect(x-2,y,2,s*1.3)};
+  function frame(now){
+    cx.clearRect(0,0,W,H);
+    if(now<rainUntil&&P.length<420)for(let i=0;i<4;i++)add(rnd(0,W),-40,false);
+    for(let i=P.length-1;i>=0;i--){const p=P[i];
+      p.vy+=p.kind==="c"?0.12:0.22;p.vy=Math.min(p.vy,p.kind==="c"?4:7);p.vx*=0.985;p.sway+=0.05;
+      p.x+=p.vx+Math.sin(p.sway)*(p.kind==="c"?1.4:.6);p.y+=p.vy;p.r+=p.vr;
+      if(p.y>H+60){P.splice(i,1);continue}
+      cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);
+      if(p.kind==="e"){cx.font=`${p.s}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;cx.textAlign="center";cx.textBaseline="middle";cx.fillText(p.e,0,0)}
+      else if(p.kind==="f"){flag(-p.s/2,-p.s/2,p.s*.9)}
+      else{cx.fillStyle=p.c;cx.scale(1,Math.cos(p.sway*2));cx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+      cx.restore()}
+    if(P.length||now<rainUntil)raf=requestAnimationFrame(frame);else close();
+  }
+  const close=()=>{if(!wrap.isConnected)return;cancelAnimationFrame(raf);removeEventListener("resize",size);wrap.classList.add("out");setTimeout(()=>{wrap.remove();celebrating=false},350)};
+  wrap.addEventListener("click",close);addEventListener("keydown",function k(e){if(e.key==="Escape"){close();removeEventListener("keydown",k)}});
+  if(reduce){setTimeout(close,3500)}else{raf=requestAnimationFrame(frame);setTimeout(close,7000)}
+}
+document.addEventListener("click",e=>{
+  const tile=e.target.closest("#pulse.is-champ");if(!tile)return;
+  if(e.target.closest("[data-champions],a,button"))return;
+  celebrate(e.clientX,e.clientY);
+});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.id==="pulse"&&e.target.classList.contains("is-champ")){e.preventDefault();const r=e.target.getBoundingClientRect();celebrate(r.left+r.width/2,r.top+r.height/2)}});
 function clinchSentence(){
   const left=TOTAL-COMPLETED;const L=DRIVERS[0];const rivals=contenders();
   if(!rivals.length){const cr=clinchRound();return `<b>${esc(L.first)} ${esc(L.last)}</b> is the ${YEAR_NOW} world champion${cr?`, sealed at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}`:""}. At 20, he is the youngest champion in Formula 1 history. <button type="button" class="linkish" data-champions>See every champion since 1950 ›</button>`}
