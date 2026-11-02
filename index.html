@@ -660,7 +660,7 @@ mark.ph{background:color-mix(in srgb,var(--amber) 22%,transparent);color:var(--a
 
 #pulse.is-champ{cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .25s}
 #pulse.is-champ:hover{border-color:rgba(212,175,55,.6);box-shadow:0 0 0 1px rgba(212,175,55,.35),0 12px 40px -12px rgba(212,175,55,.35);transform:translateY(-2px)}
-.tap-hint{display:inline-block;margin-left:6px;color:#E9C46A;font-weight:600;animation:hintpulse 2.4s ease-in-out infinite}
+.tap-hint{display:inline-block;margin-left:6px;background:none;border:0;padding:0;font:inherit;cursor:pointer;color:#E9C46A;font-weight:600;animation:hintpulse 2.4s ease-in-out infinite}
 @keyframes hintpulse{50%{opacity:.45}}
 .celebr{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,rgba(10,12,17,.35),rgba(10,12,17,.82));animation:cfade .35s ease-out;cursor:pointer;padding:max(16px,env(safe-area-inset-left,0px))}
 .celebr.out{opacity:0;transition:opacity .35s}
@@ -964,7 +964,7 @@ footer a{color:var(--muted)}
 </main>
 
 <div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Driver details">
+<aside class="drawer" id="drawer" inert aria-label="Driver details">
   <button type="button" class="close" id="drClose" aria-label="Close">✕</button>
   <div id="drBody"></div>
 </aside>
@@ -1249,7 +1249,8 @@ function renderPulse(){
   const lead=L.pts-P2.pts;
   const card=$("#pulse");card.style.setProperty("--team",tc(L.team));
   const isChamp=champDecided();card.classList.toggle("is-champ",isChamp);
-  if(isChamp){card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label",`${L.first} ${L.last}, ${YEAR_NOW} World Champion. Activate to celebrate.`);card.title="Tap to celebrate"}
+  card.removeAttribute("role");card.removeAttribute("tabindex");card.removeAttribute("aria-label");
+  card.title=isChamp?"Tap to celebrate":"";
   card.innerHTML=`
     ${champDecided()?`<button type="button" class="champ-badge" data-champions>${TROPHY_SVG}<span>${YEAR_NOW} World Champion</span></button>`:'<div class="label">Championship leader</div>'}
     <div class="leader" style="--team:${tc(L.team)}">
@@ -1266,7 +1267,7 @@ function renderPulse(){
       <div class="recent">${RACES.slice(COMPLETED-5,COMPLETED).reverse().map(r=>`<div class="rw" style="--team:${tc(r.winTeam)}"><span class="mono">${r.short}</span><b>${r.win}</b></div>`).join("")}</div></div>
     <div><div class="label" style="margin-bottom:8px">Wins this season</div>
       <div class="winbar">${Object.entries(wins).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`<i style="flex:${n};--team:${tc(byCode[c].team)}" title="${c}: ${n}"><span>${c} ${n}</span></i>`).join("")}</div></div>
-    <div class="fresh">Standings through Round ${COMPLETED}, ${esc(RACES[COMPLETED-1].name)}.${champDecided()?' <span class="tap-hint">🏁 Tap the card to celebrate</span>':""}</div>`;
+    <div class="fresh">Standings through Round ${COMPLETED}, ${esc(RACES[COMPLETED-1].name)}.${champDecided()?' <button type="button" class="tap-hint" data-celebrate>🏁 Tap the card to celebrate</button>':""}</div>`;
 }
 
 /* ================= TITLE MATHS ================= */
@@ -1310,7 +1311,7 @@ function openChampions(from){
     <div class="label dr-h">Every champion</div>
     ${Object.keys(decades).sort((a,b)=>b-a).map(k=>`<div class="ch-dec"><div class="ch-dk">${k}s</div>${decades[k].slice().reverse().map(c=>`<div class="ch-row${c[0]===YEAR_NOW?" now":""}"><span class="mono">${c[0]}</span>${FLAG(c[2],18)}<b>${esc(c[1])}</b><span class="ch-team">${esc(c[3])}</span></div>`).join("")}</div>`).join("")}
     <p class="note" style="margin-top:14px">${Object.keys(counts).length} different drivers have won the title. Most titles by a team: ${Object.entries(teams).sort((a,b)=>b[1]-a[1])[0].map(String).join(", ")}.</p>`;
-  drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");$("#scrim").classList.add("open");$("#drClose").focus();
+  drawer.classList.add("open");drawer.inert=false;$("#scrim").classList.add("open");$("#drClose").focus();
 }
 document.addEventListener("click",e=>{const b=e.target.closest("#champBtn,[data-champions]");if(b)openChampions(b)});
 
@@ -1359,7 +1360,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-champions],a,button"))return;
   celebrate(e.clientX,e.clientY);
 });
-document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.id==="pulse"&&e.target.classList.contains("is-champ")){e.preventDefault();const r=e.target.getBoundingClientRect();celebrate(r.left+r.width/2,r.top+r.height/2)}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-celebrate]");if(!b)return;const r=b.getBoundingClientRect();celebrate(e.clientX||r.left+r.width/2,e.clientY||r.top+r.height/2)});
 function clinchSentence(){
   const left=TOTAL-COMPLETED;const L=DRIVERS[0];const rivals=contenders();
   if(!rivals.length){const cr=clinchRound();return `<b>${esc(L.first)} ${esc(L.last)}</b> is the ${YEAR_NOW} world champion${cr?`, sealed at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}`:""}. At 20, he is the youngest champion in Formula 1 history. <button type="button" class="linkish" data-champions>See every champion since 1950 ›</button>`}
@@ -1452,7 +1453,7 @@ function openDriver(code,from){
       <div class="al" style="--team:${tc(d.team)}"><span class="c">${d.code}</span><div class="rng"><div class="now" style="width:${d.pts/Math.max(d.pts,teammate.pts,1)*100}%"></div></div><span class="mono">${d.pts}</span></div>
       <div class="al" style="--team:${tc(d.team)};margin-top:6px;opacity:.7"><span class="c">${teammate.code}</span><div class="rng"><div class="now" style="width:${teammate.pts/Math.max(d.pts,teammate.pts,1)*100}%"></div></div><span class="mono">${teammate.pts}</span></div>`:""}
     <p class="note" style="margin-top:18px">${i===0?"Leads the championship.":`${DRIVERS[0].pts-d.pts} points behind the leader. ${d.pts+(TOTAL-COMPLETED)*25>=DRIVERS[0].pts?"Still mathematically in the title fight.":"Out of the title fight on points."}`}</p>`;
-  drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");$("#scrim").classList.add("open");
+  drawer.classList.add("open");drawer.inert=false;$("#scrim").classList.add("open");
   $("#drClose").focus();
 }
 
@@ -1461,7 +1462,7 @@ const fmtRaceTime=s=>{if(s==null)return "";const h=Math.floor(s/3600),m=Math.flo
 async function openSessionResults(sk,from){
   lastFocus=from||null;
   const drawer=$("#drawer");$("#drBody").innerHTML='<p class="note" style="margin-top:40px">Loading results…</p>';
-  drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");drawer.setAttribute("aria-label","Session results");$("#scrim").classList.add("open");$("#drClose").focus();
+  drawer.classList.add("open");drawer.inert=false;drawer.setAttribute("aria-label","Session results");$("#scrim").classList.add("open");$("#drClose").focus();
   let d;try{await rcLoadIndex();d=await rcLoad(sk)}catch(e){$("#drBody").innerHTML='<p class="note" style="margin-top:40px">These results couldn\'t load. Check your connection and try again.</p>';return}
   const meta=(RCX.idx||[]).find(x=>x.sk==sk)||{};const R=meta.round||{};
   const isQ=/Qualifying/.test(d.type),isRace=!d.timed,sq=d.type==="Sprint Qualifying"?"SQ":"Q";
@@ -1482,7 +1483,7 @@ async function openSessionResults(sk,from){
 }
 document.addEventListener("click",e=>{const b=e.target.closest("#sessions [data-sess]");if(!b)return;openSessionResults(+b.dataset.sess,b)});
 document.addEventListener("click",e=>{if(e.target.closest("#drBody [data-replay]"))closeDriver()});
-function closeDriver(){$("#drawer").classList.remove("open");$("#drawer").setAttribute("aria-hidden","true");$("#scrim").classList.remove("open");if(lastFocus)lastFocus.focus()}
+function closeDriver(){$("#drawer").classList.remove("open");$("#drawer").inert=true;$("#scrim").classList.remove("open");if(lastFocus)lastFocus.focus()}
 $("#drClose").onclick=closeDriver;$("#scrim").onclick=closeDriver;
 addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer").classList.contains("open"))closeDriver()});
 
