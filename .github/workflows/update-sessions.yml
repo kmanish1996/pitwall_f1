@@ -34,9 +34,10 @@ jobs:
       - name: Fetch finished sessions from OpenF1
         run: python3 scripts/update_sessions.py
 
-      - name: Rebuild search pages if there is new data
+      - name: Update standings, winners and search pages if there is new data
         run: |
           if [ -n "$(git status --porcelain data)" ]; then
+            python3 scripts/update_standings.py
             python3 scripts/build_pages.py
           fi
 
@@ -48,6 +49,6 @@ jobs:
           fi
           git config user.name "pitwall-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data races drivers teams formula-1-standings-2026 f1-calendar-2026 sitemap.xml
-          git commit -m "Add replay data and pages for newly finished sessions"
+          git add -A data index.html races drivers teams formula-1-standings-2026 f1-calendar-2026 formula-1-world-champions sitemap.xml
+          git commit -m "Add newly finished sessions: replays, standings and pages"
           git push

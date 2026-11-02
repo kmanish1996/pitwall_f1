@@ -37,7 +37,7 @@ def app_data():
     js = r"""
 const fs=require('fs'),vm=require('vm');const h=fs.readFileSync(process.argv[1],'utf8');
 const a=h.indexOf('const TEAMS={'),b=h.indexOf('const POINTS=');const c={};vm.createContext(c);
-vm.runInContext(h.slice(a,b)+';this.o={TEAMS,DRIVERS,CONSTRUCTORS,PER_RACE,RACES,SPRINT_WIN,LAP_RECORD,LONG_NAMES,COMPLETED,TOTAL,SESSIONS};',c);
+vm.runInContext(h.slice(a,b)+';this.o={TEAMS,DRIVERS,CONSTRUCTORS,PER_RACE,RACES,SPRINT_WIN,LAP_RECORD,LONG_NAMES,COMPLETED,TOTAL,SESSIONS,CHAMPIONS:typeof CHAMPIONS!=="undefined"?CHAMPIONS:[]};',c);
 process.stdout.write(JSON.stringify(c.o));"""
     out = subprocess.run(["node", "-e", js, os.path.join(ROOT, "index.html")], capture_output=True, text=True, check=True).stdout
     return json.loads(out)
@@ -134,7 +134,7 @@ def page(path, title, desc, body, crumbs, ld=None):
 <body>
 <header class="top"><div class="w">
 <a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
-<nav class="main" aria-label="Main"><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/#race-centre">Race centre</a></nav>
+<nav class="main" aria-label="Main"><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/#race-centre">Race centre</a></nav>
 </div></header>
 <main class="w">
 <div class="crumbs">{crumb_html}</div>
@@ -142,7 +142,7 @@ def page(path, title, desc, body, crumbs, ld=None):
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<nav aria-label="Site"><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
 <p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
 </div></footer>
 </body>
@@ -198,6 +198,8 @@ def main():
             if r[1] == num.get(code): return r[4] or r[0]
         return None
     leader, second = D[0], D[1]
+    CHL = (A.get("CHAMPIONS") or [[0, ""]])[-1]
+    champ_now = CHL[0] == YEAR and CHL[1] == f"{leader['first']} {leader['last']}"
     left = (total - done) * 25
     pages = []
 
@@ -206,7 +208,7 @@ def main():
     trows = "".join(f'<tr style="--team:{tc(t)}"><td class="pos">{i+1}</td><td><span class="sw"></span>{team_link(t)}</td><td>{", ".join(drv(d["code"]) for d in D if d["team"] == t)}</td><td class="n">{p}</td></tr>' for i, (t, p) in enumerate(C))
     body = f"""<h1>Formula 1 standings {YEAR}</h1>
 <p class="sub">Drivers' and constructors' championships after round {done} of {total}, the {e(gp_long(RACES[done-1]))}.</p>
-<p class="lead">{drv(leader["code"])} leads the {YEAR} drivers' championship with {leader["pts"]} points, {leader["pts"]-second["pts"]} ahead of {drv(second["code"])}. With {total-done} races left, {left} points are still available. {team_link(C[0][0])} lead the constructors' championship on {C[0][1]} points.</p>
+<p class="lead">{drv(leader["code"])} {"is the " + str(YEAR) + " Formula 1 World Champion. He has" if champ_now else "leads the " + str(YEAR) + " drivers' championship with"} {leader["pts"]} points, {leader["pts"]-second["pts"]} more than {drv(second["code"])}. With {total-done} races left, {left} points are still available. {team_link(C[0][0])} lead the constructors' championship on {C[0][1]} points.</p>
 <h2>Drivers' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Nationality</th><th>Team</th><th class="n">Wins</th><th class="n">Points</th><th class="n">Gap</th></tr></thead><tbody>{rows}</tbody></table></div>
 <h2>Constructors' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{trows}</tbody></table></div>
 <p class="note" style="margin-top:16px">Want the title maths? <a href="/#title-fight">See who can still win the {YEAR} championship</a>, or <a href="/#replay">replay the season round by round</a>.</p>"""
@@ -301,7 +303,7 @@ def main():
             f = finish(r["rd"], code); q = finish(r["rd"], code, "Qualifying")
             pts = A["PER_RACE"].get(code, [None] * done)[r["rd"] - 1] if code in A["PER_RACE"] else None
             rows.append(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td class="n">{q if q is not None else "–"}</td><td class="n">{f if f is not None else "–"}</td><td class="n">{"" if pts is None else pts}</td></tr>')
-        lead = (f'{e(full)} drives car number {d["no"]} for {team_link(d["team"])} in the {YEAR} Formula 1 season. '
+        lead = ((f'{e(full)} is the {YEAR} Formula 1 World Champion. ' if champ_now and pos == 1 else "") + f'{e(full)} drives car number {d["no"]} for {team_link(d["team"])} in the {YEAR} Formula 1 season. '
                 f'After round {done}, {e(d["first"])} is P{pos} in the drivers\' championship with {d["pts"]} points'
                 + (f', {wins[code]} Grand Prix win{"s" if wins[code] > 1 else ""}' if wins.get(code) else "")
                 + (f' and {swins[code]} sprint win{"s" if swins[code] > 1 else ""}' if swins.get(code) else "") + ".")
@@ -349,6 +351,26 @@ def main():
                       f"All {len(C)} Formula 1 teams in {YEAR}, with their drivers and constructors' championship points.",
                       f'<h1>F1 teams {YEAR}</h1><p class="sub">Every team on the {YEAR} grid, in constructors\' championship order.</p><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{rows}</tbody></table></div>',
                       [("Teams", "/teams/")]))
+
+    # ---------- world champions ----------
+    CH = A.get("CHAMPIONS") or []
+    if CH:
+        counts = {}
+        for c in CH: counts[c[1]] = counts.get(c[1], 0) + 1
+        most = sorted(counts.items(), key=lambda x: -x[1])[:6]
+        latest = CH[-1]
+        name2code = {f"{d['first']} {d['last']}": d["code"] for d in D}
+        trs = "".join(f'<tr><td class="pos">{c[0]}</td><td>{drv(name2code[c[1]]) if c[1] in name2code else e(c[1])}</td><td>{e(c[3])}</td></tr>' for c in reversed(CH))
+        body = f"""<h1>Formula 1 world champions</h1>
+<p class="sub">Every World Drivers' Champion from 1950 to {latest[0]}.</p>
+<p class="lead">{e(latest[1])} is the {latest[0]} Formula 1 World Champion with {e(latest[3])}. {len(counts)} different drivers have won the title since the first championship in 1950. The most successful are {", ".join(f"{e(n)} ({k})" for n, k in most[:4])}.</p>
+<h2>Most titles</h2><div class="tbl"><table><thead><tr><th>Driver</th><th class="n">Titles</th><th>Seasons</th></tr></thead><tbody>{"".join(f'<tr><td>{e(n)}</td><td class="n">{k}</td><td>{", ".join(str(c[0]) for c in CH if c[1] == n)}</td></tr>' for n, k in most)}</tbody></table></div>
+<h2>Every champion</h2><div class="tbl"><table><thead><tr><th>Year</th><th>Driver</th><th>Team</th></tr></thead><tbody>{trs}</tbody></table></div>"""
+        pages.append(page("/formula-1-world-champions/", f"Formula 1 world champions: every F1 champion since 1950 | {BRAND}",
+                          f"Every Formula 1 World Drivers' Champion from 1950 to {latest[0]}, including {latest[1]} in {latest[0]}. Most titles, teams and seasons.",
+                          body, [("World champions", "/formula-1-world-champions/")],
+                          {"@context": "https://schema.org", "@type": "ItemList", "name": "Formula 1 World Drivers' Champions",
+                           "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": f"{c[0]}: {c[1]}"} for i, c in enumerate(reversed(CH))]}))
 
     # ---------- sitemap ----------
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")

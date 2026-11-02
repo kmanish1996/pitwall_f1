@@ -51,7 +51,9 @@ python3 scripts/update_sessions.py --only 11404  # add specific session keys
 python3 scripts/build_pages.py   # needs Node.js to read the data in index.html
 ```
 
-Standings, results and the calendar's winners are still edited by hand in `index.html`.
+## Standings
+
+`scripts/update_standings.py` recalculates the championship from the race and sprint results in `data/` (points per round, driver and constructor totals, race and sprint winners, race times and fastest laps) and writes them into `index.html`. The workflow runs it after each new session, so standings, the calendar's winners and the title maths update automatically. The world champions list (`CHAMPIONS` in `index.html`) is edited by hand once a title is decided.
 
 ## Disclaimer
 

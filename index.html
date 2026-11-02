@@ -462,6 +462,8 @@ button.t-row:hover{background:color-mix(in srgb,var(--team) 12%,var(--panel))}
 .res-row span:not(.res-lab){font-size:12px;color:var(--muted)}
 .res-lab{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11px;color:var(--fg);border-left:3px solid var(--red);padding-left:6px;line-height:1.2}
 .res-lab.spr{border-left-color:var(--amber);color:var(--amber)}
+.fl-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);padding-left:2px}
+.fl-row b{color:var(--purple);font-weight:700}
 .res-row+.res-row{border-top:1px dashed var(--line);padding-top:8px}
 
 /* race centre */
@@ -628,6 +630,33 @@ mark.ph{background:color-mix(in srgb,var(--amber) 22%,transparent);color:var(--a
 .ig-ic{flex:none;color:var(--red)}
 .lg-body .ct-ig .ig{font-weight:400;color:var(--fg)}
 .lg-body .ct-ig .ig:hover{text-decoration:none}
+
+.champ-btn{display:inline-flex;align-items:center;gap:7px;background:none;border:1px solid color-mix(in srgb,#D4AF37 55%,transparent);color:#E9C46A;border-radius:3px;padding:6px 10px;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px;transition:background .2s,transform .2s}
+.champ-btn:hover{background:color-mix(in srgb,#D4AF37 14%,transparent);transform:translateY(-1px)}
+.champ-btn .troph{width:18px;height:18px}
+@media (max-width:640px){.champ-btn span{display:none}.champ-btn{padding:6px 8px}}
+.troph{width:22px;height:22px;color:#E9C46A;flex:none;filter:drop-shadow(0 0 6px rgba(233,196,106,.35))}
+.champ-badge{display:inline-flex;align-items:center;gap:8px;width:max-content;background:linear-gradient(110deg,rgba(212,175,55,.22),rgba(212,175,55,.06));border:1px solid rgba(212,175,55,.6);color:#E9C46A;border-radius:3px;padding:5px 10px 5px 8px;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px;cursor:pointer}
+.champ-badge:hover{background:rgba(212,175,55,.28)}
+.linkish{background:none;border:0;padding:0;color:#E9C46A;font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.ch-hero{display:flex;gap:14px;align-items:center;margin:8px 0 14px}.ch-hero .troph{width:48px;height:48px}
+.ch-hero h3{font-size:40px;font-weight:900;font-style:italic}
+.ch-new{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:12px;border-radius:4px;background:linear-gradient(120deg,color-mix(in srgb,var(--team) 30%,var(--panel-2)),var(--panel-2) 70%);border:1px solid rgba(212,175,55,.5)}
+.ch-new b{display:block;font-family:var(--f-display);font-weight:900;font-style:italic;font-size:26px;text-transform:uppercase}
+.ch-new span{font-size:13px;color:color-mix(in srgb,var(--fg) 85%,var(--muted))}
+.ch-top{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.ch-t{display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center;background:var(--panel-2);border-radius:3px;padding:7px 10px}
+.ch-t b{font-size:22px;color:#E9C46A}.ch-t span{font-weight:600;font-size:13px;min-width:0}.ch-t small{display:block;color:var(--muted);font-weight:400;font-size:11px;white-space:normal}
+.ch-dec{display:grid;gap:2px;margin-bottom:10px}
+.ch-dk{font-family:var(--f-display);font-weight:900;font-style:italic;font-size:20px;color:var(--muted);margin:6px 0 2px}
+.ch-row{display:grid;grid-template-columns:42px 22px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:13.5px;padding:5px 6px;border-radius:2px}
+.ch-row:nth-child(even){background:var(--panel-2)}
+.ch-row b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ch-team{color:var(--muted);font-size:12px;white-space:nowrap}
+.ch-row.now{background:linear-gradient(90deg,rgba(212,175,55,.22),transparent);outline:1px solid rgba(212,175,55,.5)}
+.ch-card{display:grid;gap:8px;justify-items:start;text-align:left;padding:6px 0}
+.ch-card .troph{width:56px;height:56px}
+.ch-card h3{font-size:clamp(30px,5vw,44px);font-weight:900;font-style:italic;line-height:1}
+.ch-card p{margin:0}
 footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
@@ -639,6 +668,7 @@ footer a{color:var(--muted)}
 <header class="strip">
   <div class="strip-in">
     <a class="brand" href="./" aria-label="Pit Wall home"><i aria-hidden="true"></i><span class="brand-txt"><span class="brand-name">Pit Wall <b>26</b></span><span class="brand-tag">The unofficial Formula 1 fan hub</span></span></a>
+    <button type="button" class="champ-btn" id="champBtn" aria-label="Formula 1 world champions since 1950"><svg class="troph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v1.5A4.5 4.5 0 0 1 16.9 12 5.5 5.5 0 0 1 13 15.4V18h3v3H8v-3h3v-2.6A5.5 5.5 0 0 1 7.1 12 4.5 4.5 0 0 1 3 7.5V6a1 1 0 0 1 1-1h3V3Zm10 4v3.2A2.5 2.5 0 0 0 19 7.6V7h-2ZM5 7v.6A2.5 2.5 0 0 0 7 10.2V7H5Z" fill="currentColor"/></svg><span>Champions</span></button>
     <nav class="tabs" aria-label="Sections">
       <a href="#standings">Standings</a>
       <a href="#race-centre">Race centre</a>
@@ -689,7 +719,7 @@ footer a{color:var(--muted)}
   <!-- STANDINGS -->
   <section class="panel" id="p-standings">
     <div class="p-head">
-      <div><div class="label">After round 18 of 23</div><h2>Championship</h2></div>
+      <div><div class="label" id="stAfter">After round 18 of 23</div><h2>Championship</h2></div>
       <div class="controls">
         <div class="seg" role="group" aria-label="Championship">
           <button type="button" id="segDrivers" aria-pressed="true">Drivers</button>
@@ -723,7 +753,7 @@ footer a{color:var(--muted)}
       <div class="scrub">
         <span class="label">R0</span>
         <input type="range" id="rpRange" min="0" max="18" value="18" aria-label="Round">
-        <span class="label">R18</span>
+        <span class="label" id="rpLast">R18</span>
       </div>
       <div class="ticks" id="rpTicks"></div>
     </div>
@@ -757,13 +787,13 @@ footer a{color:var(--muted)}
     </div>
     <div class="tf">
       <div class="box">
-        <h3 style="font-size:22px;font-weight:800">Who can still win it?</h3>
+        <h3 style="font-size:22px;font-weight:800" id="aliveH">Who can still win it?</h3>
         <p class="note" id="aliveNote"></p>
         <div class="alive" id="alive"></div>
       </div>
       <div class="box">
-        <h3 style="font-size:22px;font-weight:800">Mexico City: can Antonelli clinch?</h3>
-        <p class="note">Pick finishing positions for Sunday and see the standings after Round 19.</p>
+        <h3 style="font-size:22px;font-weight:800" id="tfH">Mexico City: can Antonelli clinch?</h3>
+        <p class="note" id="tfNote">Pick finishing positions for Sunday and see the standings after Round 19.</p>
         <div class="picks" id="picks"></div>
         <div class="verdict" id="verdict" aria-live="polite"></div>
         <table class="pts-table" id="afterTable"></table>
@@ -909,10 +939,10 @@ footer a{color:var(--muted)}
   </section>
 
   <footer>
-    <span id="dataStamp">Standings and results through Round 18, United States GP (25 Oct 2026). Sources: formula1.com, formula1points.com.</span>
+    <span id="dataStamp">Standings and results through Round 18, United States GP. Sources: OpenF1, formula1.com.</span>
     <span>Countdowns and session status update live in your browser.</span>
   </footer>
-  <div class="site-foot" id="siteFoot"><nav class="lg-links" aria-label="Explore"><a href="/formula-1-standings-2026/">2026 standings</a> <a href="/f1-calendar-2026/">2026 calendar</a> <a href="/drivers/">Drivers</a> <a href="/teams/">Teams</a></nav></div>
+  <div class="site-foot" id="siteFoot"><nav class="lg-links" aria-label="Explore"><a href="/formula-1-standings-2026/">2026 standings</a> <a href="/f1-calendar-2026/">2026 calendar</a> <a href="/drivers/">Drivers</a> <a href="/teams/">Teams</a> <a href="/formula-1-world-champions/">World champions</a></nav></div>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -940,18 +970,18 @@ const TEAMS={
 };
 // code, first, last, number, nationality, team, points
 const DRIVERS=[
- ["ANT","Kimi","Antonelli",12,"ITA","Mercedes",365],
- ["RUS","George","Russell",63,"GBR","Mercedes",242],
- ["HAM","Lewis","Hamilton",44,"GBR","Ferrari",241],
- ["VER","Max","Verstappen",3,"NED","Red Bull Racing",236],
- ["LEC","Charles","Leclerc",16,"MON","Ferrari",233],
- ["NOR","Lando","Norris",1,"GBR","McLaren",211],
- ["PIA","Oscar","Piastri",81,"AUS","McLaren",144],
+ ["ANT","Kimi","Antonelli",12,"ITA","Mercedes",380],
+ ["VER","Max","Verstappen",3,"NED","Red Bull Racing",261],
+ ["HAM","Lewis","Hamilton",44,"GBR","Ferrari",259],
+ ["RUS","George","Russell",63,"GBR","Mercedes",250],
+ ["LEC","Charles","Leclerc",16,"MON","Ferrari",245],
+ ["NOR","Lando","Norris",1,"GBR","McLaren",221],
+ ["PIA","Oscar","Piastri",81,"AUS","McLaren",150],
  ["HAD","Isack","Hadjar",6,"FRA","Red Bull Racing",105],
- ["LAW","Liam","Lawson",30,"NZL","Racing Bulls",77],
- ["GAS","Pierre","Gasly",10,"FRA","Alpine",42],
+ ["LAW","Liam","Lawson",30,"NZL","Racing Bulls",79],
+ ["GAS","Pierre","Gasly",10,"FRA","Alpine",43],
  ["LIN","Arvid","Lindblad",41,"GBR","Racing Bulls",38],
- ["COL","Franco","Colapinto",43,"ARG","Alpine",27],
+ ["COL","Franco","Colapinto",43,"ARG","Alpine",31],
  ["BEA","Oliver","Bearman",87,"GBR","Haas F1 Team",23],
  ["HUL","Nico","Hülkenberg",27,"GER","Audi",13],
  ["BOR","Gabriel","Bortoleto",5,"BRA","Audi",10],
@@ -965,20 +995,33 @@ const DRIVERS=[
  ["PER","Sergio","Pérez",11,"MEX","Cadillac",0]
 ].map(d=>({code:d[0],first:d[1],last:d[2],no:d[3],nat:d[4],team:d[5],pts:d[6]}));
 
-const CONSTRUCTORS=[["Mercedes",607],["Ferrari",474],["Red Bull Racing",355],["McLaren",355],["Racing Bulls",102],["Alpine",69],["Haas F1 Team",30],["Audi",23],["Williams",12],["Aston Martin",7],["Cadillac",0]];
+const CONSTRUCTORS=[["Mercedes", 630], ["Ferrari", 504], ["McLaren", 371], ["Red Bull Racing", 366], ["Racing Bulls", 118], ["Alpine", 74], ["Haas F1 Team", 30], ["Audi", 23], ["Williams", 12], ["Aston Martin", 7], ["Cadillac", 0]];
 
 // points per round (sprint points included) for the current top 10
 const PER_RACE={
- ANT:[18,29,25,28,31,25,0,15,8,25,15,23,25,25,10,18,20,25],
- RUS:[25,26,12,17,8,0,18,25,23,0,6,23,18,10,25,0,2,4],
- HAM:[12,21,8,10,21,18,25,10,22,12,10,14,8,0,8,15,15,12],
- VER:[8,0,4,14,17,0,12,18,3,15,18,3,15,18,18,25,33,15],
- LEC:[15,19,15,10,16,0,0,4,29,18,12,17,0,12,12,12,24,18],
- NOR:[10,5,10,26,7,0,15,6,18,6,25,31,12,15,0,2,13,10],
- PIA:[0,3,18,22,5,12,10,12,2,10,0,12,10,4,0,8,10,6],
- HAD:[0,4,0,0,10,15,8,8,10,8,8,0,0,0,15,10,1,8],
- LAW:[0,8,2,0,6,10,4,2,9,0,4,6,0,8,0,6,10,2],
- GAS:[1,8,6,1,4,6,6,0,1,0,0,2,6,0,0,0,0,1]
+ ANT:[18, 29, 25, 28, 31, 25, 0, 15, 8, 25, 15, 23, 25, 25, 10, 18, 20, 25, 15],
+ VER:[8, 0, 4, 14, 17, 0, 12, 18, 3, 15, 18, 3, 15, 18, 18, 25, 33, 15, 25],
+ HAM:[12, 21, 8, 10, 21, 18, 25, 10, 22, 12, 10, 14, 8, 0, 8, 15, 15, 12, 18],
+ RUS:[25, 26, 12, 17, 8, 0, 18, 25, 23, 0, 6, 23, 18, 10, 25, 0, 2, 4, 8],
+ LEC:[15, 19, 15, 10, 16, 0, 0, 4, 29, 18, 12, 17, 0, 12, 12, 12, 24, 18, 12],
+ NOR:[10, 5, 10, 26, 7, 0, 15, 6, 18, 6, 25, 31, 12, 15, 0, 2, 13, 10, 10],
+ PIA:[0, 3, 18, 22, 5, 12, 10, 12, 2, 10, 0, 12, 10, 4, 0, 8, 10, 6, 6],
+ HAD:[0, 4, 0, 0, 10, 15, 8, 8, 10, 8, 8, 0, 0, 0, 15, 10, 1, 8, 0],
+ LAW:[0, 8, 2, 0, 6, 10, 4, 2, 9, 0, 4, 6, 0, 8, 0, 6, 10, 2, 2],
+ GAS:[1, 8, 6, 1, 4, 6, 6, 0, 1, 0, 0, 2, 6, 0, 0, 0, 0, 1, 1],
+ LIN:[4, 0, 0, 0, 1, 8, 2, 1, 6, 2, 1, 0, 4, 2, 6, 1, 0, 0, 0],
+ COL:[0, 1, 0, 6, 8, 0, 1, 0, 2, 1, 0, 0, 2, 6, 0, 0, 0, 0, 4],
+ BEA:[6, 11, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0],
+ HUL:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 6, 0, 0],
+ BOR:[2, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ OCO:[0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ ALO:[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0],
+ SAI:[0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+ ALB:[0, 0, 0, 1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ TSU:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+ STR:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ BOT:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ PER:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 };
 
 // round, name, short, circuit, place, dates label, sprint, raceUTC, winner code, winner team, race time
@@ -1008,7 +1051,7 @@ const RACES=[
  [23,"Abu Dhabi GP","ABU","Yas Marina Circuit","Abu Dhabi","4–6 Dec",0,"2026-12-06T13:00Z"]
 ].map(r=>({rd:r[0],name:r[1],short:r[2],circuit:r[3],place:r[4],dates:r[5],sprint:!!r[6],race:new Date(r[7]),win:r[8]||null,winTeam:r[9]||null,time:r[10]||null}));
 // Sprint winners (Saturday). Points: 8-7-6-5-4-3-2-1.
-const SPRINT_WIN={2:["RUS","Mercedes","Shanghai"],4:["NOR","McLaren","Miami"],5:["RUS","Mercedes","Montréal"],9:["ANT","Mercedes","Silverstone"],12:["RUS","Mercedes","Zandvoort"],17:["VER","Red Bull Racing","Marina Bay"]};
+const SPRINT_WIN={"2": ["RUS", "Mercedes", "Shanghai"], "4": ["NOR", "McLaren", "Miami Gardens"], "5": ["RUS", "Mercedes", "Montréal"], "9": ["ANT", "Mercedes", "Silverstone"], "12": ["RUS", "Mercedes", "Zandvoort"], "17": ["VER", "Red Bull Racing", "Marina Bay"]};
 Object.values(SPRINT_WIN).forEach(v=>v[2]="Sprint winner");
 const REPLAY={"1":{"r":11234},"2":{"s":11240,"r":11245},"3":{"r":11253},"4":{"s":11275,"r":11280},"5":{"s":11286,"r":11291},"6":{"r":11299},"7":{"r":11307},"8":{"r":11315},"9":{"s":11321,"r":11326},"10":{"r":11334},"11":{"r":11342},"12":{"s":11348,"r":11353},"13":{"r":11361},"14":{"r":11369},"15":{"r":11377},"16":{"r":11731},"17":{"s":11383,"r":11388},"18":{"r":11396}};
 // Official race lap records: fastest lap set during a Grand Prix (lightsoutblog.com, updated 13 Sep 2026; checked against 2026 race laps to Austin)
@@ -1019,8 +1062,17 @@ function sessionsFor(rd){
   if(SESSIONS_BY_RD)return SESSIONS_BY_RD[rd]||[];
   const r=REPLAY[rd]||{};return [r.s&&{sk:r.s,type:"Sprint"},r.r&&{sk:r.r,type:"Race"}].filter(Boolean);
 }
+// race results calculated from session data by scripts/update_standings.py: {round:[winner, team, race time, fastest lap (s), fastest lap by]}
+const RACE_RESULTS={"1": ["RUS", "Mercedes", "1:23:06.801", 82.091, "VER"], "2": ["ANT", "Mercedes", "1:33:15.607", 95.275, "ANT"], "3": ["ANT", "Mercedes", "1:28:03.403", 92.432, "ANT"], "4": ["ANT", "Mercedes", "1:33:19.273", 91.869, "NOR"], "5": ["ANT", "Mercedes", "1:28:15.758", 74.21, "ANT"], "6": ["ANT", "Mercedes", "2:23:31.243", 73.481, "ANT"], "7": ["HAM", "Ferrari", "1:32:28.105", 80.122, "HAM"], "8": ["RUS", "Mercedes", "1:26:37.979", 70.374, "ANT"], "9": ["LEC", "Ferrari", "1:27:11.335", 91.777, "ANT"], "10": ["ANT", "Mercedes", "1:24:42.479", 108.89, "NOR"], "11": ["NOR", "McLaren", "1:39:56.180", 82.0, "LEC"], "12": ["NOR", "McLaren", "2:04:44.859", 74.23, "LEC"], "13": ["ANT", "Mercedes", "1:51:15.281", 83.504, "ANT"], "14": ["ANT", "Mercedes", "1:34:23.754", 95.587, "RUS"], "15": ["RUS", "Mercedes", "1:38:02.143", 104.916, "RUS"], "16": ["VER", "Red Bull Racing", "1:47:14.808", 98.22, "VER"], "17": ["VER", "Red Bull Racing", "1:42:00.785", 95.202, "LEC"], "18": ["ANT", "Mercedes", "1:35:16.650", 97.976, "LEC"], "19": ["VER", "Red Bull Racing", "2:20:28.772", 79.268, "HAM"]};
+RACES.forEach(r=>{const x=RACE_RESULTS[r.rd];if(!x)return;r.win=x[0];r.winTeam=x[1];r.time=x[2];r.fl=x[3];r.flBy=x[4];
+  const L=LAP_RECORD[r.rd],d=DRIVERS.find(z=>z.code===x[4]);
+  if(x[3]&&d&&(!L||x[3]<lapSecs(L[0])-1e-6))LAP_RECORD[r.rd]=[fmtLapRec(x[3]),`${d.first} ${d.last}`,TEAMS[d.team]?TEAMS[d.team].short:d.team,2026,(TEAMS[d.team]||{c:"#888"}).c]});
+function lapSecs(s){const p=String(s).split(":");return p.length>1?+p[0]*60+ +p[1]:+p[0]}
+function fmtLapRec(v){const m=Math.floor(v/60);return `${m}:${(v-m*60).toFixed(3).padStart(6,"0")}`}
+// World Drivers' Champions, 1950 onwards: [year, driver, flag code, team]
+const CHAMPIONS=[[1950, "Nino Farina", "it", "Alfa Romeo"], [1951, "Juan Manuel Fangio", "ar", "Alfa Romeo"], [1952, "Alberto Ascari", "it", "Ferrari"], [1953, "Alberto Ascari", "it", "Ferrari"], [1954, "Juan Manuel Fangio", "ar", "Maserati / Mercedes"], [1955, "Juan Manuel Fangio", "ar", "Mercedes"], [1956, "Juan Manuel Fangio", "ar", "Ferrari"], [1957, "Juan Manuel Fangio", "ar", "Maserati"], [1958, "Mike Hawthorn", "gb", "Ferrari"], [1959, "Jack Brabham", "au", "Cooper"], [1960, "Jack Brabham", "au", "Cooper"], [1961, "Phil Hill", "us", "Ferrari"], [1962, "Graham Hill", "gb", "BRM"], [1963, "Jim Clark", "gb", "Lotus"], [1964, "John Surtees", "gb", "Ferrari"], [1965, "Jim Clark", "gb", "Lotus"], [1966, "Jack Brabham", "au", "Brabham"], [1967, "Denny Hulme", "nz", "Brabham"], [1968, "Graham Hill", "gb", "Lotus"], [1969, "Jackie Stewart", "gb", "Matra"], [1970, "Jochen Rindt", "at", "Lotus"], [1971, "Jackie Stewart", "gb", "Tyrrell"], [1972, "Emerson Fittipaldi", "br", "Lotus"], [1973, "Jackie Stewart", "gb", "Tyrrell"], [1974, "Emerson Fittipaldi", "br", "McLaren"], [1975, "Niki Lauda", "at", "Ferrari"], [1976, "James Hunt", "gb", "McLaren"], [1977, "Niki Lauda", "at", "Ferrari"], [1978, "Mario Andretti", "us", "Lotus"], [1979, "Jody Scheckter", "za", "Ferrari"], [1980, "Alan Jones", "au", "Williams"], [1981, "Nelson Piquet", "br", "Brabham"], [1982, "Keke Rosberg", "fi", "Williams"], [1983, "Nelson Piquet", "br", "Brabham"], [1984, "Niki Lauda", "at", "McLaren"], [1985, "Alain Prost", "fr", "McLaren"], [1986, "Alain Prost", "fr", "McLaren"], [1987, "Nelson Piquet", "br", "Williams"], [1988, "Ayrton Senna", "br", "McLaren"], [1989, "Alain Prost", "fr", "McLaren"], [1990, "Ayrton Senna", "br", "McLaren"], [1991, "Ayrton Senna", "br", "McLaren"], [1992, "Nigel Mansell", "gb", "Williams"], [1993, "Alain Prost", "fr", "Williams"], [1994, "Michael Schumacher", "de", "Benetton"], [1995, "Michael Schumacher", "de", "Benetton"], [1996, "Damon Hill", "gb", "Williams"], [1997, "Jacques Villeneuve", "ca", "Williams"], [1998, "Mika Häkkinen", "fi", "McLaren"], [1999, "Mika Häkkinen", "fi", "McLaren"], [2000, "Michael Schumacher", "de", "Ferrari"], [2001, "Michael Schumacher", "de", "Ferrari"], [2002, "Michael Schumacher", "de", "Ferrari"], [2003, "Michael Schumacher", "de", "Ferrari"], [2004, "Michael Schumacher", "de", "Ferrari"], [2005, "Fernando Alonso", "es", "Renault"], [2006, "Fernando Alonso", "es", "Renault"], [2007, "Kimi Räikkönen", "fi", "Ferrari"], [2008, "Lewis Hamilton", "gb", "McLaren"], [2009, "Jenson Button", "gb", "Brawn"], [2010, "Sebastian Vettel", "de", "Red Bull"], [2011, "Sebastian Vettel", "de", "Red Bull"], [2012, "Sebastian Vettel", "de", "Red Bull"], [2013, "Sebastian Vettel", "de", "Red Bull"], [2014, "Lewis Hamilton", "gb", "Mercedes"], [2015, "Lewis Hamilton", "gb", "Mercedes"], [2016, "Nico Rosberg", "de", "Mercedes"], [2017, "Lewis Hamilton", "gb", "Mercedes"], [2018, "Lewis Hamilton", "gb", "Mercedes"], [2019, "Lewis Hamilton", "gb", "Mercedes"], [2020, "Lewis Hamilton", "gb", "Mercedes"], [2021, "Max Verstappen", "nl", "Red Bull"], [2022, "Max Verstappen", "nl", "Red Bull"], [2023, "Max Verstappen", "nl", "Red Bull"], [2024, "Max Verstappen", "nl", "Red Bull"], [2025, "Lando Norris", "gb", "McLaren"], [2026, "Kimi Antonelli", "it", "Mercedes"]];
 const LONG_NAMES={19:"Mexico City Grand Prix",20:"São Paulo Grand Prix",21:"Las Vegas Grand Prix",22:"Qatar Grand Prix",23:"Abu Dhabi Grand Prix"};
-const COMPLETED=18, TOTAL=23;
+const COMPLETED=19, TOTAL=23;
 
 // Weekend sessions. Mexico has the full timetable; later rounds list the race only.
 const SESSIONS=[
@@ -1077,6 +1129,7 @@ const FLAG=(()=>{
     bh:`<rect width="30" height="20" fill="#CE1126"/>`+serr(6,5,"#fff"),
     qa:`<rect width="30" height="20" fill="#8A1538"/>`+serr(8,9,"#fff"),
     ae:`<rect width="30" height="6.67" fill="#00732F"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#111"/><rect width="7.5" height="20" fill="#FF0000"/>`,
+    za:`<rect width="30" height="10" fill="#E03C31"/><rect y="10" width="30" height="10" fill="#001489"/><polygon points="0,-1 5,-1 14,7 31,7 31,13 14,13 5,21 0,21" fill="#fff"/><polygon points="0,1 3.5,1 12.5,8.3 31,8.3 31,11.7 12.5,11.7 3.5,19 0,19" fill="#007749"/><polygon points="0,3.5 8.5,10 0,16.5" fill="#FFB612"/><polygon points="0,5.2 6.3,10 0,14.8" fill="#000"/>`,
     sa:`<rect width="30" height="20" fill="#006C35"/><path d="M8,8.2q1.2-1.6 2.4,0t2.4,0t2.4,0t2.4,0t2.4,0t2.4,0" stroke="#fff" stroke-width=".9" fill="none"/><rect x="9" y="12.2" width="12" height=".8" rx=".4" fill="#fff"/><rect x="20.6" y="11.6" width="1" height="2" fill="#fff"/>`
   };
   return (code,w=24)=>D[code]?`<svg class="flag" viewBox="0 0 30 20" width="${w}" height="${w*2/3}" role="img" aria-label="${code.toUpperCase()} flag">${D[code]}</svg>`:"";
@@ -1178,7 +1231,7 @@ function renderPulse(){
   const lead=L.pts-P2.pts;
   const card=$("#pulse");card.style.setProperty("--team",tc(L.team));
   card.innerHTML=`
-    <div class="label">Championship leader</div>
+    ${champDecided()?`<button type="button" class="champ-badge" data-champions>${TROPHY_SVG}<span>${YEAR_NOW} World Champion</span></button>`:'<div class="label">Championship leader</div>'}
     <div class="leader" style="--team:${tc(L.team)}">
       ${helmet(L.team,L.no,72)}
       <div><h2>${esc(L.first)} ${esc(L.last)}</h2><div class="sub">${esc(L.team)} · ${wins[L.code]} wins from ${COMPLETED} races</div></div>
@@ -1209,9 +1262,40 @@ function isClinched(table,leaderCode,racesLeft,winsMap){
 }
 function baseTable(){return Object.fromEntries(DRIVERS.map(d=>[d.code,d.pts]))}
 function contenders(){const L=DRIVERS[0].pts;const left=TOTAL-COMPLETED;return DRIVERS.filter((d,i)=>i>0&&d.pts+left*25>=L)}
+
+/* ================= WORLD CHAMPIONS ================= */
+const YEAR_NOW=2026;
+const TROPHY_SVG=`<svg class="troph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v1.5A4.5 4.5 0 0 1 16.9 12 5.5 5.5 0 0 1 13 15.4V18h3v3H8v-3h3v-2.6A5.5 5.5 0 0 1 7.1 12 4.5 4.5 0 0 1 3 7.5V6a1 1 0 0 1 1-1h3V3Zm10 4v3.2A2.5 2.5 0 0 0 19 7.6V7h-2ZM5 7v.6A2.5 2.5 0 0 0 7 10.2V7H5Z" fill="currentColor"/></svg>`;
+function champDecided(){return contenders().length===0}
+function clinchRound(){ // first round after which the leader could no longer be caught
+  const L=DRIVERS[0].code;const cum={};
+  for(let k=1;k<=COMPLETED;k++){DRIVERS.forEach(d=>{cum[d.code]=(cum[d.code]||0)+((PER_RACE[d.code]||[])[k-1]||0)});
+    const left=(TOTAL-k)*25;if(DRIVERS.every(d=>d.code===L||cum[d.code]+left<cum[L]))return k}
+  return null;
+}
+function openChampions(from){
+  lastFocus=from||null;
+  const counts={};CHAMPIONS.forEach(c=>counts[c[1]]=(counts[c[1]]||0)+1);
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]||0).slice(0,8);
+  const yrs=n=>CHAMPIONS.filter(c=>c[1]===n).map(c=>c[0]);
+  const teams={};CHAMPIONS.forEach(c=>c[3].split(" / ").forEach(t=>teams[t]=(teams[t]||0)+1));
+  const latest=CHAMPIONS[CHAMPIONS.length-1];const cr=clinchRound();const ld=DRIVERS[0];
+  const decades={};CHAMPIONS.forEach(c=>{const k=Math.floor(c[0]/10)*10;(decades[k]=decades[k]||[]).push(c)});
+  const drawer=$("#drawer");drawer.style.setProperty("--team","#D4AF37");drawer.setAttribute("aria-label","Formula 1 world champions");
+  $("#drBody").innerHTML=`<div class="ch-hero">${TROPHY_SVG}<div><div class="label">Formula 1 World Drivers' Champions</div><h3>1950–${latest[0]}</h3></div></div>
+    ${champDecided()&&latest[0]===YEAR_NOW?`<div class="ch-new" style="--team:${tc(ld.team)}">${helmet(ld.team,ld.no,56)}<div><div class="label">${YEAR_NOW} champion</div><b>${esc(latest[1])}</b>
+      <span>${esc(ld.team)} · ${ld.pts} points · ${wins[ld.code]||0} wins${cr?` · clinched at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}`:""}. The youngest world champion in the sport's history, at 20.</span></div></div>`:""}
+    <div class="label dr-h">Most titles</div>
+    <div class="ch-top">${top.map(([n,k])=>`<div class="ch-t"><b class="mono">${k}</b><span>${esc(n)}<small>${yrs(n).join(", ")}</small></span></div>`).join("")}</div>
+    <div class="label dr-h">Every champion</div>
+    ${Object.keys(decades).sort((a,b)=>b-a).map(k=>`<div class="ch-dec"><div class="ch-dk">${k}s</div>${decades[k].slice().reverse().map(c=>`<div class="ch-row${c[0]===YEAR_NOW?" now":""}"><span class="mono">${c[0]}</span>${FLAG(c[2],18)}<b>${esc(c[1])}</b><span class="ch-team">${esc(c[3])}</span></div>`).join("")}</div>`).join("")}
+    <p class="note" style="margin-top:14px">${Object.keys(counts).length} different drivers have won the title. Most titles by a team: ${Object.entries(teams).sort((a,b)=>b[1]-a[1])[0].map(String).join(", ")}.</p>`;
+  drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");$("#scrim").classList.add("open");$("#drClose").focus();
+}
+document.addEventListener("click",e=>{const b=e.target.closest("#champBtn,[data-champions]");if(b)openChampions(b)});
 function clinchSentence(){
   const left=TOTAL-COMPLETED;const L=DRIVERS[0];const rivals=contenders();
-  if(!rivals.length)return `<b>${L.last}</b> is already champion.`;
+  if(!rivals.length){const cr=clinchRound();return `<b>${esc(L.first)} ${esc(L.last)}</b> is the ${YEAR_NOW} world champion${cr?`, sealed at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}`:""}. At 20, he is the youngest champion in Formula 1 history. <button type="button" class="linkish" data-champions>See every champion since 1950 ›</button>`}
   // for each rival winning in Mexico, find the worst finish that still clinches for the leader
   const parts=rivals.map(r=>{
     for(let p=11;p>=1;p--){ // 11 = no points
@@ -1279,8 +1363,8 @@ function openDriver(code,from){
     const mx=Math.max(...per,25);
     const best=per.indexOf(Math.max(...per));
     bars=`<div class="label dr-h">Points per round · sprint points included</div>
-      <div class="racebars">${per.map((p,k)=>`<div class="${p===0?"zero":""}${RACES[k].win===code?" win":""}" style="height:${Math.max(2,p/mx*100)}%;animation-delay:${k*30}ms" title="R${k+1} ${RACES[k].name}: ${p} pts"></div>`).join("")}</div>
-      <div class="racelabels">${RACES.slice(0,COMPLETED).map(r=>`<span>${r.short}</span>`).join("")}</div>
+      <div class="racebars" style="grid-template-columns:repeat(${COMPLETED},minmax(0,1fr))">${per.map((p,k)=>`<div class="${p===0?"zero":""}${RACES[k].win===code?" win":""}" style="height:${Math.max(2,p/mx*100)}%;animation-delay:${k*30}ms" title="R${k+1} ${RACES[k].name}: ${p} pts"></div>`).join("")}</div>
+      <div class="racelabels" style="grid-template-columns:repeat(${COMPLETED},minmax(0,1fr))">${RACES.slice(0,COMPLETED).map(r=>`<span>${r.short}</span>`).join("")}</div>
       <p class="note">Best haul: <b>${per[best]} pts</b> at the ${esc(RACES[best].name)}. Chequered flags mark Grand Prix wins.</p>`;
   }else{
     bars=`<p class="note dr-h">A round-by-round breakdown is available for the current top 10.</p>`;
@@ -1336,12 +1420,15 @@ $("#drClose").onclick=closeDriver;$("#scrim").onclick=closeDriver;
 addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer").classList.contains("open"))closeDriver()});
 
 /* ================= REPLAY ================= */
-const TOP=Object.keys(PER_RACE);
+const TOP=DRIVERS.slice(0,10).map(d=>d.code).filter(c=>PER_RACE[c]);
 const CUM={};TOP.forEach(c=>{let s=0;CUM[c]=[0,...PER_RACE[c].map(p=>s+=p)]});
 const area=$("#raceArea");const rowEls={};
 TOP.forEach(c=>{const d=byCode[c];const r=el("div",{className:"rr",style:`--team:${tc(d.team)}`});
   r.innerHTML=`<span class="c">${c}</span><div class="track"><div class="fill"></div><span class="val mono"></span></div>`;area.appendChild(r);rowEls[c]=r});
-$("#rpTicks").innerHTML=["",...RACES.slice(0,COMPLETED).map(r=>r.short)].map(s=>`<span>${s}</span>`).join("");
+$("#rpTicks").innerHTML=["",...RACES.slice(0,COMPLETED).map(r=>r.short)].map(s=>`<span>${s}</span>`).join("");$("#rpTicks").style.gridTemplateColumns=`repeat(${COMPLETED+1},minmax(0,1fr))`;
+{const rr=$("#rpRange");rr.max=COMPLETED;rr.value=COMPLETED;$("#rpLast").textContent="R"+COMPLETED;}
+$("#stAfter").textContent=`After round ${COMPLETED} of ${TOTAL}`;
+$("#dataStamp").textContent=`Standings and results through Round ${COMPLETED}, ${RACES[COMPLETED-1].name}. Sources: OpenF1, formula1.com.`;
 let rd=COMPLETED,playing=false,playT=null;
 function drawReplay(){
   const order=[...TOP].sort((a,b)=>CUM[b][rd]-CUM[a][rd]||DRIVERS.indexOf(byCode[a])-DRIVERS.indexOf(byCode[b]));
@@ -1414,7 +1501,7 @@ function renderCalendar(animate){
     const c=el("article",{className:"rc"+(isNext?" is-next":""),style:animate?`animation-delay:${(i%12)*30}ms`:"animation:none"});
     let foot="";
     if(done){const row=(lab,code,team,time)=>{const w=byCode[code];return `<div class="res-row" style="--team:${tc(team)}"><span class="res-lab${lab==="Sprint"?" spr":""}">${lab}</span>${helmet(team,w.no,40)}<div style="min-width:0"><b>${w.code}</b> ${FLAG(NAT_FLAG[w.nat],16)} <span>${esc(w.last)} · ${esc(TEAMS[team].short)}</span>${time?`<div class="mono" style="font-size:11px;color:var(--muted)">${time}</div>`:""}</div></div>`};
-      const sp=SPRINT_WIN[r.rd];const rp=REPLAY[r.rd]||{};foot=`<div class="winner res">${sp?row("Sprint",sp[0],sp[1],"Saturday"):""}${row("Grand Prix",r.win,r.winTeam,(r.sprint?"Sunday · ":"")+r.time)}</div>`}
+      const sp=SPRINT_WIN[r.rd];const rp=REPLAY[r.rd]||{};foot=`<div class="winner res">${sp?row("Sprint",sp[0],sp[1],"Saturday"):""}${row("Grand Prix",r.win,r.winTeam,(r.sprint?"Sunday · ":"")+"Race time "+r.time)}${r.fl?`<div class="fl-row"><span class="lrec-ic" aria-hidden="true"></span>Fastest lap <b class="mono">${fmtLapRec(r.fl)}</b> · ${esc(r.flBy||"")}</div>`:""}</div>`}
     else if(pendingResult){foot=`<div class="winner"><span class="note">Race finished. The result appears with the next data update.</span></div>`}
     else{const days=Math.ceil((r.race-now)/864e5);foot=`<div class="winner"><span class="togo">${days<=1?"<b>Race day</b>":`<b>${days}</b> days to lights out`} · ${fmtDay.format(r.race)} ${fmtTime.format(r.race)}</span></div>`}
     const sl=sessionsFor(r.rd);
@@ -1430,15 +1517,22 @@ function renderCalendar(animate){
 $("#calSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;calFilter=b.dataset.f;$("#calSeg").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderCalendar(true)});
 
 /* ================= TITLE FIGHT ================= */
+function renderTitleDecided(){
+  const L=DRIVERS[0];const cr=clinchRound();const box=$("#tfH").closest(".box");
+  box.innerHTML=`<div class="ch-card" style="--team:${tc(L.team)}">${TROPHY_SVG}<div class="label">${YEAR_NOW} World Champion</div><h3>${esc(L.first)} ${esc(L.last)}</h3>
+    <p>${esc(L.team)} · ${L.pts} points · ${wins[L.code]||0} Grand Prix wins${cr?` · clinched at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}, round ${cr} of ${TOTAL}`:""}.</p>
+    <p class="note">The youngest world champion in Formula 1 history, at 20. ${TOTAL-COMPLETED} races remain in the fight for second place.</p>
+    <button type="button" class="btn primary" data-champions>Every world champion since 1950</button></div><span id="tfH" hidden></span>`;
+}
 function renderAlive(){
   const left=TOTAL-COMPLETED;const L=DRIVERS[0].pts;const top=DRIVERS.slice(0,7);const scale=Math.max(...top.map(d=>d.pts+left*25));
-  $("#aliveNote").textContent=`${left} races left, so ${left*25} points are still available. Striped bars show each driver's best possible total. The red line is ${DRIVERS[0].last}'s current score.`;
+  $("#aliveNote").textContent=champDecided()?`${DRIVERS[0].last} can no longer be caught: no one can reach his ${L} points with ${left*25} still available. Striped bars show each driver's best possible total.`:`${left} races left, so ${left*25} points are still available. Striped bars show each driver's best possible total. The red line is ${DRIVERS[0].last}'s current score.`;
   $("#alive").innerHTML=top.map((d,i)=>{const max=d.pts+left*25;const ok=i===0||max>=L;
     return `<div class="al" style="--team:${tc(d.team)}"><span class="c">${d.code}</span>
       <div class="rng"><div class="pot" style="left:0;width:${max/scale*100}%"></div><div class="now" style="width:${d.pts/scale*100}%"></div><div class="line" style="left:${L/scale*100}%"></div></div>
       <span class="st ${ok?"in":"out"}">${i===0?"Leader":ok?"Alive · max "+max:"Out · max "+max}</span></div>`}).join("");
 }
-const PICK=["ANT","RUS","HAM"];const picks={ANT:1,RUS:2,HAM:3};
+const PICK=DRIVERS.slice(0,3).map(d=>d.code);const picks=Object.fromEntries(PICK.map((c,i)=>[c,i+1]));
 function renderPicks(){
   const box=$("#picks");box.innerHTML="";
   PICK.forEach(c=>{const d=byCode[c];const row=el("div",{className:"pick",style:`--team:${tc(d.team)}`});
@@ -1456,7 +1550,7 @@ function evalScenario(fx){
   const champ=isClinched(t,lead,left,w);
   const ld=byCode[lead];const second=order[1];
   if(champ){v.className="verdict champ";v.innerHTML=`<div class="vh">${esc(ld.last)} is world champion</div><p>${t[lead]} points with ${left*25} left to play. ${esc(byCode[second].last)} can reach ${t[second]+left*25} at most${t[second]+left*25===t[lead]?", and would lose the tie on wins":""}. First title for ${esc(ld.first)} ${esc(ld.last)}.</p>`;if(fx)flagFall()}
-  else{v.className="verdict";const gap=t[lead]-t[second];v.innerHTML=`<div class="vh">The fight goes to São Paulo</div><p>${esc(ld.last)} leads ${esc(byCode[second].last)} by ${gap} with ${left*25} points left. He needs a lead of ${left*25} or more to settle it.</p>`}
+  else{v.className="verdict";const gap=t[lead]-t[second];const nx=RACES[COMPLETED+1];v.innerHTML=`<div class="vh">${nx?"The fight goes to "+esc(nx.place):"Decided at the finale"}</div><p>${esc(ld.last)} leads ${esc(byCode[second].last)} by ${gap} with ${left*25} points left. He needs a lead of ${left*25} or more to settle it.</p>`}
   $("#afterTable").innerHTML=`<tr><th>Pos</th><th>Driver</th><th style="text-align:right">Pts</th><th style="text-align:right">Max possible</th></tr>`+
     order.slice(0,5).map((c,i)=>`<tr><td class="mono">P${i+1}</td><td><span style="display:inline-block;width:4px;height:12px;background:${tc(byCode[c].team)};margin-right:6px;vertical-align:-1px"></span>${esc(byCode[c].first)} ${esc(byCode[c].last)}</td><td class="mono">${t[c]}</td><td class="mono">${t[c]+left*25}</td></tr>`).join("");
 }
@@ -2257,7 +2351,7 @@ function renderFooter(){
   $("#siteFoot").innerHTML=`
     <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
     ${SITE.instagram?`<a class="ig" href="https://www.instagram.com/${encodeURIComponent(SITE.instagram)}/" target="_blank" rel="noopener">${IG_ICON}<span>Follow <b>@${esc(SITE.instagram)}</b> on Instagram</span></a>`:""}
-    <nav class="lg-links" aria-label="Explore">${[["/formula-1-standings-2026/","2026 standings"],["/f1-calendar-2026/","2026 calendar"],["/drivers/","Drivers"],["/teams/","Teams"]].map(([h,t])=>`<a href="${h}">${t}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
+    <nav class="lg-links" aria-label="Explore">${[["/formula-1-standings-2026/","2026 standings"],["/f1-calendar-2026/","2026 calendar"],["/drivers/","Drivers"],["/teams/","Teams"],["/formula-1-world-champions/","World champions"]].map(([h,t])=>`<a href="${h}">${t}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
     <nav class="lg-links" aria-label="Legal">${Object.entries(LEGAL_ROUTES).map(([k,v])=>`<a href="#${k}">${v}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
     <p>©${new Date().getFullYear()} ${esc(SITE.name)}. All rights reserved.</p>`;
 }
@@ -2276,7 +2370,7 @@ function route(){
   if(r==="standings")renderTower();
   if(r==="replay"){if(!replayDrawn){replayDrawn=true;rd=0;drawReplay();setTimeout(()=>{if(!playing)play()},500)}drawLine()}
   if(r==="calendar")renderCalendar(true);
-  if(r==="title-fight"){renderAlive();evalScenario(false)}
+  if(r==="title-fight"){renderAlive();if(champDecided())renderTitleDecided();else evalScenario(false)}
   if(r==="travel"){renderTravel(true);renderChecklist()}
   if(r==="race-centre")rcInit();else if(typeof rcPause==="function"&&RCX.playing){rcPause()}
 }
