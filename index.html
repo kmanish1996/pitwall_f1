@@ -764,8 +764,11 @@ footer a{color:var(--muted)}
 /* ================= TRACKS ================= */
 .tk-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .tk-hero p{color:var(--muted);max-width:58ch;margin:8px 0 0}
-.tk-pick{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tk-pick button{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px 12px;color:var(--fg);text-align:left;cursor:pointer}
+.tk-hero>div:first-child{flex:1 1 320px}
+.tk-pick{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding:2px 2px 8px;margin-top:14px;flex:1 1 100%;scroll-snap-type:x proximity}
+.tk-pick button{flex:none;scroll-snap-align:start}
+.tk-pick .nx{display:inline-block;margin-left:4px;font-size:9px;color:#fff;background:var(--red);border-radius:2px;padding:0 4px;vertical-align:1px;letter-spacing:.06em}
+.tk-pick button{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px 12px;color:var(--fg);text-align:left;cursor:pointer}
 .tk-pick button.on{border-color:var(--red);box-shadow:inset 0 -2px 0 var(--red)}
 .tk-pick b{display:block;font-family:var(--f-display);text-transform:uppercase;letter-spacing:.06em;font-size:15px}
 .tk-pick small{color:var(--muted);font-size:12px}
@@ -1121,10 +1124,7 @@ footer a{color:var(--muted)}
         <h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Tracks</h2>
         <p>Every circuit rebuilt from a real pole lap: the shape, the height and the car's telemetry. Spin it round in 3D, or study it flat in 2D.</p>
       </div>
-      <div class="tk-pick" role="tablist" aria-label="Choose a circuit">
-        <button type="button" role="tab" aria-selected="true" class="on" data-track="albert-park"><span id="tkFlag"></span><span><b>Albert Park</b><small>Melbourne · Round 1</small></span></button>
-        <span class="tk-soon">More circuits coming soon</span>
-      </div>
+      <div class="tk-pick" id="tkPick" role="tablist" aria-label="Choose a circuit"></div>
     </div>
 
     <div class="tk-viewer" id="tkViewer">
@@ -3093,18 +3093,130 @@ function dashDraw(){
 }
 
 /* ================= TRACKS: 3D / 2D circuit explorer ================= */
-/* circuit facts; shape, height and telemetry come from data/tracks/<slug>.json (scripts/build_track.py) */
+/* circuit facts; shape, height and telemetry come from data/tracks/<slug>.json (scripts/build_track.py).
+   Lengths, corner counts and first-race years: Wikipedia's list of Formula One circuits (Albert Park's corner count: F1/Autosport).
+   {ELEV} {VMAX} {VMIN} {FT} {DRV} {YEAR} are filled in from the lap data. */
 const TRACK_INFO={
-  "albert-park":{name:"Albert Park Circuit",city:"Melbourne",flag:"au",rd:1,length:5.278,laps:58,turns:14,firstGP:1996,
-    bits:[
-      "<b>A race track in a city park.</b> The circuit runs on Albert Park's everyday roads and loops around Albert Park Lake. It's a temporary street circuit, built up for race week.",
-      "<b>The season opener's home since 1996,</b> when the Australian Grand Prix moved to Melbourne from Adelaide.",
-      "<b>Rebuilt for speed in 2022.</b> The old Turn 9–10 chicane was removed and Turn 6 widened by more than 7.5 m, worth about 70 km/h there. The changes were expected to cut lap times by around five seconds, and the corner count dropped from 16 to 14.",
-      "<b>Almost pancake flat.</b> On the pole lap, the highest and lowest points of the track are only {ELEV} m apart, so the 3D view exaggerates the height to make it visible.",
-      "<b>Michael Schumacher won here four times,</b> more than any other driver."
-    ],
-    sources:[["Sky Sports circuit guide","https://www.skysports.com/f1/grandprix/australia/circuit-guide"],["Autosport on the 2022 changes","https://www.autosport.com/f1/news/f1-australian-gp-track-changes-albert-park/9517500/"]]}
+  "albert-park":{name:"Albert Park",full:"Albert Park Circuit",city:"Melbourne",flag:"au",rd:1,length:5.278,turns:14,firstGP:1996,bits:[
+    "<b>A race track in a city park.</b> The circuit runs on Albert Park's everyday roads and loops around Albert Park Lake. It's a temporary street circuit, built up for race week.",
+    "<b>The season opener's home since 1996,</b> when the Australian Grand Prix moved to Melbourne from Adelaide.",
+    "<b>Rebuilt for speed in 2022.</b> The old Turn 9–10 chicane was removed and Turn 6 widened by more than 7.5 m, worth about 70 km/h there. The changes were expected to cut lap times by around five seconds, and the corner count dropped from 16 to 14.",
+    "<b>Almost pancake flat.</b> On the pole lap, the highest and lowest points of the track are only {ELEV} m apart, so the 3D view exaggerates the height to make it visible.",
+    "<b>Michael Schumacher won here four times,</b> more than any other driver."]},
+  "shanghai":{name:"Shanghai",full:"Shanghai International Circuit",city:"Shanghai",flag:"cn",rd:2,length:5.451,turns:16,firstGP:2004,bits:[
+    "<b>Shaped like a word.</b> The layout follows the Chinese character 上 (shàng), meaning \"above\" or \"rise\", the first character of Shanghai's name.",
+    "<b>A first corner that never seems to end.</b> Turns 1 and 2 keep tightening as they curl back on themselves, so drivers brake and turn at the same time for a long way.",
+    "<b>Built on marshland.</b> The track sits on a foundation of polystyrene blocks to stop it sinking into the soft ground.",
+    "<b>A huge back straight</b> of around 1.2 km into the Turn 14 hairpin, the best overtaking spot on the lap."]},
+  "suzuka":{name:"Suzuka",full:"Suzuka International Racing Course",city:"Suzuka",flag:"jp",rd:3,length:5.807,turns:18,firstGP:1987,bits:[
+    "<b>A figure of eight.</b> It's the only track on the calendar that crosses over itself, with the back straight running over a bridge above the first part of the lap.",
+    "<b>Built by Honda</b> in 1962 as a test track, and still owned by a Honda company.",
+    "<b>The S Curves and 130R.</b> The flowing first sector and the near-flat-out 130R left-hander are among the most respected corners in racing.",
+    "<b>Where titles are won.</b> Suzuka has settled many world championships, including the Senna–Prost collisions of 1989 and 1990.",
+    "<b>Real hills.</b> The pole lap climbs and falls {ELEV} m between its lowest and highest points."]},
+  "miami":{name:"Miami",full:"Miami International Autodrome",city:"Miami Gardens",flag:"us",rd:4,length:5.412,turns:19,firstGP:2022,bits:[
+    "<b>Built around a stadium.</b> The track winds around Hard Rock Stadium, home of the NFL's Miami Dolphins, in Miami Gardens.",
+    "<b>The famous fake marina.</b> The yachts in the \"marina\" sit on a painted deck with no water underneath.",
+    "<b>A tight, twisty chicane</b> at Turns 14–15 sits beside very fast sections, so the cars need to be good at both.",
+    "<b>Flat out for top speed.</b> The pole lap peaked at {VMAX} km/h on the long back straight."]},
+  "montreal":{name:"Montréal",full:"Circuit Gilles Villeneuve",city:"Montréal",flag:"ca",rd:5,length:4.361,turns:14,firstGP:1978,bits:[
+    "<b>On an island.</b> The circuit is on Île Notre-Dame, a man-made island in the St Lawrence River built for the Expo 67 world's fair.",
+    "<b>The Wall of Champions.</b> The wall at the exit of the final chicane got its name in 1999, when Damon Hill, Michael Schumacher and Jacques Villeneuve all crashed into it.",
+    "<b>Named after Gilles Villeneuve,</b> who won the first Grand Prix held here in 1978.",
+    "<b>Stop, go, stop, go.</b> Long straights into slow chicanes make it hard on brakes: the slowest point of the pole lap was {VMIN} km/h."]},
+  "monaco":{name:"Monaco",full:"Circuit de Monaco",city:"Monte Carlo",flag:"mc",rd:6,length:3.337,turns:19,firstGP:1950,bits:[
+    "<b>The shortest and slowest lap of the season,</b> squeezed between the barriers on the streets of Monte Carlo.",
+    "<b>The slowest corner in F1.</b> The Fairmont hairpin dropped the pole lap to just {VMIN} km/h.",
+    "<b>A tunnel on the track.</b> Cars race through the tunnel under the Fairmont hotel, the only one on the calendar, flat out from darkness into daylight.",
+    "<b>On the calendar since 1950,</b> the first season of the world championship.",
+    "<b>Up and down the hill.</b> From the harbour up to Casino Square and back, the lap covers {ELEV} m of height."]},
+  "barcelona":{name:"Barcelona",full:"Circuit de Barcelona-Catalunya",city:"Montmeló",flag:"es",rd:7,length:4.657,turns:14,firstGP:1991,bits:[
+    "<b>Opened in 1991,</b> in time for the Barcelona Olympics the following year.",
+    "<b>Teams know every bump.</b> It has long been a favourite pre-season testing venue, so car set-ups here are rarely a surprise.",
+    "<b>The final chicane is gone.</b> The slow chicane before the last corner was removed in 2023, bringing back the fast sweep onto the main straight.",
+    "<b>Now its own Grand Prix.</b> With the Spanish Grand Prix moving to Madrid in 2026, Barcelona races as the Barcelona-Catalunya Grand Prix."]},
+  "red-bull-ring":{name:"Red Bull Ring",full:"Red Bull Ring",city:"Spielberg",flag:"at",rd:8,length:4.318,turns:10,firstGP:1970,bits:[
+    "<b>One lap, about a minute.</b> With just 10 corners, the pole lap took barely over a minute, one of the shortest laps of the year.",
+    "<b>Up the mountain and back.</b> Set in the hills of Styria, the lap climbs and falls {ELEV} m.",
+    "<b>Three names, one place.</b> It was the Österreichring from 1970, the shorter A1-Ring from 1997, and the Red Bull Ring since F1 returned in 2014."]},
+  "silverstone":{name:"Silverstone",full:"Silverstone Circuit",city:"Silverstone",flag:"gb",rd:9,length:5.891,turns:18,firstGP:1950,bits:[
+    "<b>Where it all began.</b> Silverstone hosted the first ever Formula 1 World Championship race, on 13 May 1950.",
+    "<b>An old airfield.</b> The track was built on a Second World War RAF bomber base, and the first layouts used its runways.",
+    "<b>Maggotts, Becketts and Chapel.</b> This flick left-right-left-right is one of the fastest series of direction changes in F1.",
+    "<b>Fast and flowing.</b> Most of the lap is at high speed: the slowest point of the pole lap was {VMIN} km/h."]},
+  "spa":{name:"Spa",full:"Circuit de Spa-Francorchamps",city:"Stavelot",flag:"be",rd:10,length:7.004,turns:20,firstGP:1950,bits:[
+    "<b>The longest lap of the year,</b> at just over 7 km through the forests of the Ardennes.",
+    "<b>Eau Rouge and Raidillon.</b> Cars plunge into a dip and then climb steeply uphill through this left-right-left, almost flat out.",
+    "<b>Rain on one side, sun on the other.</b> The lap is so long that it can be raining on one part of the track and dry on another.",
+    "<b>A real roller coaster.</b> The pole lap covers {ELEV} m between its lowest and highest points, the most of any track here.",
+    "<b>Flat out for {FT}% of the lap</b> on the pole lap."]},
+  "hungaroring":{name:"Hungaroring",full:"Hungaroring",city:"Mogyoród",flag:"hu",rd:11,length:4.381,turns:14,firstGP:1986,bits:[
+    "<b>Behind the Iron Curtain.</b> In 1986 it hosted the first Formula 1 race in a communist country.",
+    "<b>\"Monaco without the walls\".</b> It's tight and twisty, so overtaking is hard and qualifying matters a lot.",
+    "<b>Built in a valley.</b> Fans on the hillsides can see much of the lap from one spot.",
+    "<b>Busy on the pedals.</b> The pole lap was at full throttle for only {FT}% of the lap, one of the lowest figures of the year."]},
+  "zandvoort":{name:"Zandvoort",full:"Circuit Zandvoort",city:"Zandvoort",flag:"nl",rd:12,length:4.259,turns:14,firstGP:1952,bits:[
+    "<b>In the dunes.</b> The circuit winds through the sand dunes just behind the North Sea beach.",
+    "<b>Back after 36 years.</b> F1 returned in 2021 after last racing here in 1985.",
+    "<b>Banked corners.</b> Turn 3 and the final corner are banked at up to 19 degrees, far steeper than most F1 corners.",
+    "<b>A sea of orange.</b> Packed with Max Verstappen's fans, it's one of the loudest crowds of the season."]},
+  "monza":{name:"Monza",full:"Autodromo Nazionale Monza",city:"Monza",flag:"it",rd:13,length:5.793,turns:11,firstGP:1950,bits:[
+    "<b>The Temple of Speed.</b> On the pole lap the car was at full throttle for {FT}% of the lap, the most of any track here.",
+    "<b>More world championship Grands Prix than anywhere else.</b> Monza has been on the calendar almost every year since 1950.",
+    "<b>Built in 1922</b> inside the royal park of Monza. The old banked oval still stands next to the modern track.",
+    "<b>Low downforce.</b> Teams bring their slimmest wings here, and the pole lap reached {VMAX} km/h."]},
+  "madring":{name:"Madring",full:"Madring",city:"Madrid",flag:"es",rd:14,length:5.414,turns:22,firstGP:2026,bits:[
+    "<b>Brand new for 2026.</b> Part street circuit, part purpose-built, it runs around the IFEMA exhibition centre in Madrid.",
+    "<b>The Spanish Grand Prix comes to Madrid</b> for the first time since 1981, when it was held at Jarama.",
+    "<b>La Monumental.</b> Its signature corner is a long, banked turn.",
+    "<b>Lots of corners.</b> With 22 turns, it has more corners than any other track on the 2026 calendar."]},
+  "baku":{name:"Baku",full:"Baku City Circuit",city:"Baku",flag:"az",rd:15,length:6.003,turns:20,firstGP:2016,bits:[
+    "<b>Two tracks in one.</b> A flat-out run of about 2.2 km along the seafront meets a tight, twisty section past the old city walls.",
+    "<b>The castle section.</b> At its narrowest, near Turn 8, the track is only about 7.6 m wide.",
+    "<b>First race in 2016,</b> when it hosted the European Grand Prix, before becoming the Azerbaijan Grand Prix in 2017.",
+    "<b>Top speed.</b> The pole lap hit {VMAX} km/h on the long run to the finish line."]},
+  "sepang":{name:"Sepang",full:"Sepang International Circuit",city:"Sepang",flag:"my",rd:16,length:5.543,turns:15,firstGP:1999,bits:[
+    "<b>The first of a new generation.</b> Opened in 1999, it was the first F1 track designed by Hermann Tilke, who went on to design many more.",
+    "<b>Home of the Malaysian Grand Prix</b> from 1999 to 2017.",
+    "<b>Heat, humidity and sudden storms.</b> Tropical downpours can soak the track within minutes.",
+    "<b>Two long straights</b> meet at the tight final hairpin, side by side in front of the main grandstand."]},
+  "marina-bay":{name:"Marina Bay",full:"Marina Bay Street Circuit",city:"Singapore",flag:"sg",rd:17,length:4.940,turns:19,firstGP:2008,bits:[
+    "<b>F1's first night race,</b> held in 2008 under floodlights through the city centre.",
+    "<b>Brutal on drivers.</b> Heat, humidity and a long race make it one of the most physically demanding of the year.",
+    "<b>A new layout in 2023.</b> The tight section under a grandstand at the old Turns 16–19 was replaced by a straight, shortening the lap.",
+    "<b>Corner after corner.</b> {DRV}'s pole lap used {GEARS} gear changes."]},
+  "cota":{name:"Austin",full:"Circuit of the Americas",city:"Austin",flag:"us",rd:18,length:5.513,turns:20,firstGP:2012,bits:[
+    "<b>A wall of a first corner.</b> Turn 1 is a blind hairpin at the top of a steep climb from the start line.",
+    "<b>Greatest hits.</b> The fast esses in the first sector were inspired by famous corners elsewhere, such as Silverstone's Maggotts and Becketts.",
+    "<b>F1 back in America.</b> Opened in 2012, it gave the United States Grand Prix a permanent home.",
+    "<b>Up and down.</b> The pole lap covers {ELEV} m from lowest to highest point."]},
+  "mexico-city":{name:"Mexico City",full:"Autódromo Hermanos Rodríguez",city:"Mexico City",flag:"mx",rd:19,length:4.304,turns:17,firstGP:1963,bits:[
+    "<b>Thin air.</b> At about 2,200 m above sea level, there's less drag and less downforce. The pole lap hit {VMAX} km/h, the highest top speed of any track here.",
+    "<b>Through a stadium.</b> The lap passes through the Foro Sol, a former baseball stadium, in front of a huge grandstand.",
+    "<b>Named after two brothers,</b> Ricardo and Pedro Rodríguez, Mexico's racing heroes of the 1960s.",
+    "<b>Engines and brakes struggle to stay cool</b> in the thin air, so teams open up their cooling."]},
+  "interlagos":{name:"Interlagos",full:"Autódromo José Carlos Pace",city:"São Paulo",flag:"br",rd:20,length:4.309,turns:15,firstGP:1973,bits:[
+    "<b>\"Between lakes\".</b> That's what Interlagos means; the circuit sits between two reservoirs in São Paulo.",
+    "<b>Anti-clockwise,</b> one of the few tracks on the calendar to run that way, which tests drivers' necks.",
+    "<b>Named after José Carlos Pace,</b> the Brazilian driver who won here in 1975.",
+    "<b>A natural bowl.</b> The lap rises and falls {ELEV} m, from the Senna S down to the Juncão and back up the hill."]},
+  "las-vegas":{name:"Las Vegas",full:"Las Vegas Strip Circuit",city:"Las Vegas",flag:"us",rd:21,length:6.201,turns:17,firstGP:2023,bits:[
+    "<b>Down the Strip at night.</b> Cars race on public roads, past the casinos of the Las Vegas Strip.",
+    "<b>Not Vegas's first F1 race.</b> In 1981 and 1982, the Caesars Palace Grand Prix was held in a hotel car park.",
+    "<b>A very long lap,</b> second only to Spa, with a long flat-out run down the Strip.",
+    "<b>Wet in 2025.</b> This lap is Lando Norris's 2025 pole, set on a wet track, so it's slower than a dry lap would be."]},
+  "lusail":{name:"Lusail",full:"Lusail International Circuit",city:"Lusail",flag:"qa",rd:22,length:5.419,turns:16,firstGP:2021,bits:[
+    "<b>Built for motorbikes.</b> The circuit opened in 2004 for MotoGP and first hosted F1 in 2021.",
+    "<b>A floodlit night race</b> in the desert north of Doha.",
+    "<b>Fast, flowing corners</b> one after another make it very hard on tyres and on drivers' necks.",
+    "<b>Hardly any slow corners.</b> The slowest point of the pole lap was {VMIN} km/h."]},
+  "yas-marina":{name:"Yas Marina",full:"Yas Marina Circuit",city:"Abu Dhabi",flag:"ae",rd:23,length:5.281,turns:16,firstGP:2009,bits:[
+    "<b>Day into night.</b> The race starts in daylight and finishes under floodlights.",
+    "<b>A tunnel for the pit lane.</b> The pit exit dives under the track before rejoining.",
+    "<b>The finale.</b> It has hosted the last race of the season most years, including the 2021 title decider between Max Verstappen and Lewis Hamilton.",
+    "<b>Redesigned in 2021</b> to remove slow corners and give more chances to overtake."]}
 };
+const TRACK_SOURCES=[["Wikipedia: List of Formula One circuits","https://en.wikipedia.org/wiki/List_of_Formula_One_circuits"],["Sky Sports Albert Park guide","https://www.skysports.com/f1/grandprix/australia/circuit-guide"],["Autosport on Albert Park's 2022 changes","https://www.autosport.com/f1/news/f1-australian-gp-track-changes-albert-park/9517500/"]];
 const TK={ready:false,slug:"albert-park",data:null,mode:"3d",cam:"orbit",t:0,rate:1,playing:!reduce,speedMap:false,ex:10,raf:0,last:0,
   three:null,v2:{s:1,rot:0,ox:0,oy:0},labels:[],hintT:0};
 const TK_W=13; /* track width in metres */
@@ -3114,25 +3226,41 @@ function tkSpeedCol(v){ /* red slow → amber → yellow → green → blue fast
   if(v<=st[0][0])return st[0][1];for(let i=1;i<st.length;i++)if(v<=st[i][0]){const f=(v-st[i-1][0])/(st[i][0]-st[i-1][0]);return st[i-1][1].map((c,k)=>Math.round(c+(st[i][1][k]-c)*f))}
   return st[st.length-1][1];
 }
+function tkSlugFromHash(){const m=(location.hash||"").match(/^#tracks\/([\w-]+)/);return m&&TRACK_INFO[m[1]]?m[1]:null}
+function tkDefaultSlug(){const next=RACES.find(r=>r.rd===COMPLETED+1),hit=next&&Object.keys(TRACK_INFO).find(k=>TRACK_INFO[k].rd===next.rd);return hit||"albert-park"}
 function tkInit(){
-  if(TK.ready){tkResize();tkLoop();return}
+  if(TK.ready){const want=tkSlugFromHash();if(want&&want!==TK.slug)tkLoad(want);else{tkResize();tkLoop()}return}
   TK.ready=true;
-  $("#tkFlag").innerHTML=FLAG("au",26);
+  const pick=$("#tkPick");
+  pick.innerHTML=Object.entries(TRACK_INFO).sort((a,b)=>a[1].rd-b[1].rd).map(([k,t])=>`<button type="button" role="tab" data-track="${k}" aria-selected="false">${FLAG(t.flag,24)}<span><b>${esc(t.name)}</b><small>Round ${t.rd}${t.rd===COMPLETED+1?'<i class="nx">NEXT</i>':""}</small></span></button>`).join("");
+  pick.addEventListener("click",e=>{const b=e.target.closest("[data-track]");if(b&&b.dataset.track!==TK.slug)tkLoad(b.dataset.track)});
   $("#tk3dBtn").addEventListener("click",()=>tkMode("3d"));$("#tk2dBtn").addEventListener("click",()=>tkMode("2d"));
   document.querySelectorAll("#tkCamSeg [data-cam]").forEach(b=>b.addEventListener("click",()=>tkCam(b.dataset.cam)));
   document.querySelectorAll("#tkRate [data-rate]").forEach(b=>b.addEventListener("click",()=>{TK.rate=+b.dataset.rate;document.querySelectorAll("#tkRate [data-rate]").forEach(x=>x.setAttribute("aria-pressed",x===b))}));
   $("#tkPlay").addEventListener("click",()=>{TK.playing=!TK.playing;tkPlayBtn()});
   $("#tkScrub").addEventListener("input",e=>{if(!TK.data)return;TK.t=e.target.value/1000*TK.data.lapTime;tkFrame(0,true)});
-  $("#tkSpeedMap").addEventListener("change",e=>{TK.speedMap=e.target.checked;$("#tkLegend").hidden=!TK.speedMap;if(TK.three)tkColour3d();tkFrame(0,true)});
-  $("#tkEx").addEventListener("input",e=>{TK.ex=+e.target.value;$("#tkExV").textContent=TK.ex+"×";if(TK.three)tkBuildTrack3d();tkFrame(0,true)});
+  $("#tkSpeedMap").addEventListener("change",e=>{TK.speedMap=e.target.checked;$("#tkLegend").hidden=!TK.speedMap;if(TK.three&&TK.data)tkColour3d();tkFrame(0,true)});
+  $("#tkEx").addEventListener("input",e=>{TK.ex=+e.target.value;$("#tkExV").textContent=TK.ex+"×";if(TK.three&&TK.data)tkBuildTrack3d();tkFrame(0,true)});
   $("#tkReset").addEventListener("click",()=>{if(TK.mode==="3d")tkCam("orbit",true);else tkFit2d();tkFrame(0,true)});
   new ResizeObserver(()=>tkResize()).observe($("#tkStage"));
   document.addEventListener("visibilitychange",()=>{if(tkVisible())tkLoop()});
   tkPlayBtn();tkSetup2d();
-  fetch(`data/tracks/${TK.slug}.json`).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
-    TK.data=d;tkPrep(d);tkFacts();tkFit2d();
-    return tkLoadThree().then(()=>{tkSetup3d();tkMode("3d")}).catch(err=>{console.warn("3D unavailable",err);$("#tk3dBtn").disabled=true;$("#tk3dBtn").title="3D isn't available in this browser";tkMode("2d")});
-  }).then(()=>{$("#tkLoading").hidden=true;tkLoop()}).catch(err=>{console.error(err);$("#tkLoading").textContent="Couldn't load the circuit. Please refresh."});
+  tkLoad(tkSlugFromHash()||tkDefaultSlug(),true);
+}
+function tkLoad(slug,first){
+  TK.slug=slug;TK.loadId=(TK.loadId||0)+1;const id=TK.loadId;
+  document.querySelectorAll("#tkPick [data-track]").forEach(b=>{const on=b.dataset.track===slug;b.classList.toggle("on",on);b.setAttribute("aria-selected",on);if(on)b.scrollIntoView({block:"nearest",inline:"center",behavior:first||reduce?"auto":"smooth"})});
+  if(!first||tkSlugFromHash())history.replaceState(null,"","#tracks/"+slug);
+  $("#tkLoading").hidden=false;$("#tkLoading").textContent="Building the circuit…";
+  fetch(`data/tracks/${slug}.json`).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+    if(id!==TK.loadId)return;
+    TK.data=d;TK.t=0;tkPrep(d);tkFacts();
+    /* pick a height exaggeration that makes the hills readable without turning them into mountains */
+    TK.ex=Math.max(1,Math.min(25,Math.round(d.span*0.012/Math.max(0.5,d.stats.elev))));$("#tkEx").value=TK.ex;$("#tkExV").textContent=TK.ex+"×";
+    const go3d=()=>{if(TK.three)tkApply3d();else tkSetup3d();tkMode(TK.mode==="2d"&&!first?"2d":"3d")};
+    const p=TK.three?Promise.resolve(go3d()):tkLoadThree().then(go3d).catch(err=>{console.warn("3D unavailable",err);$("#tk3dBtn").disabled=true;$("#tk3dBtn").title="3D isn't available in this browser";tkMode("2d")});
+    return p.then(()=>{tkFit2d();tkDrawProfile();$("#tkLoading").hidden=true;tkFrame(0,true);tkLoop()});
+  }).catch(err=>{console.error(err);if(id===TK.loadId)$("#tkLoading").textContent="Couldn't load this circuit. Please try again."});
 }
 function tkLoadThree(){
   if(window.THREE&&THREE.OrbitControls)return Promise.resolve();
@@ -3199,21 +3327,27 @@ function tkFrame(dt,force){
 function tkSetup3d(){
   const host=$("#tk3d"),r=new THREE.WebGLRenderer({antialias:true,alpha:false});
   r.setClearColor(0x131b27);host.appendChild(r.domElement);
-  const scene=new THREE.Scene();scene.fog=new THREE.Fog(0x131b27,TK.data.span*1.2,TK.data.span*3.2);
-  const cam=new THREE.PerspectiveCamera(45,1,1,TK.data.span*6);
+  const scene=new THREE.Scene();scene.fog=new THREE.Fog(0x131b27,2000,6000);
+  const cam=new THREE.PerspectiveCamera(45,1,1,20000);
   scene.add(new THREE.HemisphereLight(0xdfe8ff,0x16301f,0.95));
   const sun=new THREE.DirectionalLight(0xffffff,0.75);sun.position.set(0.6,1,0.35);scene.add(sun);
-  const S=TK.data.span;
-  const ground=new THREE.Mesh(new THREE.PlaneGeometry(S*10,S*10),new THREE.MeshLambertMaterial({color:0x10261a}));
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(40000,40000),new THREE.MeshLambertMaterial({color:0x10261a}));
   ground.rotation.x=-Math.PI/2;ground.position.y=-0.6;scene.add(ground);
-  const grid=new THREE.GridHelper(S*2.4,Math.round(S*2.4/100),0x1d3d2a,0x163222);grid.position.y=-0.55;scene.add(grid);
-  const ctr=new THREE.OrbitControls(cam,r.domElement);ctr.enableDamping=true;ctr.dampingFactor=0.08;ctr.maxPolarAngle=Math.PI*0.48;ctr.minDistance=15;ctr.maxDistance=S*2.6;
+  const grid=new THREE.GridHelper(8000,80,0x1d3d2a,0x163222);grid.position.y=-0.55;scene.add(grid);
+  const ctr=new THREE.OrbitControls(cam,r.domElement);ctr.enableDamping=true;ctr.dampingFactor=0.08;ctr.maxPolarAngle=Math.PI*0.48;ctr.minDistance=15;
   ctr.addEventListener("start",()=>{$("#tkHint").style.opacity=0});
-  TK.three={r,scene,cam,ctr,track:null,car:tkCarModel(TK.data.source.colour),beacon:null};
-  scene.add(TK.three.car);
-  const bc=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,60,8,1,true),new THREE.MeshBasicMaterial({color:new THREE.Color(TK.data.source.colour),transparent:true,opacity:0.5,depthWrite:false}));
-  TK.three.beacon=bc;scene.add(bc);
-  tkBuildTrack3d();tkResize();tkCam("orbit",true);
+  const bc=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,60,8,1,true),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.5,depthWrite:false}));
+  scene.add(bc);
+  TK.three={r,scene,cam,ctr,track:null,car:null,beacon:bc};
+  tkResize();tkApply3d();
+}
+/* everything in the 3D scene that depends on the circuit */
+function tkApply3d(){
+  const g=TK.three,d=TK.data,S=d.span;
+  g.scene.fog.near=S*1.2;g.scene.fog.far=S*3.2;g.cam.far=S*6;g.cam.updateProjectionMatrix();g.ctr.maxDistance=S*2.6;
+  if(g.car)g.scene.remove(g.car);g.car=tkCarModel(d.source.colour);g.scene.add(g.car);
+  g.beacon.material.color.set(d.source.colour);
+  tkBuildTrack3d();tkCam(TK.cam==="chase"||TK.cam==="follow"?TK.cam:"orbit",true);
 }
 function tkY(z){return z*TK.ex}
 function tkBuildTrack3d(){
@@ -3286,7 +3420,7 @@ function tkCam(mode,reset){
   if(mode==="follow"){const c=tkAt(TK.t);g.ctr.target.set(c.x,tkY(c.z),-c.y);g.cam.position.set(c.x-60,tkY(c.z)+45,-c.y+60);g.ctr.update()}
 }
 function tkRender3d(c,dt){
-  const g=TK.three;if(!g)return;
+  const g=TK.three;if(!g||!g.car||!g.track)return;
   const car=g.car,yaw=c.h,y=tkY(c.z);
   car.position.set(c.x,y,-c.y);car.rotation.set(0,yaw,0);
   /* make the car easier to spot from far away */
@@ -3375,15 +3509,18 @@ function tkFacts(){
   const d=TK.data,I=TRACK_INFO[d.slug],race=RACES.find(r=>r.rd===I.rd),rec=LAP_RECORD[I.rd],st=d.stats;
   const lt=d.lapTime,lm=Math.floor(lt/60),lts=lm+":"+(lt-lm*60).toFixed(3).padStart(6,"0");
   const win=race&&race.win?DRIVERS.find(x=>x.code===race.win):null;
-  const cards=[["Length",I.length.toFixed(3)+" km",`${I.laps} laps · ${(I.length*I.laps).toFixed(3)} km race`],["Corners",I.turns,"since the 2022 redesign"],
-    ["Lap record",rec?rec[0]:"–",rec?`${rec[1]}, ${rec[3]}`:""],[`${d.source.year} pole`,lts,d.source.driverName],
-    [`${d.source.year} winner`,win?`${win.first[0]}. ${win.last}`:"–",race&&race.time?race.time:""],["First F1 race here",I.firstGP,"Australian Grand Prix"]];
+  const laps=I.rd===6?78:Math.ceil(305/I.length);
+  const avg=Math.round(d.cum[d.n-1]/d.lapTime*3.6);
+  const raceCard=win?[`${YEAR_NOW} winner`,`${win.first[0]}. ${win.last}`,race.time||""]:race?[`${YEAR_NOW} race`,race.race.toLocaleDateString(undefined,{day:"numeric",month:"short"}),race.rd===COMPLETED+1?"Next race":"Coming up"]:["Race","–",""];
+  const cards=[["Length",I.length.toFixed(3)+" km",`${laps} laps · ${(I.length*laps).toFixed(3)} km race`],["Corners",I.turns,I.full],
+    ["Race lap record",rec?rec[0]:"–",rec?`${rec[1]}, ${rec[3]}`:""],[`${d.source.year} pole`,lts,d.source.driverName],raceCard,["First F1 race here",I.firstGP,I.city]];
   $("#tkStats").innerHTML=cards.map(([k,v,s])=>`<div class="tk-stat"><span class="label">${k}</span><b>${esc(String(v))}</b><small>${esc(s)}</small></div>`).join("");
-  $("#tkBits").innerHTML=I.bits.map(b=>`<li>${b.replace("{ELEV}",st.elev)}</li>`).join("");
-  $("#tkLapTitle").textContent=`${d.source.driverName}'s pole lap in numbers`;
-  $("#tkNums").innerHTML=[[st.vmax+" km/h","top speed"],[st.vmin+" km/h","slowest point"],[st.fullThrottle+"%","of the lap at full throttle"],[st.braking+"%","on the brakes"],[st.gearChanges,"gear changes"],[st.elev+" m","from lowest to highest point"]]
+  const fill=b=>b.replace(/{ELEV}/g,st.elev).replace(/{VMAX}/g,st.vmax).replace(/{VMIN}/g,st.vmin).replace(/{FT}/g,st.fullThrottle).replace(/{DRV}/g,esc(d.source.driverName)).replace(/{GEARS}/g,st.gearChanges).replace(/{YEAR}/g,d.source.year);
+  $("#tkBits").innerHTML=I.bits.map(b=>`<li>${fill(b)}</li>`).join("");
+  $("#tkLapTitle").textContent=`${d.source.driverName}'s ${d.source.year} pole lap in numbers`;
+  $("#tkNums").innerHTML=[[st.vmax+" km/h","top speed"],[st.vmin+" km/h","slowest point"],[avg+" km/h","average speed"],[st.fullThrottle+"%","of the lap at full throttle"],[st.gearChanges,"gear changes"],[st.elev+" m","from lowest to highest point"]]
     .map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
-  $("#tkSrc").innerHTML=`Circuit shape, height and telemetry come from ${esc(d.source.driverName)}'s ${d.source.year} qualifying lap in <a href="https://openf1.org" target="_blank" rel="noopener">OpenF1</a> data, so they can differ slightly from the official map. Height in the 3D view is exaggerated. Facts: ${I.sources.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(", ")}.`;
+  $("#tkSrc").innerHTML=`Circuit shape, height and telemetry come from ${esc(d.source.driverName)}'s ${d.source.year} qualifying lap in <a href="https://openf1.org" target="_blank" rel="noopener">OpenF1</a> data, so they can differ slightly from the official map${d.source.year<YEAR_NOW?`. This circuit hasn't raced in ${YEAR_NOW} yet, so the lap is from ${d.source.year}`:""}. Height in the 3D view is exaggerated. Facts: ${TRACK_SOURCES.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(", ")}.`;
 }
 
 /* ================= ROUTING ================= */
@@ -3394,7 +3531,7 @@ function route(){
   const isLegal=Object.prototype.hasOwnProperty.call(LEGAL_ROUTES,h);
   $(".hero").hidden=isLegal;$("#p-legal").hidden=!isLegal;
   if(isLegal){ROUTES.forEach(x=>{$("#p-"+x).hidden=true});document.querySelectorAll("nav.tabs a").forEach(a=>a.removeAttribute("aria-current"));renderLegal(h);gmLeave();if(typeof rcPause==="function"&&RCX.playing)rcPause();scrollTo(0,0);return}
-  const r=ROUTES.includes(h)?h:"standings";
+  const hb=h.split("/")[0],r=ROUTES.includes(hb)?hb:"standings";
   ROUTES.forEach(x=>{$("#p-"+x).hidden=x!==r});
   document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.getAttribute("href")==="#"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   if(r==="standings")renderTower();
