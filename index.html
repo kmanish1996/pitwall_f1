@@ -761,6 +761,87 @@ footer a{color:var(--muted)}
 .rx-hook small{display:block;margin-top:6px;color:var(--muted);font-size:11.5px;line-height:1.4}
 .q-confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
 .dash-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+/* ================= TRACKS ================= */
+.tk-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.tk-hero p{color:var(--muted);max-width:58ch;margin:8px 0 0}
+.tk-pick{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tk-pick button{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px 12px;color:var(--fg);text-align:left;cursor:pointer}
+.tk-pick button.on{border-color:var(--red);box-shadow:inset 0 -2px 0 var(--red)}
+.tk-pick b{display:block;font-family:var(--f-display);text-transform:uppercase;letter-spacing:.06em;font-size:15px}
+.tk-pick small{color:var(--muted);font-size:12px}
+.tk-soon{color:var(--muted);font-size:12px;border:1px dashed var(--line);border-radius:4px;padding:10px 12px}
+.tk-viewer{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.tk-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border-bottom:1px solid var(--line)}
+.tk-seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.tk-seg button{background:transparent;border:0;color:var(--muted);padding:7px 11px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;cursor:pointer}
+.tk-seg button+button{border-left:1px solid var(--line)}
+.tk-seg button[aria-pressed="true"]{background:rgba(225,6,0,.16);color:#fff}
+.tk-seg.sm button{padding:6px 9px}
+.tk-seg[hidden]{display:none}
+.tk-tog{display:inline-flex;gap:6px;align-items:center;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;color:var(--muted);cursor:pointer;padding:6px 4px}
+.tk-tog input{accent-color:var(--red)}
+.tk-reset{margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:3px;padding:7px 11px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;cursor:pointer}
+.tk-stage{position:relative;height:clamp(360px,62vh,660px);background:radial-gradient(120% 100% at 50% 0%,#141a24,#07090d 75%);touch-action:none;overflow:hidden}
+.tk-layer{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tk-layer[hidden]{display:none}
+.tk-layer canvas{display:block;width:100%!important;height:100%!important}
+.tk-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tk-lab{position:absolute;left:0;top:0;transform:translate(-50%,-100%);background:rgba(8,10,14,.82);border:1px solid rgba(255,255,255,.14);border-radius:3px;padding:2px 6px;font-family:var(--f-mono);font-size:10.5px;line-height:1.2;color:#fff;white-space:nowrap;text-align:center}
+.tk-lab small{display:block;color:var(--muted);font-size:9px}
+.tk-lab::after{content:"";position:absolute;left:50%;bottom:-5px;width:1px;height:5px;background:rgba(255,255,255,.4)}
+.tk-lab.slow{border-color:rgba(225,6,0,.6)}
+.tk-hud{position:absolute;left:10px;bottom:10px;background:rgba(5,7,10,.82);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:8px 10px;min-width:150px;pointer-events:none}
+.tk-who{display:flex;gap:6px;align-items:center;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--muted)}
+.tk-who i{width:4px;height:14px;background:var(--team,#888)}
+.tk-clock{font-size:20px;color:#fff;margin-top:2px}
+.tk-row{display:flex;align-items:baseline;gap:4px;margin-top:2px}
+.tk-row b{font-size:26px;color:#fff;min-width:2.2em;text-align:right}
+.tk-row small{color:var(--muted);font-size:11px}
+.tk-gear{margin-left:auto;font-size:20px;color:var(--amber);border:1px solid rgba(255,201,60,.4);border-radius:3px;padding:0 6px}
+.tk-pedal{display:flex;align-items:center;gap:6px;margin-top:4px;font-family:var(--f-mono);font-size:9px;color:var(--muted)}
+.tk-pedal span{width:24px}
+.tk-pedal i{flex:1;height:5px;background:#1f2633;border-radius:2px;overflow:hidden}
+.tk-pedal i b{display:block;height:100%;width:0;background:var(--green)}
+.tk-pedal.brk i b{background:var(--red)}
+.tk-legend{position:absolute;right:10px;bottom:10px;display:flex;align-items:center;gap:6px;background:rgba(5,7,10,.82);border-radius:4px;padding:5px 8px;font-family:var(--f-mono);font-size:10px;color:var(--muted)}
+.tk-legend i{width:110px;height:6px;border-radius:3px;background:linear-gradient(90deg,#E10600,#FF8A00,#FFC93C,#2FD480,#38B6FF)}
+.tk-legend[hidden]{display:none}
+.tk-hint{position:absolute;right:10px;top:10px;font-size:11px;color:var(--muted);background:rgba(5,7,10,.7);padding:4px 8px;border-radius:3px;pointer-events:none;transition:opacity .6s}
+.tk-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-family:var(--f-display);text-transform:uppercase;letter-spacing:.1em;pointer-events:none}
+.tk-loading[hidden]{display:none}
+.tk-play{display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--line);flex-wrap:wrap}
+.tk-pp{width:38px;height:34px;border-radius:3px;border:1px solid var(--line);background:var(--panel-2);color:#fff;font-size:12px;cursor:pointer}
+#tkScrub{flex:1;min-width:140px;accent-color:var(--red)}
+.tk-ex{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;color:var(--muted)}
+.tk-ex input{width:90px;accent-color:var(--amber)}
+.tk-ex b{color:var(--amber);font-size:12px;min-width:3ch}
+.tk-ex[hidden]{display:none}
+.tk-prof{border-top:1px solid var(--line);height:96px}
+.tk-prof canvas{display:block;width:100%;height:100%}
+.tk-facts{margin-top:16px;display:grid;gap:12px}
+.tk-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.tk-stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.tk-stat b{display:block;font-family:var(--f-mono);font-size:19px;margin-top:2px}
+.tk-stat small{display:block;color:var(--muted);font-size:11.5px;margin-top:1px}
+.tk-cols{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+@media (max-width:820px){.tk-cols{grid-template-columns:1fr}}
+.tk-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.tk-bits{margin:10px 0 0;padding-left:18px;display:grid;gap:9px}
+.tk-bits li::marker{color:var(--red)}
+.tk-bits b{color:#fff}
+.tk-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.tk-nums div{border-left:2px solid var(--line);padding-left:10px}
+.tk-nums b{display:block;font-family:var(--f-mono);font-size:20px}
+.tk-nums span{color:var(--muted);font-size:12px}
+.tk-src{color:var(--muted);font-size:12px;margin:0}
+@media (max-width:560px){
+  .tk-stage{height:min(62vh,460px)}
+  .tk-hud{min-width:0;padding:5px 8px;left:6px;bottom:6px}.tk-row b{font-size:18px;min-width:0}.tk-clock{font-size:13px}.tk-gear{font-size:15px}.tk-pedal{display:none}.tk-who{font-size:9.5px}
+  .tk-legend{right:6px;bottom:6px}.tk-legend i{width:60px}
+  .tk-hint{left:auto;right:6px;top:6px;font-size:10px}
+  .tk-reset{margin-left:0}
+  .tk-lab{font-size:9.5px;padding:1px 4px}
+}
 </style>
 
 <header class="strip">
@@ -772,6 +853,7 @@ footer a{color:var(--muted)}
       <a href="#race-centre">Race centre</a>
       <a href="#replay">Season replay</a>
       <a href="#calendar">Calendar</a>
+      <a href="#tracks">Tracks</a>
       <a href="#title-fight">Title fight</a>
       <a href="#travel">Race travel</a>
       <a href="#games">Games</a>
@@ -1030,6 +1112,67 @@ footer a{color:var(--muted)}
     <p class="tv-foot">Ticket prices are official 2026 circuit prices compiled by GP Destinations (May 2026, before fees). Currency conversion uses late-October 2026 rates. Hotel, food and flight figures are planning estimates, not quotes: race weekends often push hotel prices far above normal, so book early.</p>
   </section>
 
+
+  <!-- TRACKS -->
+  <section class="panel" id="p-tracks" hidden>
+    <div class="tk-hero">
+      <div>
+        <div class="label">Circuit explorer</div>
+        <h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Tracks</h2>
+        <p>Every circuit rebuilt from a real pole lap: the shape, the height and the car's telemetry. Spin it round in 3D, or study it flat in 2D.</p>
+      </div>
+      <div class="tk-pick" role="tablist" aria-label="Choose a circuit">
+        <button type="button" role="tab" aria-selected="true" class="on" data-track="albert-park"><span id="tkFlag"></span><span><b>Albert Park</b><small>Melbourne · Round 1</small></span></button>
+        <span class="tk-soon">More circuits coming soon</span>
+      </div>
+    </div>
+
+    <div class="tk-viewer" id="tkViewer">
+      <div class="tk-bar">
+        <div class="tk-seg" role="group" aria-label="View">
+          <button type="button" id="tk3dBtn" aria-pressed="true">3D</button><button type="button" id="tk2dBtn" aria-pressed="false">2D</button>
+        </div>
+        <div class="tk-seg" role="group" aria-label="Camera" id="tkCamSeg">
+          <button type="button" data-cam="orbit" aria-pressed="true">Free</button><button type="button" data-cam="follow" aria-pressed="false">Follow car</button><button type="button" data-cam="chase" aria-pressed="false">Chase cam</button>
+        </div>
+        <label class="tk-tog"><input type="checkbox" id="tkSpeedMap"> Speed map</label>
+        <button type="button" class="tk-reset" id="tkReset">Reset view</button>
+      </div>
+      <div class="tk-stage" id="tkStage">
+        <div id="tk3d" class="tk-layer"></div>
+        <canvas id="tk2d" class="tk-layer" hidden></canvas>
+        <div class="tk-labels" id="tkLabels" aria-hidden="true"></div>
+        <div class="tk-hud" id="tkHud">
+          <div class="tk-who"><i id="tkSwatch"></i><span id="tkWho">–</span></div>
+          <div class="tk-clock mono" id="tkClock">0:00.000</div>
+          <div class="tk-row"><b class="mono" id="tkSpd">0</b><small>km/h</small><span class="tk-gear mono" id="tkGear">N</span></div>
+          <div class="tk-pedal"><span>THR</span><i><b id="tkThr"></b></i></div>
+          <div class="tk-pedal brk"><span>BRK</span><i><b id="tkBrk"></b></i></div>
+        </div>
+        <div class="tk-legend" id="tkLegend" hidden><span>Slow</span><i></i><span>Fast</span></div>
+        <div class="tk-hint" id="tkHint">Drag to rotate · Right-drag or two fingers to move · Scroll or pinch to zoom</div>
+        <div class="tk-loading" id="tkLoading">Building the circuit…</div>
+      </div>
+      <div class="tk-play">
+        <button type="button" class="tk-pp" id="tkPlay" aria-label="Pause">❚❚</button>
+        <input type="range" id="tkScrub" min="0" max="1000" value="0" aria-label="Position in the lap">
+        <div class="tk-seg sm" role="group" aria-label="Playback speed" id="tkRate">
+          <button type="button" data-rate="0.5" aria-pressed="false">½×</button><button type="button" data-rate="1" aria-pressed="true">1×</button><button type="button" data-rate="2" aria-pressed="false">2×</button><button type="button" data-rate="4" aria-pressed="false">4×</button>
+        </div>
+        <label class="tk-ex" id="tkExWrap">Height <input type="range" id="tkEx" min="1" max="25" value="10" aria-label="Height exaggeration"><b class="mono" id="tkExV">10×</b></label>
+      </div>
+      <div class="tk-prof"><canvas id="tkProfile" aria-label="Elevation profile of the lap" role="img"></canvas></div>
+    </div>
+
+    <div class="tk-facts">
+      <div class="tk-stats" id="tkStats"></div>
+      <div class="tk-cols">
+        <div class="tk-card"><div class="label">Interesting bits</div><ul class="tk-bits" id="tkBits"></ul></div>
+        <div class="tk-card"><div class="label" id="tkLapTitle">The pole lap in numbers</div><div class="tk-nums" id="tkNums"></div></div>
+      </div>
+      <p class="tk-src" id="tkSrc"></p>
+    </div>
+  </section>
 
   <!-- GAMES -->
   <section class="panel" id="p-games" hidden>
@@ -2949,8 +3092,302 @@ function dashDraw(){
   }
 }
 
+/* ================= TRACKS: 3D / 2D circuit explorer ================= */
+/* circuit facts; shape, height and telemetry come from data/tracks/<slug>.json (scripts/build_track.py) */
+const TRACK_INFO={
+  "albert-park":{name:"Albert Park Circuit",city:"Melbourne",flag:"au",rd:1,length:5.278,laps:58,turns:14,firstGP:1996,
+    bits:[
+      "<b>A race track in a city park.</b> The circuit runs on Albert Park's everyday roads and loops around Albert Park Lake. It's a temporary street circuit, built up for race week.",
+      "<b>The season opener's home since 1996,</b> when the Australian Grand Prix moved to Melbourne from Adelaide.",
+      "<b>Rebuilt for speed in 2022.</b> The old Turn 9–10 chicane was removed and Turn 6 widened by more than 7.5 m, worth about 70 km/h there. The changes were expected to cut lap times by around five seconds, and the corner count dropped from 16 to 14.",
+      "<b>Almost pancake flat.</b> On the pole lap, the highest and lowest points of the track are only {ELEV} m apart, so the 3D view exaggerates the height to make it visible.",
+      "<b>Michael Schumacher won here four times,</b> more than any other driver."
+    ],
+    sources:[["Sky Sports circuit guide","https://www.skysports.com/f1/grandprix/australia/circuit-guide"],["Autosport on the 2022 changes","https://www.autosport.com/f1/news/f1-australian-gp-track-changes-albert-park/9517500/"]]}
+};
+const TK={ready:false,slug:"albert-park",data:null,mode:"3d",cam:"orbit",t:0,rate:1,playing:!reduce,speedMap:false,ex:10,raf:0,last:0,
+  three:null,v2:{s:1,rot:0,ox:0,oy:0},labels:[],hintT:0};
+const TK_W=13; /* track width in metres */
+function tkVisible(){return !$("#p-tracks").hidden&&!document.hidden}
+function tkSpeedCol(v){ /* red slow → amber → yellow → green → blue fast */
+  const st=[[90,[225,6,0]],[150,[255,138,0]],[210,[255,201,60]],[270,[47,212,128]],[330,[56,182,255]]];
+  if(v<=st[0][0])return st[0][1];for(let i=1;i<st.length;i++)if(v<=st[i][0]){const f=(v-st[i-1][0])/(st[i][0]-st[i-1][0]);return st[i-1][1].map((c,k)=>Math.round(c+(st[i][1][k]-c)*f))}
+  return st[st.length-1][1];
+}
+function tkInit(){
+  if(TK.ready){tkResize();tkLoop();return}
+  TK.ready=true;
+  $("#tkFlag").innerHTML=FLAG("au",26);
+  $("#tk3dBtn").addEventListener("click",()=>tkMode("3d"));$("#tk2dBtn").addEventListener("click",()=>tkMode("2d"));
+  document.querySelectorAll("#tkCamSeg [data-cam]").forEach(b=>b.addEventListener("click",()=>tkCam(b.dataset.cam)));
+  document.querySelectorAll("#tkRate [data-rate]").forEach(b=>b.addEventListener("click",()=>{TK.rate=+b.dataset.rate;document.querySelectorAll("#tkRate [data-rate]").forEach(x=>x.setAttribute("aria-pressed",x===b))}));
+  $("#tkPlay").addEventListener("click",()=>{TK.playing=!TK.playing;tkPlayBtn()});
+  $("#tkScrub").addEventListener("input",e=>{if(!TK.data)return;TK.t=e.target.value/1000*TK.data.lapTime;tkFrame(0,true)});
+  $("#tkSpeedMap").addEventListener("change",e=>{TK.speedMap=e.target.checked;$("#tkLegend").hidden=!TK.speedMap;if(TK.three)tkColour3d();tkFrame(0,true)});
+  $("#tkEx").addEventListener("input",e=>{TK.ex=+e.target.value;$("#tkExV").textContent=TK.ex+"×";if(TK.three)tkBuildTrack3d();tkFrame(0,true)});
+  $("#tkReset").addEventListener("click",()=>{if(TK.mode==="3d")tkCam("orbit",true);else tkFit2d();tkFrame(0,true)});
+  new ResizeObserver(()=>tkResize()).observe($("#tkStage"));
+  document.addEventListener("visibilitychange",()=>{if(tkVisible())tkLoop()});
+  tkPlayBtn();tkSetup2d();
+  fetch(`data/tracks/${TK.slug}.json`).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+    TK.data=d;tkPrep(d);tkFacts();tkFit2d();
+    return tkLoadThree().then(()=>{tkSetup3d();tkMode("3d")}).catch(err=>{console.warn("3D unavailable",err);$("#tk3dBtn").disabled=true;$("#tk3dBtn").title="3D isn't available in this browser";tkMode("2d")});
+  }).then(()=>{$("#tkLoading").hidden=true;tkLoop()}).catch(err=>{console.error(err);$("#tkLoading").textContent="Couldn't load the circuit. Please refresh."});
+}
+function tkLoadThree(){
+  if(window.THREE&&THREE.OrbitControls)return Promise.resolve();
+  const add=src=>new Promise((ok,bad)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=()=>bad(new Error("load "+src));document.head.appendChild(s)});
+  const gl=(()=>{try{const c=document.createElement("canvas");return !!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){return false}})();
+  if(!gl)return Promise.reject(new Error("no webgl"));
+  return add("assets/vendor/three-r147.min.js").then(()=>add("assets/vendor/three-r147-OrbitControls.js"));
+}
+function tkPrep(d){
+  const P=d.pts;d.n=P.length;d.T=P.map(p=>p[3]);
+  d.span=Math.max(...P.map(p=>Math.abs(p[0])),...P.map(p=>Math.abs(p[1])))*2;
+  d.cum=[0];for(let i=1;i<d.n;i++)d.cum.push(d.cum[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));
+  /* labels only for the corners drivers brake for */
+  d.labelCorners=d.corners.filter(c=>c.v<250);
+  const slowest=d.corners.reduce((a,c)=>c.v<a.v?c:a,d.corners[0]);
+  $("#tkLabels").innerHTML=d.labelCorners.map(c=>`<div class="tk-lab${c===slowest?" slow":""}">${c.v} km/h<small>${["","1st","2nd","3rd","4th","5th","6th","7th","8th"][c.gear]||c.gear} gear</small></div>`).join("");
+  TK.labels=[...$("#tkLabels").children];
+  $("#tkWho").textContent=`${d.source.driver} · ${d.source.year} pole lap`;$("#tkSwatch").style.background=d.source.colour;
+}
+/* car state at time t: position (metres), height, heading, telemetry */
+function tkAt(t){
+  const d=TK.data,T=d.T,P=d.pts;let lo=0,hi=d.n-1;
+  if(t<=T[0])lo=0,hi=1;else if(t>=T[hi]){lo=hi-1}else{while(hi-lo>1){const m=(lo+hi)>>1;if(T[m]<=t)lo=m;else hi=m}}
+  const a=P[lo],b=P[hi],f=Math.max(0,Math.min(1,(t-a[3])/Math.max(1e-6,b[3]-a[3])));
+  const n2=P[Math.min(d.n-1,hi+2)],p2=P[Math.max(0,lo-2)];
+  return{x:a[0]+(b[0]-a[0])*f,y:a[1]+(b[1]-a[1])*f,z:a[2]+(b[2]-a[2])*f,h:Math.atan2(n2[1]-p2[1],n2[0]-p2[0]),
+    spd:Math.round(a[4]+(b[4]-a[4])*f),gear:f<.5?a[5]:b[5],thr:a[6]+(b[6]-a[6])*f,brk:f<.5?a[7]:b[7],i:lo,dist:d.cum[lo]+(d.cum[hi]-d.cum[lo])*f};
+}
+function tkPlayBtn(){const b=$("#tkPlay");b.textContent=TK.playing?"❚❚":"▶";b.setAttribute("aria-label",TK.playing?"Pause":"Play")}
+function tkMode(m){
+  if(m==="3d"&&!TK.three)m="2d";
+  TK.mode=m;$("#tk3dBtn").setAttribute("aria-pressed",m==="3d");$("#tk2dBtn").setAttribute("aria-pressed",m==="2d");
+  $("#tk3d").hidden=m!=="3d";$("#tk2d").hidden=m!=="2d";$("#tkCamSeg").hidden=m!=="3d";$("#tkExWrap").hidden=m!=="3d";
+  const touch=matchMedia("(pointer:coarse)").matches;$("#tkHint").textContent=touch?(m==="3d"?"Drag to rotate · Pinch to zoom · Two fingers to move":"Drag to move · Pinch to zoom · Twist to rotate"):(m==="3d"?"Drag to rotate · Right-drag to move · Scroll to zoom":"Drag to move · Scroll to zoom · Shift-drag to rotate");
+  $("#tkHint").style.opacity=1;TK.hintT=0;
+  tkResize();tkFrame(0,true);
+}
+function tkResize(){
+  const st=$("#tkStage");if(!st)return;const w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const c=$("#tk2d");c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);TK.v2.dpr=dpr;
+  if(TK.three){TK.three.r.setPixelRatio(dpr);TK.three.r.setSize(w,h,false);TK.three.cam.aspect=w/h;TK.three.cam.updateProjectionMatrix()}
+  tkDrawProfile();if(TK.data)tkFrame(0,true);
+}
+function tkLoop(){
+  cancelAnimationFrame(TK.raf);TK.last=performance.now();
+  const f=now=>{const dt=Math.min(.1,(now-TK.last)/1000);TK.last=now;if(!tkVisible())return;
+    try{tkFrame(dt)}catch(e){console.error(e)}TK.raf=requestAnimationFrame(f)};
+  TK.raf=requestAnimationFrame(f);
+}
+function tkFrame(dt,force){
+  const d=TK.data;if(!d)return;
+  if(TK.playing&&dt){TK.t+=dt*TK.rate;if(TK.t>d.lapTime)TK.t-=d.lapTime}
+  TK.hintT+=dt||0;if(TK.hintT>6)$("#tkHint").style.opacity=0;
+  const c=tkAt(TK.t);
+  const m=Math.floor(TK.t/60),s=TK.t-m*60;$("#tkClock").textContent=m+":"+s.toFixed(3).padStart(6,"0");
+  $("#tkSpd").textContent=c.spd;$("#tkGear").textContent=c.gear||"N";$("#tkThr").style.width=Math.round(c.thr)+"%";$("#tkBrk").style.width=c.brk?"100%":"0";
+  if(dt||force)$("#tkScrub").value=Math.round(TK.t/d.lapTime*1000);
+  if(TK.mode==="3d")tkRender3d(c,dt);else tkDraw2d(c);
+  tkProfileMarker(c);
+}
+
+/* ---------- 3D ---------- */
+function tkSetup3d(){
+  const host=$("#tk3d"),r=new THREE.WebGLRenderer({antialias:true,alpha:false});
+  r.setClearColor(0x131b27);host.appendChild(r.domElement);
+  const scene=new THREE.Scene();scene.fog=new THREE.Fog(0x131b27,TK.data.span*1.2,TK.data.span*3.2);
+  const cam=new THREE.PerspectiveCamera(45,1,1,TK.data.span*6);
+  scene.add(new THREE.HemisphereLight(0xdfe8ff,0x16301f,0.95));
+  const sun=new THREE.DirectionalLight(0xffffff,0.75);sun.position.set(0.6,1,0.35);scene.add(sun);
+  const S=TK.data.span;
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(S*10,S*10),new THREE.MeshLambertMaterial({color:0x10261a}));
+  ground.rotation.x=-Math.PI/2;ground.position.y=-0.6;scene.add(ground);
+  const grid=new THREE.GridHelper(S*2.4,Math.round(S*2.4/100),0x1d3d2a,0x163222);grid.position.y=-0.55;scene.add(grid);
+  const ctr=new THREE.OrbitControls(cam,r.domElement);ctr.enableDamping=true;ctr.dampingFactor=0.08;ctr.maxPolarAngle=Math.PI*0.48;ctr.minDistance=15;ctr.maxDistance=S*2.6;
+  ctr.addEventListener("start",()=>{$("#tkHint").style.opacity=0});
+  TK.three={r,scene,cam,ctr,track:null,car:tkCarModel(TK.data.source.colour),beacon:null};
+  scene.add(TK.three.car);
+  const bc=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,60,8,1,true),new THREE.MeshBasicMaterial({color:new THREE.Color(TK.data.source.colour),transparent:true,opacity:0.5,depthWrite:false}));
+  TK.three.beacon=bc;scene.add(bc);
+  tkBuildTrack3d();tkResize();tkCam("orbit",true);
+}
+function tkY(z){return z*TK.ex}
+function tkBuildTrack3d(){
+  const g=TK.three;if(g.track){g.scene.remove(g.track);g.track.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
+  const d=TK.data,P=d.pts,n=d.n,grp=new THREE.Group();
+  const nrm=i=>{const a=P[(i-1+n)%n],b=P[(i+1)%n];const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;return[-dy/l,dx/l]};
+  /* ribbon helper: strip between lateral offsets o1..o2 (metres, + = left) at height lift */
+  const strip=(o1,o2,lift,colFn,idx)=>{
+    const ids=idx||[...Array(n).keys()],pos=[],col=[],ind=[];
+    ids.forEach((i,k)=>{const p=P[i],[nx,ny]=nrm(i),y=tkY(p[2])+lift;
+      for(const o of [o1,o2]){pos.push(p[0]+nx*o,y,-(p[1]+ny*o))}
+      const c=colFn(i,k);col.push(...c,...c);
+      if(k<ids.length-1||!idx){const a=k*2,b=((k+1)%ids.length)*2;ind.push(a,b,a+1,a+1,b,b+1)}});
+    const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));
+    geo.setAttribute("color",new THREE.Float32BufferAttribute(col,3));geo.setIndex(ind);geo.computeVertexNormals();
+    return new THREE.Mesh(geo,new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide}));
+  };
+  const W=TK_W/2;
+  const asphalt=strip(W,-W,0,()=>[0.19,0.2,0.23]);asphalt.name="asphalt";grp.add(asphalt);
+  grp.add(strip(W-0.2,W-0.75,0.03,()=>[0.92,0.92,0.92]));grp.add(strip(-W+0.75,-W+0.2,0.03,()=>[0.92,0.92,0.92]));
+  /* walls down to the ground so the height reads */
+  const wall=(o)=>{const pos=[],ind=[];for(let i=0;i<n;i++){const p=P[i],[nx,ny]=nrm(i);pos.push(p[0]+nx*o,tkY(p[2]),-(p[1]+ny*o),p[0]+nx*o,-0.6,-(p[1]+ny*o));const a=i*2,b=((i+1)%n)*2;ind.push(a,b,a+1,a+1,b,b+1)}
+    const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));geo.setIndex(ind);geo.computeVertexNormals();
+    return new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:0x2a2f38,side:THREE.DoubleSide}))};
+  grp.add(wall(W+1.6));grp.add(wall(-W-1.6));
+  /* kerbs on the inside of each corner */
+  for(const c of d.corners){const ids=[];for(let k=-9;k<=9;k++)ids.push((c.i+k+n)%n);
+    const side=c.dir==="L"?1:-1,o1=side*W,o2=side*(W+1.6);
+    grp.add(strip(Math.min(o1,o2),Math.max(o1,o2),0.05,(i,k)=>k%2?[0.88,0.04,0]:[0.95,0.95,0.95],ids))}
+  /* start / finish line */
+  const sf=document.createElement("canvas");sf.width=64;sf.height=8;const sc=sf.getContext("2d");for(let x=0;x<16;x++)for(let y=0;y<2;y++){sc.fillStyle=(x+y)%2?"#111":"#fafafa";sc.fillRect(x*4,y*4,4,4)}
+  const tex=new THREE.CanvasTexture(sf);tex.magFilter=THREE.NearestFilter;
+  const p0=P[0],[nx,ny]=nrm(0),line=new THREE.Mesh(new THREE.PlaneGeometry(TK_W,2.4),new THREE.MeshBasicMaterial({map:tex}));
+  line.rotation.x=-Math.PI/2;line.rotation.z=Math.atan2(ny,nx);line.position.set(p0[0],tkY(p0[2])+0.06,-p0[1]);grp.add(line);
+  const lp=[],lc=[];for(let i=0;i<=n;i++){const p=P[i%n];lp.push(p[0],tkY(p[2])+0.15,-p[1]);lc.push(1,1,1)}
+  const lg=new THREE.BufferGeometry();lg.setAttribute("position",new THREE.Float32BufferAttribute(lp,3));lg.setAttribute("color",new THREE.Float32BufferAttribute(lc,3));
+  const line2=new THREE.Line(lg,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.85}));line2.name="line";grp.add(line2);
+  g.track=grp;g.scene.add(grp);tkColour3d();
+}
+function tkColour3d(){
+  const g=TK.three,m=g.track.getObjectByName("asphalt"),col=m.geometry.attributes.color,P=TK.data.pts;
+  for(let i=0;i<TK.data.n;i++){const c=TK.speedMap?tkSpeedCol(P[i][4]).map(v=>0.12+v/255*0.62):[0.19,0.2,0.23];col.setXYZ(i*2,...c);col.setXYZ(i*2+1,...c)}
+  col.needsUpdate=true;
+  const ln=g.track.getObjectByName("line"),lc=ln.geometry.attributes.color;
+  for(let i=0;i<=TK.data.n;i++){const c=TK.speedMap?tkSpeedCol(P[i%TK.data.n][4]).map(v=>v/255):[0.95,0.95,0.95];lc.setXYZ(i,...c)}lc.needsUpdate=true;
+}
+function tkCarModel(hex){
+  const g=new THREE.Group(),team=new THREE.Color(hex),M=c=>new THREE.MeshLambertMaterial({color:c});
+  const box=(w,h,d,x,y,z,m)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);g.add(o);return o};
+  const body=M(team),dark=M(0x15171c),black=M(0x0b0b0b);
+  box(5.2,0.08,1.5,0,0.1,0,dark);                       // floor
+  box(3.0,0.42,0.85,0.1,0.42,0,body);                    // tub
+  box(1.7,0.24,0.42,2.3,0.34,0,body);                    // nose
+  box(1.7,0.38,1.5,-0.4,0.38,0,body);                    // sidepods
+  box(1.6,0.5,0.46,-1.3,0.66,0,body);                    // engine cover
+  box(0.5,0.06,1.95,2.95,0.14,0,dark);                   // front wing
+  box(0.4,0.07,1.15,-2.55,0.98,0,body);box(0.12,0.62,0.08,-2.5,0.66,0.35,dark);box(0.12,0.62,0.08,-2.5,0.66,-0.35,dark); // rear wing
+  const wheel=new THREE.CylinderGeometry(0.36,0.36,0.38,14);
+  for(const [x,z] of [[1.75,0.88],[1.75,-0.88],[-1.6,0.9],[-1.6,-0.9]]){const w=new THREE.Mesh(wheel,black);w.rotation.x=Math.PI/2;w.position.set(x,0.36,z);g.add(w)}
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(0.34,0.05,6,14,Math.PI),M(0x2b2f36));halo.rotation.set(-Math.PI/2,0,Math.PI/2);halo.position.set(0.45,0.82,0);g.add(halo);
+  const helm=new THREE.Mesh(new THREE.SphereGeometry(0.19,12,10),M(0xf2f2f2));helm.position.set(0.1,0.8,0);g.add(helm);
+  return g;
+}
+function tkCam(mode,reset){
+  const g=TK.three;if(!g)return;TK.cam=mode;
+  document.querySelectorAll("#tkCamSeg [data-cam]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cam===mode));
+  g.ctr.enabled=mode!=="chase";
+  const S=TK.data.span;
+  if(mode==="orbit"){const P=TK.data.pts,hx=Math.max(...P.map(p=>Math.abs(p[0]))),hy=Math.max(...P.map(p=>Math.abs(p[1]))),tv=Math.tan(g.cam.fov*Math.PI/360),fit=Math.max(hy*1.05/tv,hx/(tv*g.cam.aspect))*1.22;g.ctr.target.set(0,0,0);g.cam.position.set(0,fit*0.82,fit*0.57);g.ctr.update()}
+  if(mode==="follow"){const c=tkAt(TK.t);g.ctr.target.set(c.x,tkY(c.z),-c.y);g.cam.position.set(c.x-60,tkY(c.z)+45,-c.y+60);g.ctr.update()}
+}
+function tkRender3d(c,dt){
+  const g=TK.three;if(!g)return;
+  const car=g.car,yaw=c.h,y=tkY(c.z);
+  car.position.set(c.x,y,-c.y);car.rotation.set(0,yaw,0);
+  /* make the car easier to spot from far away */
+  const camD=g.cam.position.distanceTo(car.position),sc=TK.cam==="chase"?1:Math.max(1,Math.min(5,camD/180));car.scale.setScalar(sc);
+  g.beacon.visible=TK.cam!=="chase"&&camD>500;g.beacon.position.set(c.x,y+30,-c.y);
+  if(TK.cam==="follow"){const tgt=new THREE.Vector3(c.x,y,-c.y),dl=tgt.clone().sub(g.ctr.target);g.ctr.target.add(dl);g.cam.position.add(dl)}
+  if(TK.cam==="chase"){const fx=Math.cos(yaw),fz=-Math.sin(yaw),want=new THREE.Vector3(c.x-fx*16,y+5.5,-c.y-fz*16);
+    if(dt)g.cam.position.lerp(want,Math.min(1,dt*6));else g.cam.position.copy(want);g.cam.lookAt(c.x+fx*14,y+1.5,-c.y+fz*14)}
+  else g.ctr.update();
+  g.r.render(g.scene,g.cam);
+  /* corner labels */
+  const st=$("#tkStage"),W=st.clientWidth,H=st.clientHeight,v=new THREE.Vector3(),P=TK.data.pts;
+  TK.data.labelCorners.forEach((k,j)=>{const p=P[k.i];v.set(p[0],tkY(p[2])+3,-p[1]).project(g.cam);const el=TK.labels[j];
+    const vis=v.z<1&&v.x>-1.1&&v.x<1.1&&v.y>-1.1&&v.y<1.1&&TK.cam!=="chase";el.style.display=vis?"":"none";
+    if(vis)el.style.transform=`translate(${((v.x+1)/2*W).toFixed(1)}px,${((1-v.y)/2*H).toFixed(1)}px) translate(-50%,-100%)`});
+}
+
+/* ---------- 2D ---------- */
+function tkSetup2d(){
+  const c=$("#tk2d"),v=TK.v2,pts=new Map();let last=null;
+  c.addEventListener("wheel",e=>{e.preventDefault();const r=c.getBoundingClientRect();tkZoom2d(Math.exp(-e.deltaY*0.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+  c.addEventListener("pointerdown",e=>{c.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});last=null;$("#tkHint").style.opacity=0});
+  c.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;const prev=pts.get(e.pointerId),now={x:e.clientX,y:e.clientY};
+    if(pts.size===1){if(e.shiftKey){v.rot+=(now.x-prev.x)*0.006}else{v.ox+=now.x-prev.x;v.oy+=now.y-prev.y}}
+    else if(pts.size===2){const ids=[...pts.keys()],o=pts.get(ids[0]===e.pointerId?ids[1]:ids[0]);
+      const d0=Math.hypot(prev.x-o.x,prev.y-o.y),d1=Math.hypot(now.x-o.x,now.y-o.y),a0=Math.atan2(prev.y-o.y,prev.x-o.x),a1=Math.atan2(now.y-o.y,now.x-o.x);
+      const r=c.getBoundingClientRect(),mx=(now.x+o.x)/2-r.left,my=(now.y+o.y)/2-r.top;
+      if(d0>10)tkZoom2d(d1/d0,mx,my);tkRotate2d(a1-a0,mx,my);v.ox+=(now.x-prev.x)/2;v.oy+=(now.y-prev.y)/2}
+    pts.set(e.pointerId,now);if(!TK.playing)tkFrame(0,true)});
+  ["pointerup","pointercancel"].forEach(t=>c.addEventListener(t,e=>pts.delete(e.pointerId)));
+  c.addEventListener("dblclick",()=>{tkFit2d();tkFrame(0,true)});
+}
+function tkZoom2d(f,mx,my){const v=TK.v2,ns=Math.max(v.fit*0.6,Math.min(v.fit*25,v.s*f));f=ns/v.s;v.ox=mx-(mx-v.ox)*f;v.oy=my-(my-v.oy)*f;v.s=ns}
+function tkRotate2d(a,mx,my){const v=TK.v2,cs=Math.cos(a),sn=Math.sin(a),dx=v.ox-mx,dy=v.oy-my;v.ox=mx+dx*cs-dy*sn;v.oy=my+dx*sn+dy*cs;v.rot+=a}
+function tkFit2d(){
+  const st=$("#tkStage"),W=st.clientWidth,H=st.clientHeight,d=TK.data;if(!d||!W)return;
+  const xs=d.pts.map(p=>p[0]),ys=d.pts.map(p=>p[1]),w=Math.max(...xs)-Math.min(...xs),h=Math.max(...ys)-Math.min(...ys);
+  const s=Math.min((W-60)/w,(H-90)/h);Object.assign(TK.v2,{s,fit:s,rot:0,ox:W/2-(Math.max(...xs)+Math.min(...xs))/2*s,oy:H/2+(Math.max(...ys)+Math.min(...ys))/2*s});
+}
+function tkTo2d(x,y){const v=TK.v2,cs=Math.cos(v.rot),sn=Math.sin(v.rot),X=x*v.s,Y=-y*v.s;return[v.ox+X*cs-Y*sn,v.oy+X*sn+Y*cs]}
+function tkDraw2d(c){
+  const cv=$("#tk2d"),ctx=cv.getContext("2d"),v=TK.v2,d=TK.data,P=d.pts,n=d.n;
+  ctx.setTransform(v.dpr,0,0,v.dpr,0,0);const W=cv.width/v.dpr,H=cv.height/v.dpr;ctx.clearRect(0,0,W,H);
+  const S=P.map(p=>tkTo2d(p[0],p[1])),w=Math.max(4,TK_W*v.s);
+  ctx.lineJoin="round";ctx.lineCap="round";
+  const path=()=>{ctx.beginPath();S.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath()};
+  path();ctx.strokeStyle="#000";ctx.lineWidth=w+6;ctx.stroke();
+  path();ctx.strokeStyle="#e6e6e6";ctx.lineWidth=w+2.5;ctx.stroke();
+  if(TK.speedMap){ctx.lineWidth=w;for(let i=0;i<n;i++){const a=S[i],b=S[(i+1)%n];ctx.strokeStyle=`rgb(${tkSpeedCol(P[i][4]).join(",")})`;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}}
+  else{path();ctx.strokeStyle="#30343d";ctx.lineWidth=w;ctx.stroke()}
+  /* start/finish */
+  const s0=S[0],s1=S[2],ang=Math.atan2(s1[1]-s0[1],s1[0]-s0[0]);ctx.save();ctx.translate(s0[0],s0[1]);ctx.rotate(ang);
+  const q=Math.max(2,w/4);for(let k=0;k<4;k++)for(let j=0;j<2;j++){ctx.fillStyle=(k+j)%2?"#111":"#fff";ctx.fillRect(j*q-q,-w/2+k*w/4,q,w/4)}ctx.restore();
+  /* labels */
+  d.labelCorners.forEach((k,j)=>{const p=S[k.i],el=TK.labels[j];el.style.display="";el.style.transform=`translate(${p[0].toFixed(1)}px,${(p[1]-w/2-4).toFixed(1)}px) translate(-50%,-100%)`});
+  /* car */
+  const [cx,cy]=tkTo2d(c.x,c.y),hd=-c.h+v.rot,r=Math.max(6,Math.min(14,w*0.55));
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(hd);ctx.fillStyle=d.source.colour;ctx.strokeStyle="#fff";ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(r*1.4,0);ctx.lineTo(-r,r*0.8);ctx.lineTo(-r*0.5,0);ctx.lineTo(-r,-r*0.8);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+  ctx.font='700 11px "JetBrains Mono",monospace';ctx.fillStyle="#fff";ctx.textAlign="left";ctx.fillText(d.source.driver,cx+r+6,cy-r-2);
+}
+
+/* ---------- elevation profile ---------- */
+function tkDrawProfile(){
+  const cv=$("#tkProfile"),d=TK.data;if(!cv||!d)return;const W=cv.clientWidth,H=cv.clientHeight;if(!W)return;
+  const dpr=Math.min(devicePixelRatio||1,2);cv.width=W*dpr;cv.height=H*dpr;const ctx=cv.getContext("2d",{willReadFrequently:true});ctx.setTransform(dpr,0,0,dpr,0,0);
+  const L=d.cum[d.n-1],zs=d.pts.map(p=>p[2]),zmax=Math.max(...zs),pad={l:44,r:12,t:16,b:20};
+  const X=s=>pad.l+s/L*(W-pad.l-pad.r),Y=z=>H-pad.b-(z/Math.max(0.5,zmax))*(H-pad.t-pad.b);
+  ctx.clearRect(0,0,W,H);ctx.font='10px "JetBrains Mono",monospace';ctx.fillStyle="#8C94A6";ctx.textAlign="right";
+  ctx.fillText(zmax.toFixed(1)+" m",pad.l-6,Y(zmax)+3);ctx.fillText("0 m",pad.l-6,Y(0)+3);
+  ctx.textAlign="left";ctx.fillText("HEIGHT ON THE LAP",pad.l,11);ctx.textAlign="right";ctx.fillText((L/1000).toFixed(2)+" km",W-pad.r,H-5);
+  const grd=ctx.createLinearGradient(0,Y(zmax),0,Y(0));grd.addColorStop(0,"rgba(225,6,0,.35)");grd.addColorStop(1,"rgba(225,6,0,.02)");
+  ctx.beginPath();ctx.moveTo(X(0),Y(0));d.pts.forEach((p,i)=>ctx.lineTo(X(d.cum[i]),Y(p[2])));ctx.lineTo(X(L),Y(0));ctx.closePath();ctx.fillStyle=grd;ctx.fill();
+  ctx.beginPath();d.pts.forEach((p,i)=>i?ctx.lineTo(X(d.cum[i]),Y(p[2])):ctx.moveTo(X(0),Y(p[2])));ctx.strokeStyle="#E10600";ctx.lineWidth=1.5;ctx.stroke();
+  TK.prof={X,Y,img:ctx.getImageData(0,0,cv.width,cv.height)};
+}
+function tkProfileMarker(c){
+  const cv=$("#tkProfile"),pr=TK.prof;if(!pr)return;const ctx=cv.getContext("2d");ctx.putImageData(pr.img,0,0);
+  const dpr=cv.width/cv.clientWidth;ctx.setTransform(dpr,0,0,dpr,0,0);const x=pr.X(c.dist),y=pr.Y(c.z);
+  ctx.strokeStyle="rgba(255,255,255,.35)";ctx.beginPath();ctx.moveTo(x,14);ctx.lineTo(x,cv.clientHeight-20);ctx.stroke();
+  ctx.fillStyle=TK.data.source.colour;ctx.beginPath();ctx.arc(x,y,4.5,0,7);ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.stroke();
+}
+
+/* ---------- facts ---------- */
+function tkFacts(){
+  const d=TK.data,I=TRACK_INFO[d.slug],race=RACES.find(r=>r.rd===I.rd),rec=LAP_RECORD[I.rd],st=d.stats;
+  const lt=d.lapTime,lm=Math.floor(lt/60),lts=lm+":"+(lt-lm*60).toFixed(3).padStart(6,"0");
+  const win=race&&race.win?DRIVERS.find(x=>x.code===race.win):null;
+  const cards=[["Length",I.length.toFixed(3)+" km",`${I.laps} laps · ${(I.length*I.laps).toFixed(3)} km race`],["Corners",I.turns,"since the 2022 redesign"],
+    ["Lap record",rec?rec[0]:"–",rec?`${rec[1]}, ${rec[3]}`:""],[`${d.source.year} pole`,lts,d.source.driverName],
+    [`${d.source.year} winner`,win?`${win.first[0]}. ${win.last}`:"–",race&&race.time?race.time:""],["First F1 race here",I.firstGP,"Australian Grand Prix"]];
+  $("#tkStats").innerHTML=cards.map(([k,v,s])=>`<div class="tk-stat"><span class="label">${k}</span><b>${esc(String(v))}</b><small>${esc(s)}</small></div>`).join("");
+  $("#tkBits").innerHTML=I.bits.map(b=>`<li>${b.replace("{ELEV}",st.elev)}</li>`).join("");
+  $("#tkLapTitle").textContent=`${d.source.driverName}'s pole lap in numbers`;
+  $("#tkNums").innerHTML=[[st.vmax+" km/h","top speed"],[st.vmin+" km/h","slowest point"],[st.fullThrottle+"%","of the lap at full throttle"],[st.braking+"%","on the brakes"],[st.gearChanges,"gear changes"],[st.elev+" m","from lowest to highest point"]]
+    .map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+  $("#tkSrc").innerHTML=`Circuit shape, height and telemetry come from ${esc(d.source.driverName)}'s ${d.source.year} qualifying lap in <a href="https://openf1.org" target="_blank" rel="noopener">OpenF1</a> data, so they can differ slightly from the official map. Height in the 3D view is exaggerated. Facts: ${I.sources.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(", ")}.`;
+}
+
 /* ================= ROUTING ================= */
-const ROUTES=["standings","race-centre","replay","calendar","title-fight","travel","games"];
+const ROUTES=["standings","race-centre","replay","calendar","tracks","title-fight","travel","games"];
 let replayDrawn=false;
 function route(){
   const h=(location.hash||"").slice(1);
@@ -2966,6 +3403,7 @@ function route(){
   if(r==="title-fight"){renderAlive();if(champDecided())renderTitleDecided();else evalScenario(false)}
   if(r==="travel"){renderTravel(true);renderChecklist()}
   if(r==="games")gmInit();else gmLeave();
+  if(r==="tracks")tkInit();
   if(r==="race-centre")rcInit();else if(typeof rcPause==="function"&&RCX.playing){rcPause()}
 }
 addEventListener("hashchange",()=>{route();const p=document.querySelector("section.panel:not([hidden])");if(p&&location.hash)p.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
