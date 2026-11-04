@@ -2645,52 +2645,60 @@ function rxStats(){
 }
 
 /* ---------- Pit Wall Dash: three-lap qualifying against the grid ---------- */
-/* qualifying physics: shared by the player, the reference lap and the ghost */
-const DW=360,DH=560,PY=DH*0.74;
-const Q={L:12000,HW:62,VMAX:640,VERS:210,VBRAKE:220,VGRASS:170,LAT:250,K:3.6,LAPS:3};
-const Q_A=[260,90,30];
-const Q_CH=[[2700,700,90],[6300,560,80],[9700,820,95]];
+/* qualifying physics: shared by the player, the reference lap and the ghost.
+   The car follows the track by itself; steering moves it across the road.
+   Take a corner faster than its grip allows and the car slides wide (understeer). */
+const DW=360,DH=560,PY=DH*0.8,QZ=1.3;
+const Q={L:12000,HW:74,VMAX:560,VERS:160,VBRAKE:180,VGRASS:170,G0:260,G1:0.2,STEER:190,K:3.45,LAPS:3};
+const Q_A=[200,70,20];
+const Q_CH=[[2700,900,70],[6300,760,62],[9700,1000,74]];
 const qSm=t=>t<=0?0:t>=1?1:t*t*(3-2*t);
 function qOff(d){
   const L=Q.L,lp=((d%L)+L)%L,u=lp/L,tw=2*Math.PI;
   let o=Q_A[0]*Math.sin(tw*2*u)+Q_A[1]*Math.sin(tw*5*u+0.8)+Q_A[2]*Math.sin(tw*9*u+2.1);
-  for(const [c,P,a] of Q_CH){const z=(lp-c)/430;o+=a*Math.exp(-z*z)*Math.sin(tw*(lp-c)/P)}
+  for(const [c,P,a] of Q_CH){const z=(lp-c)/520;o+=a*Math.exp(-z*z)*Math.sin(tw*(lp-c)/P)}
   return o*qSm(lp/900)*qSm((L-lp)/900);
 }
 const qCX=d=>DW/2+qOff(d);
 const qSlope=d=>(qOff(d+6)-qOff(d-6))/12;
+/* fastest speed the car can hold at distance d without sliding */
+const qVlim=d=>Q.G0/(Math.abs(qSlope(d))+Q.G1);
 function qStep(s,inp,dt){
   let dir=inp.dir||0,boost=inp.boost,brake=inp.brake;
-  if(s.spin>0){s.spin-=dt;dir=0;boost=false;brake=true}
-  const grip=Q.LAT*Math.max(0.35,1.3-s.v/1000);s.vx+=(dir*grip-s.vx)*Math.min(1,dt*8);s.x+=s.vx*dt;
-  const c=qCX(s.d);s.x=Math.max(c-Q.HW-60,Math.min(c+Q.HW+60,s.x));
-  const ex=Math.abs(s.x-c);s.off=ex>Q.HW+9;s.wide=ex>Q.HW+22;
+  s.vx+=(dir*Q.STEER-s.vx)*Math.min(1,dt*10);
+  /* the tyres can give the car at most "grip" of sideways speed: following the bend plus your steering */
+  const sl=qSlope(s.d),grip=Math.max(40,Q.G0-Q.G1*s.v),want=sl*s.v+s.vx,got=Math.max(-grip,Math.min(grip,want));
+  s.slide=Math.abs(want-got);s.r+=(got-sl*s.v)*dt;
+  s.r=Math.max(-Q.HW-60,Math.min(Q.HW+60,s.r));
+  const ex=Math.abs(s.r);s.off=ex>Q.HW+9;s.wide=ex>Q.HW+22;
   s.boosting=!!(boost&&s.ers>0.01&&!brake);
   let target=Q.VMAX+(s.boosting?Q.VERS:0);if(brake)target=Q.VBRAKE;if(s.off)target=Math.min(target,Q.VGRASS);
   const rate=target<s.v?(brake?2.8:s.off?3.2:1.0):0.9;
   s.v+=(target-s.v)*Math.min(1,dt*rate);
-  if(s.boosting)s.ers=Math.max(0,s.ers-dt*0.3);else if(brake)s.ers=Math.min(1,s.ers+dt*0.12);
-  s.d+=s.v*dt;
+  if(s.boosting)s.ers=Math.max(0,s.ers-dt*0.32);else if(brake)s.ers=Math.min(1,s.ers+dt*0.12);
+  s.d+=s.v*dt;s.x=qCX(s.d)+s.r;s.head=Math.atan(sl+s.vx/Math.max(60,s.v));
 }
-/* the reference driver (tuned by searching for the fastest lap that stays inside track limits) */
+/* speed you could still slow to by distance dd ahead if you braked now */
+const qReach=(v,dd)=>Q.VBRAKE+(v-Q.VBRAKE)*Math.exp(-2.8*dd/Math.max(200,v*0.75));
+/* the reference driver (its braking point tuned for the fastest clean lap): brakes just in time for every corner, uses ERS where it's flat out */
 function qBot(s){
-  let need=1e9,far=1e9;
-  for(let k=0;k<=s.v*0.4;k+=15)need=Math.min(need,390/(Math.abs(qSlope(s.d+k))+0.25));
-  for(let k=0;k<=s.v*1.2;k+=20)far=Math.min(far,390/(Math.abs(qSlope(s.d+k))+0.25));
-  return{dir:Math.max(-1,Math.min(1,(qCX(s.d+s.v*0.14)-s.x)/9)),boost:far>760,brake:s.v>need+30};
+  let brake=false,far=1e9;
+  for(let k=0;k<=s.v*0.9;k+=12){if(qVlim(s.d+k)<qReach(s.v,k+0.2*s.v)+4){brake=true;break}}
+  for(let k=0;k<=s.v*1.2;k+=20)far=Math.min(far,qVlim(s.d+k));
+  return{dir:Math.max(-1,Math.min(1,-s.r/10)),boost:!brake&&far>Q.VMAX+Q.VERS,brake};
 }
+function qNew(d,v){const s={d,r:0,v,vx:0,ers:1,spin:0};s.x=qCX(d);s.head=0;return s}
 /* reference flying lap sampled every 20 units: time and x at each distance */
 function qReference(){
-  const s={d:-4000,x:qCX(-4000),v:Q.VMAX,vx:0,ers:1,spin:0},dt=1/240,N=Q.L/20;
+  const s=qNew(-4000,Q.VMAX),dt=1/240,N=Q.L/20;
   const T=new Float32Array(N+1),X=new Float32Array(N+1);let t=0,i=0,crossed=false,off=0;
   while(i<=N){
     const prev=s.d;qStep(s,qBot(s),dt);
-    if(!crossed&&prev<0&&s.d>=0){crossed=true;t=(s.d)/s.v*-1;s.ers=1}
+    if(!crossed&&prev<0&&s.d>=0){crossed=true;t=-(s.d)/s.v;s.ers=1}
     if(crossed){t+=dt;if(s.off)off+=dt;while(i<=N&&s.d>=i*20){T[i]=t-(s.d-i*20)/s.v;X[i]=s.x;i++}}
   }
   return{T,X,lap:T[N],off};
 }
-
 const qFmt=gs=>{if(gs==null||!isFinite(gs))return"–";const s=gs*Q.K,m=Math.floor(s/60);return m+":"+(s-m*60).toFixed(3).padStart(6,"0")};
 const fmtGap=gs=>(gs<0?"-":"+")+(Math.abs(gs)*Q.K).toFixed(3);
 const D={state:"idle",raf:0,team:"Ferrari",keys:{},touch:new Map(),boostTouch:false,brakeTouch:false,fx:[],scale:1,acc:0,
@@ -2702,7 +2710,7 @@ function qBuildGrid(){
   const field=Object.values(byTeam).flatMap(a=>a.slice().sort((x,y)=>y.pts-x.pts).slice(0,2));
   field.sort((a,b)=>b.pts-a.pts);
   const R=qRng(2026),opt=D.ref.lap;
-  const g=field.map((d,i)=>({code:d.code,name:d.first+" "+d.last,team:d.team,t:opt*(1.024+i*0.0029+R()*0.006)}));
+  const g=field.map((d,i)=>({code:d.code,name:d.first+" "+d.last,team:d.team,t:opt*(1.045+i*0.0068+R()*0.006)}));
   g.sort((a,b)=>a.t-b.t);
   /* best sectors on the sheet: the reference lap's split, at pole pace, a touch quicker */
   const N=D.ref.T.length-1,f=[D.ref.T[Math.round(N/3)],D.ref.T[Math.round(2*N/3)]-D.ref.T[Math.round(N/3)],D.ref.lap-D.ref.T[Math.round(2*N/3)]].map(x=>x/D.ref.lap);
@@ -2756,13 +2764,18 @@ function dashSetup(){
   pad("#dashBoost","boostTouch");pad("#dashBrake","brakeTouch");
   document.addEventListener("visibilitychange",()=>{if(document.hidden)dashPause()});
   addEventListener("resize",()=>{if(gmVisible()&&gmTab==="race")dashResize()});
-  D.s={d:-1400,x:qCX(-1400),v:0,vx:0,ers:1,spin:0};
+  D.s=qNew(-1400,0);D.corners=qCorners();
   qRenderSheet();dashIntro();dashResize();
+}
+function qCorners(){
+  const out=[];let prev=qVlim(-20),cur=qVlim(0);
+  for(let d=20;d<=Q.L;d+=20){const nx=qVlim(d);if(cur<prev&&cur<=nx&&cur<Q.VMAX-40)out.push({d:d-20,v:cur,dir:Math.sign(qSlope(d-20))});prev=cur;cur=nx}
+  return out;
 }
 function dashIntro(){
   const tg=qTarget(),p=D.best!=null?qPosition(D.best):null;
   $("#dashTitle").textContent="Qualifying";
-  $("#dashSub").innerHTML=`<p>Three flying laps around Pit Wall Park. Your best lap counts, and putting all four wheels off the track deletes the lap. Brake for the chicanes and save ERS for the straights.</p>
+  $("#dashSub").innerHTML=`<p>Three flying laps around Pit Wall Park. Your best lap counts, and putting all four wheels off the track deletes the lap. The car follows the track: you steer across it, and if you arrive too fast you slide wide. Brake when the line turns red, and use ERS on the green straights.</p>
     <p class="q-target">${D.best==null?`Pole to beat: <b>${tg.code} ${qFmt(tg.t)}</b>`:p===1?`You're on pole with <b>${qFmt(D.best)}</b>. Can you go faster?`:`You're P${p}. Next to beat: <b>${tg.code} ${qFmt(tg.t)}</b>`}</p>`;
   $("#dashTeams").hidden=false;$("#dashKeys").hidden=false;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent=D.best==null?"Leave the garage":"Go again";
 }
@@ -2776,7 +2789,7 @@ function dashResize(){
   D.scale=cw*dpr/DW;dashDraw();
 }
 function dashStart(){
-  D.s={d:-1400,x:qCX(-1400),v:380,vx:0,ers:1,spin:0};
+  D.s=qNew(-1400,380);
   Object.assign(D,{state:"out",t:0,lap:0,lapT0:0,del:false,laps:[],sec:[null,null,null],secIdx:0,secT0:0,coolT:0,acc:0,fx:[],sBest:[null,null,null],target:qTarget()});
   D.keys={};D.touch.clear();
   D.fx.push({x:DW/2,y:DH*0.3,t:0,txt:"OUT LAP",c:"#fff",big:1});
@@ -2802,7 +2815,7 @@ function qRefT(lp){const i=Math.max(0,Math.min(D.ref.T.length-2,Math.floor(lp/20
 function dashStep(dt){
   D.fx=D.fx.filter(f=>(f.t+=dt)<1.1);
   const s=D.s,k=D.keys;
-  if(D.state==="cool"){D.coolT+=dt;D.acc+=dt;while(D.acc>=1/240){D.acc-=1/240;qStep(s,{dir:Math.max(-1,Math.min(1,(qCX(s.d+60)-s.x)/30)),brake:s.v>380},1/240)}if(D.coolT>1.6)dashOver();return}
+  if(D.state==="cool"){D.coolT+=dt;D.acc+=dt;while(D.acc>=1/240){D.acc-=1/240;qStep(s,{dir:Math.max(-1,Math.min(1,-s.r/30)),brake:s.v>380},1/240)}if(D.coolT>1.6)dashOver();return}
   const touchDir=[...D.touch.values()].reduce((a,b)=>a+b,0);
   const inp={dir:Math.max(-1,Math.min(1,((k.arrowleft||k.a)?-1:0)+((k.arrowright||k.d)?1:0)+touchDir)),
     boost:!!(k.arrowup||k.w||k[" "]||D.boostTouch),brake:!!(k.arrowdown||k.s||D.brakeTouch)};
@@ -2874,7 +2887,7 @@ function qConfetti(){
   requestAnimationFrame(f);
 }
 function dashCar(ctx,x,y,col,tilt,alpha){
-  ctx.save();ctx.translate(x,y);ctx.rotate(tilt||0);ctx.globalAlpha=alpha==null?1:alpha;
+  ctx.save();ctx.translate(x,y);ctx.rotate(tilt||0);ctx.scale(1/QZ,1/QZ);ctx.globalAlpha=alpha==null?1:alpha;
   ctx.fillStyle="rgba(0,0,0,.35)";ctx.fillRect(-12,-22,26,48);
   ctx.fillStyle="#0b0b0b";ctx.fillRect(-13,-18,6,11);ctx.fillRect(7,-18,6,11);ctx.fillRect(-14,8,7,13);ctx.fillRect(7,8,7,13);
   ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(3,-13);ctx.lineTo(8,-4);ctx.lineTo(8,13);ctx.lineTo(4,20);ctx.lineTo(-4,20);ctx.lineTo(-8,13);ctx.lineTo(-8,-4);ctx.lineTo(-3,-13);ctx.closePath();ctx.fill();
@@ -2887,31 +2900,41 @@ function dashCar(ctx,x,y,col,tilt,alpha){
 }
 function dashDraw(){
   const ctx=D.ctx;if(!ctx||!D.s)return;const s=D.s;ctx.setTransform(D.scale,0,0,D.scale,0,0);
-  const cam=qCX(s.d)-DW/2,L=Q.L,HW=Q.HW;
+  const cam=qCX(s.d),L=Q.L,HW=Q.HW/QZ,KB=9/QZ;
+  const SX=wx=>DW/2+(wx-cam)/QZ,SY=d=>PY-(d-s.d)/QZ;
+  const live=D.state==="out"||D.state==="lap"||D.state==="cool";
   for(let y=-8;y<DH+8;y+=4){
-    const d=s.d+PY-y,c=qCX(d)-cam,band=Math.floor(d/60)&1,lp=((d%L)+L)%L;
+    const d=s.d+(PY-y)*QZ,c=SX(qCX(d)),band=Math.floor(d/60)&1,lp=((d%L)+L)%L;
     ctx.fillStyle=band?"#1f6b2c":"#237a32";ctx.fillRect(0,y,DW,4);
     ctx.fillStyle=band?"#2c3038":"#30343d";ctx.fillRect(c-HW,y,HW*2,4);
-    const kb=Math.floor(d/22)&1;ctx.fillStyle=kb?"#E10600":"#f2f2f2";ctx.fillRect(c-HW-9,y,9,4);ctx.fillRect(c+HW,y,9,4);
-    ctx.fillStyle="rgba(255,255,255,.8)";ctx.fillRect(c-HW+3,y,2,4);ctx.fillRect(c+HW-5,y,2,4);
-    if(lp<16){const sq=8,row=Math.floor(lp/4)&1;for(let x=c-HW,i=0;x<c+HW;x+=sq,i++){ctx.fillStyle=(i+row)&1?"#111":"#fafafa";ctx.fillRect(x,y,Math.min(sq,c+HW-x),4)}}
-    else if(Math.abs(lp-L/3)<3||Math.abs(lp-2*L/3)<3){ctx.fillStyle="rgba(181,75,232,.7)";ctx.fillRect(c-HW,y,HW*2,3)}
+    const kb=Math.floor(d/22)&1;ctx.fillStyle=kb?"#E10600":"#f2f2f2";ctx.fillRect(c-HW-KB,y,KB,4);ctx.fillRect(c+HW,y,KB,4);
+    ctx.fillStyle="rgba(255,255,255,.8)";ctx.fillRect(c-HW+2,y,1.5,4);ctx.fillRect(c+HW-3.5,y,1.5,4);
+    if(lp<20){const sq=7,row=Math.floor(lp/5)&1;for(let x=c-HW,i=0;x<c+HW;x+=sq,i++){ctx.fillStyle=(i+row)&1?"#111":"#fafafa";ctx.fillRect(x,y,Math.min(sq,c+HW-x),4)}}
+    else if(Math.abs(lp-L/3)<4||Math.abs(lp-2*L/3)<4){ctx.fillStyle="rgba(181,75,232,.7)";ctx.fillRect(c-HW,y,HW*2,3)}
+    /* racing-line assist: green flat out, amber a slower corner ahead, red brake now */
+    else if(y<PY+30){const ahead=d-s.d;if(ahead>-40){const vl=qVlim(d);let col="rgba(47,212,128,.55)";
+      if(live&&ahead>0&&vl<qReach(s.v,Math.max(0,ahead-0.06*s.v))+4)col="rgba(255,60,50,.9)";else if(vl<s.v+20)col="rgba(255,201,60,.8)";
+      ctx.fillStyle=col;ctx.fillRect(c-1.5,y,3,4)}}
   }
-  /* braking boards before each chicane */
-  ctx.font='700 11px "JetBrains Mono",monospace';ctx.textAlign="center";ctx.textBaseline="middle";
-  for(const [cc] of Q_CH)for(const [off,txt] of [[300,"3"],[200,"2"],[100,"1"]]){
-    for(const base of [Math.floor(s.d/L)*L,Math.floor(s.d/L)*L+L]){const d=base+cc-760-off,y=PY-(d-s.d);if(y<-20||y>DH+20)continue;
-      const x=qCX(d)-cam-HW-24;ctx.fillStyle="#f4f4f4";ctx.fillRect(x-9,y-8,18,16);ctx.fillStyle="#111";ctx.fillText(txt,x,y+1)}}
+  /* corner signs: which way it turns and how fast you can take it */
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  for(const cn of D.corners||[])for(const base of [Math.floor(s.d/L)*L,Math.floor(s.d/L)*L+L]){
+    const d=base+cn.d-cn.v*0.9,y=SY(d);if(y<-30||y>DH+30)continue;
+    const side=cn.dir>0?-1:1,x=SX(qCX(d))+side*(HW+KB+20);
+    ctx.fillStyle="#f4f4f4";ctx.fillRect(x-17,y-15,34,30);ctx.fillStyle="#E10600";ctx.fillRect(x-17,y-15,34,4);
+    ctx.fillStyle="#111";ctx.font='900 13px "Saira Condensed","Arial Narrow",sans-serif';ctx.fillText(cn.dir>0?"↱":"↰",x,y-3);
+    ctx.font='700 9px "JetBrains Mono",monospace';ctx.fillText(Math.round(cn.v*0.435),x,y+9)}
   /* ghost of the driver you're chasing */
   if(D.state==="lap"&&D.target){const g=qGhostLp(D.t-D.lapT0,D.target.t/D.ref.lap);
-    if(g){const gd=D.lap*L-L+g.lp,y=PY-(gd-s.d);if(y>-40&&y<DH+40){const gx=g.x-cam;dashCar(ctx,gx,y,tc(D.target.team),0,0.42);
-      ctx.fillStyle="rgba(255,255,255,.85)";ctx.font='700 10px "JetBrains Mono",monospace';ctx.fillText(D.target.code,gx,y-34)}}}
-  const px=s.x-cam,col=TEAMS[D.team].c;
-  dashCar(ctx,px,PY,col,s.vx/1400,1);
-  if(s.boosting){ctx.fillStyle="rgba(255,201,60,.6)";for(let i=0;i<3;i++)ctx.fillRect(px-6+i*5,PY+26,2,8+Math.random()*14)}
+    if(g){const gd=D.lap*L-L+g.lp,y=SY(gd);if(y>-40&&y<DH+40){const gx=SX(g.x);dashCar(ctx,gx,y,tc(D.target.team),Math.atan(qSlope(gd)),0.42);
+      ctx.fillStyle="rgba(255,255,255,.85)";ctx.font='700 10px "JetBrains Mono",monospace';ctx.fillText(D.target.code,gx,y-28)}}}
+  const px=SX(s.x),col=TEAMS[D.team].c;
+  dashCar(ctx,px,PY,col,s.head||0,1);
+  if(live&&s.slide>70){ctx.fillStyle="rgba(20,20,20,.5)";ctx.fillRect(px-9,PY+14,3,10);ctx.fillRect(px+6,PY+14,3,10);ctx.fillStyle="rgba(255,201,60,.95)";ctx.font='italic 900 14px "Saira Condensed","Arial Narrow",sans-serif';ctx.fillText("TOO FAST",px,PY-36)}
+  if(s.boosting){ctx.fillStyle="rgba(255,201,60,.6)";for(let i=0;i<3;i++)ctx.fillRect(px-5+i*4,PY+20,2,6+Math.random()*12)}
   if(D.state!=="idle"&&D.state!=="over"){
     ctx.textAlign="center";ctx.fillStyle="rgba(5,7,10,.6)";ctx.fillRect(DW/2-34,DH-46,68,40);ctx.font='italic 900 24px "Saira Condensed","Arial Narrow",sans-serif';ctx.fillStyle="#fff";
-    ctx.fillText(Math.round(s.v*0.34)+"",DW/2,DH-30);ctx.font='700 9px "JetBrains Mono",monospace';ctx.fillStyle="rgba(255,255,255,.7)";ctx.fillText("KM/H",DW/2,DH-14);
+    ctx.fillText(Math.round(s.v*0.435)+"",DW/2,DH-30);ctx.font='700 9px "JetBrains Mono",monospace';ctx.fillStyle="rgba(255,255,255,.7)";ctx.fillText("KM/H",DW/2,DH-14);
     if(D.del&&D.state==="lap"){ctx.fillStyle="rgba(225,6,0,.85)";ctx.fillRect(0,96,DW,20);ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font='700 11px "JetBrains Mono",monospace';ctx.fillText("LAP DELETED · TRACK LIMITS",DW/2,106)}
   }
   ctx.textAlign="center";ctx.textBaseline="middle";
