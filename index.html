@@ -989,6 +989,53 @@ nav.tabs a:first-child{padding-left:0}
 .ab-hist b{font-family:var(--f-display);text-transform:uppercase;font-size:18px;letter-spacing:.02em}.ab-hist p{margin:2px 0 0;color:var(--muted);line-height:1.5}
 @media (prefers-reduced-motion:reduce){.ab-hist li{opacity:1;transform:none}}
 :root[data-theme="light"] :is(.ab-stage,.ln-mini svg,.ab-q svg){--fg:#F1F3F7;--muted:#8C94A6}
+/* ===== Race weekend & trophies ===== */
+.wk-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.wk-sched{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:620px){.wk-sched{grid-template-columns:1fr}}
+.wk-day{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;display:grid;gap:8px;align-content:start;animation:wkIn .5s var(--d) both}
+@keyframes wkIn{from{opacity:0;transform:translateY(10px)}}
+.wk-chip{display:flex;justify-content:space-between;align-items:center;gap:8px;text-decoration:none;color:var(--fg);background:var(--panel-2);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:3px;padding:8px 10px}
+.wk-chip b{font-family:var(--f-display);font-size:18px;letter-spacing:.04em}.wk-chip small{color:var(--muted);font-size:11.5px;text-align:right}
+.wk-chip.fp1,.wk-chip.fp2,.wk-chip.fp3{border-left-color:#3C8DFF}.wk-chip.sq,.wk-chip.quali{border-left-color:#B54BE8}.wk-chip.sprint{border-left-color:#FFC93C}.wk-chip.race{border-left-color:var(--red)}
+.wk-chip:hover{border-color:var(--red)}
+.wk-time{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:4px}
+.ln-term.flash{animation:wkFlash 1.2s}
+@keyframes wkFlash{20%{box-shadow:0 0 0 3px var(--red)}}
+.wk-ptsbox{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}@media (max-width:760px){.wk-ptsbox{grid-template-columns:1fr}}
+.wk-pts{display:flex;gap:6px;align-items:flex-end;height:150px;margin-top:10px}
+.wk-pts .pt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}
+.wk-pts .pt i{display:block;width:100%;max-width:34px;height:0;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--red),color-mix(in srgb,var(--red) 35%,transparent));transition:height .7s cubic-bezier(.2,.8,.2,1) var(--d)}
+.wk-pts .pt.spr i{background:linear-gradient(180deg,#FFC93C,color-mix(in srgb,#FFC93C 35%,transparent))}
+.wk-pts.go .pt i{height:calc(var(--h) * .78)}
+.wk-pts .pt b{font-family:var(--f-mono);font-size:14px;opacity:0;transition:opacity .4s calc(var(--d) + .5s)}.wk-pts.go .pt b{opacity:1}
+.wk-pts .pt span{font-size:10px;color:var(--muted)}
+.tr-hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px}
+@media (max-width:860px){.tr-hero{grid-template-columns:1fr}}
+.tr-stage{position:relative;height:clamp(360px,58vh,540px);border-radius:var(--r);border:1px solid var(--line);background:radial-gradient(circle at 50% 30%,#3a2f12 0%,#14120c 40%,#0a0c11 75%);overflow:hidden;touch-action:none}
+.tr-pick{position:absolute;left:10px;bottom:10px;display:flex;gap:6px}
+.tr-pick button{background:rgba(5,7,10,.8);border:1px solid #3a4150;color:#B9C0CF;border-radius:3px;padding:7px 11px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer}
+.tr-pick button[aria-pressed="true"]{color:#14120c;background:#E9C46A;border-color:#E9C46A}
+.tr-info{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.tr-info h3{font-size:clamp(22px,2.6vw,28px);font-style:italic;font-weight:900;margin:4px 0 6px}.tr-info p{line-height:1.55;margin:6px 0 0}
+.tr-facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.tr-facts div{border-left:2px solid #E9C46A;padding-left:8px}.tr-facts b{display:block;font-size:14px;margin-top:2px}
+.tr-bars{display:grid;gap:5px;margin-top:8px}
+.tr-bar{display:grid;grid-template-columns:150px 1fr 26px;gap:8px;align-items:center;font-size:13px}
+.tr-bar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-bar i{display:block;height:10px;width:0;border-radius:2px;background:var(--c,#E9C46A);transition:width .8s cubic-bezier(.2,.8,.2,1) var(--d)}
+.tr-bars.go .tr-bar i{width:var(--w)}
+.tr-bar b{font-family:var(--f-mono);text-align:right}
+:root[data-theme="light"] .tr-facts div{border-left-color:#8A6A12}
+.tr-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px}@media (max-width:860px){.tr-row{grid-template-columns:1fr}}
+.tr-podium{border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.tr-awards{display:grid;gap:8px}
+.tr-award{display:grid;grid-template-columns:40px 1fr;column-gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.tr-award .ic{grid-row:span 2;font-size:26px;line-height:1}.tr-award b{font-family:var(--f-display);text-transform:uppercase;font-size:17px}.tr-award p{margin:2px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+.ln-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;padding-bottom:2px}.ln-tabs button{flex:none}
+@media (min-width:1100px){.ln-tabs{flex-wrap:wrap}}
+@media (max-width:560px){.tr-bar{grid-template-columns:120px 1fr 22px}}
+.ab-more{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:var(--r);padding:14px 16px}.ab-more b{display:block;font-family:var(--f-display);text-transform:uppercase;font-size:20px}.ab-more span{color:var(--muted);font-size:14px}
 /* ===== light theme ===== */
 :root[data-theme="light"]{
   --carbon:#F3F4F7;--panel:#FFFFFF;--panel-2:#EEF0F4;--line:#DCE0E7;--fg:#12151C;--muted:#5A6272;
@@ -1408,9 +1455,11 @@ nav.tabs a:first-child{padding-left:0}
     <div class="ln-hero">
       <div class="label">F1 school</div>
       <h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Wanna learn about F1?</h2>
-      <p>New to Formula 1, or want to sound smart on race day? Here's the track talk, the tyres, the steering wheel, the tech and the people behind it all, explained with moving pictures.</p>
+      <p>New to Formula 1, or want to sound smart on race day? Here's what F1 is, how a race weekend and the championships work, the track talk, tyres, steering wheel, tech and people, all explained with moving pictures.</p>
       <div class="ln-tabs" role="tablist" aria-label="Topics">
         <button type="button" role="tab" data-ln="about" aria-selected="true"><span>🏎️</span>What is F1?</button>
+        <button type="button" role="tab" data-ln="weekend" aria-selected="false"><span>🗓️</span>Race weekend</button>
+        <button type="button" role="tab" data-ln="trophies" aria-selected="false"><span>🏆</span>Trophies</button>
         <button type="button" role="tab" data-ln="track" aria-selected="false"><span>🏁</span>Track talk</button>
         <button type="button" role="tab" data-ln="tyres" aria-selected="false"><span>🛞</span>Tyres</button>
         <button type="button" role="tab" data-ln="wheel" aria-selected="false"><span>🎮</span>Steering wheel</button>
@@ -1442,26 +1491,58 @@ nav.tabs a:first-child{padding-left:0}
       <h3 class="ab-h">Pushing everything to the limit</h3>
       <div class="ab-limit" id="lnLimit"></div>
 
-      <h3 class="ab-h">How a race weekend works</h3>
-      <div class="ab-week">
-        <div class="ab-days">
-          <div><span class="label">Friday</span><b>Practice 1 &amp; 2</b><p>Teams test set-ups and tyres and learn the track.</p></div>
-          <div><span class="label">Saturday</span><b>Practice 3 · Qualifying</b><p>One last practice, then the fight for grid positions.</p></div>
-          <div><span class="label">Sunday</span><b>The Grand Prix</b><p>About 305 km (Monaco is shorter), usually around 90 minutes.</p></div>
-        </div>
-        <div class="ab-q">
-          <div id="lnQ"></div>
-          <p><b>Qualifying is a knockout.</b> In Q1 all 22 cars set lap times and the slowest six are out. In Q2 another six go. The final ten fight for pole position in Q3. The order sets the starting grid.</p>
-        </div>
-        <div class="ab-pts">
-          <div><span class="label">Race points, top 10</span><div class="ab-ptsrow" id="lnPts"></div></div>
-          <p>Sprint weekends (six in 2026) swap Practice 2 and 3 for <b>Sprint Qualifying</b> and a short Saturday <b>Sprint</b> of about 100 km, with points for the top eight (8 down to 1).</p>
-        </div>
-      </div>
+      <div class="ab-more"><div><b>How does a race weekend work?</b><span>Practice, qualifying, sprints, the race and the points.</span></div><a href="#learn/weekend" class="btn primary" data-goto="weekend">Race weekend →</a></div>
 
       <h3 class="ab-h">A brief history</h3>
       <ol class="ab-hist" id="lnHist"></ol>
       <p class="ln-note" id="lnChampNote"></p>
+    </div>
+
+    <div class="ln-pane" id="lnWeekend" role="tabpanel" hidden>
+      <p class="ln-intro">A Grand Prix weekend runs from Friday to Sunday. There are two formats: the normal weekend and the <b>sprint weekend</b>, which has an extra short race on Saturday. Tap a session to jump to it.</p>
+      <div class="wk-top">
+        <div class="tk-seg" role="group" aria-label="Weekend format"><button type="button" data-wk="standard" aria-pressed="true">Normal weekend</button><button type="button" data-wk="sprint" aria-pressed="false">Sprint weekend</button></div>
+        <span class="ln-note" id="lnSchedNote" style="margin:0"></span>
+      </div>
+      <div class="wk-sched" id="lnSched"></div>
+      <div class="ln-grid" id="lnSessGrid" style="margin-top:16px"></div>
+      <h3 class="ab-h">Points: what a weekend is worth</h3>
+      <div class="wk-ptsbox">
+        <div class="ln-card"><div class="label">Grand Prix · top 10 score</div><div class="wk-pts" id="lnPtsRace"></div></div>
+        <div class="ln-card"><div class="label">Sprint · top 8 score</div><div class="wk-pts" id="lnPtsSprint"></div></div>
+      </div>
+      <div class="ln-cols"><div class="ln-card"><ul class="ln-list">
+        <li><b>A perfect weekend is worth 25 points,</b> or 33 on a sprint weekend (8 for the Sprint win plus 25 for the Grand Prix).</li>
+        <li><b>No bonus for the fastest lap</b> since 2025. Points go to finishing positions only.</li>
+        <li><b>Both of a team's drivers score</b> for the Constructors' Championship, so a team can earn up to 43 points in a Grand Prix (25 + 18).</li>
+      </ul></div><div class="ln-card"><ul class="ln-list">
+        <li><b>Ties are broken by countback:</b> whoever has more wins is ahead; if that's level, more second places, and so on.</li>
+        <li><b>A shortened race</b> (for example, stopped early by rain) can pay reduced points, depending on how much of it was completed.</li>
+        <li>Points decide both world championships: see the <a href="#learn/trophies" data-goto="trophies">Trophies</a> tab.</li>
+      </ul></div></div>
+    </div>
+
+    <div class="ln-pane" id="lnTrophies" role="tabpanel" hidden>
+      <p class="ln-intro">Two titles are up for grabs every season: the <b>World Drivers' Championship</b> for the driver with the most points, and the <b>World Constructors' Championship</b> for the team. Both are presented at the FIA's prize-giving at the end of the year.</p>
+      <div class="tr-hero">
+        <div class="tr-stage" id="trStage"><div id="tr3" class="tk-layer"></div><div class="tk-loading" id="trLoading">Polishing the trophies…</div>
+          <div class="tk-hint">Drag to turn them · Tap a trophy</div>
+          <div class="tr-pick"><button type="button" data-tr="wdc" aria-pressed="true">🏆 Drivers'</button><button type="button" data-tr="wcc" aria-pressed="false">🏆 Constructors'</button></div></div>
+        <div class="tr-info">
+          <div id="trWdc"><div class="label">Since 1950</div><h3>World Drivers' Championship</h3>
+            <p>The big one. Every point a driver scores in Grands Prix and Sprints counts, and whoever has the most at the end of the season is <b>Formula 1 World Champion</b>. It can be settled at the final race, or with several rounds to spare.</p>
+            <div class="tr-facts" id="trWdcFacts"></div>
+            <div class="label" style="margin-top:12px">Most titles</div><div class="tr-bars" id="trWdcBars"></div></div>
+          <div id="trWcc" hidden><div class="label">Since 1958</div><h3>World Constructors' Championship</h3>
+            <p>The teams' title. Both drivers' points are added together, so a team needs two strong drivers. For the teams it's worth more than glory: the final order decides each team's share of the sport's prize money.</p>
+            <div class="tr-facts" id="trWccFacts"></div>
+            <div class="label" style="margin-top:12px">Most titles (to 2025)</div><div class="tr-bars" id="trWccBars"></div></div>
+          <p class="ln-note">The 3D trophies are our own designs, not the official FIA trophies.</p>
+        </div>
+      </div>
+      <h3 class="ab-h">Every race has its own prizes</h3>
+      <div class="tr-row"><div class="tr-podium" id="trPodium"></div><div class="tr-awards" id="trAwards"></div></div>
+      <p class="ln-note">Constructors' title counts: Autosport (to 2024) plus McLaren's 2025 title. Drivers' titles from Pit Wall's list of champions.</p>
     </div>
 
     <div class="ln-pane" id="lnTrack" role="tabpanel" hidden><div class="ln-grid" id="lnTerms"></div></div>
@@ -4250,14 +4331,6 @@ function lnAboutRender(){
   $("#lnNums").innerHTML=LN_NUMS.map(([n,u,l])=>`<div class="ln-num"><b data-n="${n}">${n===1950?n:0}</b><small>${u}</small><span>${l}</span></div>`).join("");
   $("#lnLimit").innerHTML=LN_LIMIT.map(c=>`<div class="ln-mini"><svg viewBox="0 0 200 110" class="ln-svg" role="img">${lnDefs}${c.svg}</svg><div class="ln-body"><h3>${c.t}</h3><p>${c.d}</p></div></div>`).join("");
   $("#lnHist").innerHTML=LN_HISTORY.map(([y,t,d])=>`<li><span class="yr">${y}</span><div><b>${t}</b><p>${d}</p></div></li>`).join("");
-  /* qualifying knockout: 22 cars, six out in Q1, six more in Q2, ten fight for pole */
-  const dots=Array.from({length:22},(_,r)=>{const x=24+(r%11)*30,y=r<11?44:84,team=Object.values(TEAMS)[Math.floor(r/2)%11].c;
-    const out=r>=16?.3:r>=10?.6:null;
-    return `<circle cx="${x}" cy="${y}" r="9" fill="${team}">${out?`<animate attributeName="opacity" values="1;1;.12;.12" keyTimes="0;${out};${out+.04};1" dur="8s" repeatCount="indefinite"/>`:""}</circle>${r===0?`<circle cx="${x}" cy="${y}" r="13" fill="none" stroke="#B54BE8" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.82;.86;1" dur="8s" repeatCount="indefinite"/></circle>`:""}<text x="${x}" y="${y+24}" class="ln-t s" text-anchor="middle">${r+1}</text>`}).join("");
-  $("#lnQ").innerHTML=`<svg viewBox="0 0 360 140" class="ln-svg" role="img" aria-label="Qualifying knockout">${lnDefs}<rect width="360" height="140" fill="#12161E"/>${dots}
-    ${lnCycle(["Q1 · ALL 22 CARS","Q1 · SLOWEST 6 OUT","Q2 · 6 MORE OUT","Q3 · TOP 10 FOR POLE"],8,t=>`<text x="180" y="20" class="ln-t" text-anchor="middle">${t}</text>`)}<text x="180" y="132" class="ln-t s" text-anchor="middle">PURPLE RING = POLE POSITION</text></svg>`;
-  const pts=typeof POINTS!=="undefined"?POINTS:[25,18,15,12,10,8,6,4,2,1];
-  $("#lnPts").innerHTML=pts.map((p,i)=>`<div><i style="height:${p*2.4}px"></i><b>${p}</b><span>P${i+1}</span></div>`).join("");
   const champs=typeof CHAMPIONS!=="undefined"?CHAMPIONS:[];const names=new Set(champs.map(c=>c[1]));
   $("#lnChampNote").textContent=champs.length?`${names.size} different drivers have been world champion since 1950.`:"";
   /* count the numbers up when they scroll into view */
@@ -4267,6 +4340,144 @@ function lnAboutRender(){
   const io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting||e.boundingClientRect.top<0){e.target.classList.add("in");io2.unobserve(e.target)}}),{threshold:.15});
   document.querySelectorAll("#lnHist li").forEach(li=>io2.observe(li));
 }
+
+/* ---------- Race weekend ---------- */
+const lnMiniTrack="M40,90 C40,40 90,30 160,30 C240,30 290,40 290,80 C290,120 250,140 200,130 C160,122 150,100 120,104 C80,110 40,130 40,90 Z";
+function lnLoopCar(col,dur,begin){return `<g>${lnCarTop(col,.62)}<animateMotion dur="${dur}s" begin="${begin||0}s" repeatCount="indefinite" rotate="auto"><mpath href="#lnMiniT"/></animateMotion></g>`}
+const lnTrackBase=`<rect width="320" height="160" fill="#1d5a2a"/><path id="lnMiniT" d="${lnMiniTrack}" fill="none" stroke="#e6e6e6" stroke-width="26"/><path d="${lnMiniTrack}" fill="none" stroke="#3a3f48" stroke-width="22"/><rect x="156" y="19" width="8" height="22" fill="url(#lnChq2)"/><defs><pattern id="lnChq2" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#fff"/><rect width="2" height="2" fill="#111"/><rect x="2" y="2" width="2" height="2" fill="#111"/></pattern></defs>`;
+function lnKnock(n,out1,out2,lbl){
+  const per=Math.ceil(n/2),dots=Array.from({length:n},(_,r)=>{const x=22+(r%per)*(280/per),y=r<per?58:98,team=Object.values(TEAMS)[Math.floor(r/2)%11].c,out=r>=n-out1?.3:r>=n-out1-out2?.6:null;
+    return `<circle cx="${x}" cy="${y}" r="8" fill="${team}">${out?`<animate attributeName="opacity" values="1;1;.12;.12" keyTimes="0;${out};${out+.04};1" dur="8s" repeatCount="indefinite"/>`:""}</circle>${r===0?`<circle cx="${x}" cy="${y}" r="12" fill="none" stroke="#B54BE8" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.82;.86;1" dur="8s" repeatCount="indefinite"/></circle>`:""}`}).join("");
+  return `<rect width="320" height="160" fill="#12161E"/>${dots}${lnCycle([lbl[0]+" · ALL "+n+" CARS",lbl[0]+" · SLOWEST "+out1+" OUT",lbl[1]+" · "+out2+" MORE OUT",lbl[2]+" · TOP 10 FOR POLE"],8,t=>`<text x="160" y="24" class="ln-t" text-anchor="middle">${t}</text>`)}<text x="160" y="140" class="ln-t s" text-anchor="middle">PURPLE RING = POLE POSITION</text>`}
+const LN_SESS=[
+ {id:"fp1",name:"Practice 1",short:"FP1",time:"60 min",when:"Friday · every weekend",
+  body:"The first run on track. Teams check the car works, try new parts and settings, and drivers relearn the track as the surface gathers rubber and gets faster. Teams also have to give young <b>rookie</b> drivers a few FP1 sessions every season.",
+  svg:()=>`${lnTrackBase}${lnLoopCar(LN_RED,6)}${lnLoopCar(LN_TEAL,6,2)}${lnLoopCar(LN_BLUE,6,4)}<rect x="210" y="104" width="100" height="44" rx="4" fill="rgba(5,7,10,.85)"/><text x="220" y="120" class="ln-t s">NEW FRONT WING</text><text x="220" y="138" class="ln-t g">TESTING…<animate attributeName="opacity" values="1;.3;1" dur="1.2s" repeatCount="indefinite"/></text>`},
+ {id:"fp2",name:"Practice 2",short:"FP2",time:"60 min",when:"Friday · normal weekends",
+  body:"Usually the most important practice. Teams do <b>long runs</b> with lots of fuel to see how quickly each tyre wears out over a race distance, which shapes Sunday's strategy. They also try a few fast laps on low fuel.",
+  svg:()=>`<rect width="320" height="160" fill="#12161E"/><text x="16" y="24" class="ln-t s">LAP TIME OVER A LONG RUN</text><path d="M20,130 H300 M20,130 V36" stroke="#3a4150"/>
+   ${[["#E10600","M24,60 L60,64 L100,72 L140,84 L180,100 L220,118"],["#FFD400","M24,70 L80,72 L140,76 L200,82 L260,90 L296,96"],["#F2F2F2","M24,82 L100,83 L180,85 L260,87 L296,88"]].map(([c,d],i)=>`<path d="${d}" stroke="${c}" stroke-width="3" fill="none" stroke-dasharray="320" stroke-dashoffset="320"><animate attributeName="stroke-dashoffset" values="320;0;0" keyTimes="0;.7;1" dur="5s" begin="${i*.3}s" repeatCount="indefinite"/></path>`).join("")}
+   <text x="226" y="122" class="ln-t r">SOFT FADES</text><text x="232" y="54" class="ln-t s">SLOWER ↑</text>`},
+ {id:"fp3",name:"Practice 3",short:"FP3",time:"60 min",when:"Saturday · normal weekends",
+  body:"The final hour of practice before qualifying. Teams fine-tune the set-up and drivers do <b>qualifying simulations</b>: one flat-out lap on fresh soft tyres and low fuel, to be ready for the afternoon.",
+  svg:()=>`${lnTrackBase}${lnLoopCar(LN_ORANGE,3.6)}<rect x="196" y="104" width="114" height="44" rx="4" fill="rgba(5,7,10,.85)"/>${["S1","S2","S3"].map((s,i)=>`<rect x="${206+i*34}" y="114" width="30" height="16" rx="2" fill="#3a3f48"><animate attributeName="fill" values="#3a3f48;${i===1?"#2FD480":"#B54BE8"};#3a3f48" keyTimes="0;${(.33*(i+1)).toFixed(2)};1" dur="3.6s" repeatCount="indefinite" calcMode="discrete"/></rect><text x="${221+i*34}" y="126" class="ln-t s" text-anchor="middle">${s}</text>`).join("")}<text x="206" y="144" class="ln-t s">QUALI SIM ON SOFTS</text>`},
+ {id:"sq",name:"Sprint Qualifying",short:"SQ",time:"SQ1 12 · SQ2 10 · SQ3 8 min",when:"Friday · sprint weekends",
+  body:"A shorter version of qualifying that sets the grid for Saturday's Sprint. It works the same way: the slowest six drop out in SQ1, six more in SQ2, and the top ten fight for Sprint pole in SQ3.",
+  svg:()=>lnKnock(22,6,6,["SQ1","SQ2","SQ3"])},
+ {id:"sprint",name:"Sprint",short:"SPRINT",time:"~100 km · ~30 min",when:"Saturday · sprint weekends",
+  body:"A short, flat-out race of about 100 km, roughly a third of a Grand Prix, with no compulsory pit stop. The top eight score points, from 8 for the winner down to 1 for eighth.",
+  svg:()=>`${lnTrackBase}${lnLoopCar(LN_RED,2.6)}${lnLoopCar(LN_TEAL,2.6,.3)}${lnLoopCar(LN_BLUE,2.6,.6)}<rect x="210" y="104" width="100" height="44" rx="4" fill="rgba(5,7,10,.85)"/><text x="220" y="120" class="ln-t s">SPRINT</text>${lnCycle(["LAP 14/19","LAP 15/19","LAP 16/19","LAP 17/19","LAP 18/19","LAP 19/19"],7.8,t=>`<text x="220" y="140" class="ln-t" style="font-family:var(--f-mono)">${t}</text>`)}`},
+ {id:"quali",name:"Qualifying",short:"QUALI",time:"Q1 18 · Q2 15 · Q3 12 min",when:"Saturday · every weekend",
+  body:"The knockout that sets Sunday's grid. Everyone runs in Q1 and the slowest six are out; another six go in Q2; the top ten battle for <b>pole position</b> in Q3. A driver slower than 107% of the fastest Q1 time may not be allowed to start.",
+  svg:()=>lnKnock(22,6,6,["Q1","Q2","Q3"])},
+ {id:"race",name:"The Grand Prix",short:"RACE",time:"~305 km · max 2 hours",when:"Sunday · every weekend",
+  body:"After a formation lap, five red lights come on one by one and then go out: <b>lights out and away we go</b>. The race runs for about 305 km (Monaco is shorter), with a two-hour limit. In a dry race every driver must use two different tyre compounds, so everyone pits at least once. The top ten score points.",
+  svg:()=>`<rect width="320" height="160" fill="#1d5a2a"/>${lnRoad("M-10,108 H330",70,false)}<path d="M150,73 V143" stroke="#fff" stroke-width="3" stroke-dasharray="4 4"/>
+   <g transform="translate(70,10)"><rect width="180" height="34" rx="4" fill="#05070a"/>${[0,1,2,3,4].map(i=>`<circle cx="${22+i*34}" cy="17" r="11" fill="#2a0a0a"><animate attributeName="fill" values="#2a0a0a;#ff2a1f;#ff2a1f;#2a0a0a;#2a0a0a" keyTimes="0;${(.08+i*.08).toFixed(2)};.5;.5;1" dur="6s" repeatCount="indefinite" calcMode="discrete"/></circle>`).join("")}</g>
+   <g>${[[120,92,LN_RED],[96,124,LN_TEAL],[72,92,LN_BLUE],[48,124,LN_ORANGE]].map(([x,y,c])=>`<g transform="translate(${x},${y})">${lnCarTop(c,.8)}</g>`).join("")}<animateTransform attributeName="transform" type="translate" values="0,0;0,0;260,0;260,0" keyTimes="0;.5;.85;1" dur="6s" repeatCount="indefinite"/></g>
+   <text x="160" y="62" class="ln-t" text-anchor="middle" opacity="0">LIGHTS OUT!<animate attributeName="opacity" values="0;0;1;0" keyTimes="0;.5;.52;.8" dur="6s" repeatCount="indefinite"/></text>`}
+];
+const LN_SCHED={standard:[["Friday",["fp1","fp2"]],["Saturday",["fp3","quali"]],["Sunday",["race"]]],sprint:[["Friday",["fp1","sq"]],["Saturday",["sprint","quali"]],["Sunday",["race"]]]};
+function lnWeekendRender(){
+  $("#lnSessGrid").innerHTML=LN_SESS.map(s=>`<article class="ln-term" id="ln-s-${s.id}"><div class="ln-pic"><svg viewBox="0 0 320 160" class="ln-svg" role="img">${lnDefs}${s.svg()}</svg></div><div class="ln-body"><div class="ln-kick">${s.when}</div><h3>${s.name}</h3><div class="wk-time">${s.time}</div><p>${s.body}</p></div></article>`).join("");
+  const sched=k=>{document.querySelectorAll("[data-wk]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.wk===k));
+    $("#lnSched").innerHTML=LN_SCHED[k].map(([d,ids],i)=>`<div class="wk-day" style="--d:${i*.15}s"><span class="label">${d}</span>${ids.map(id=>{const s=LN_SESS.find(x=>x.id===id);return `<a href="#ln-s-${id}" class="wk-chip ${id}" data-sess="${id}"><b>${s.short}</b><small>${s.time}</small></a>`}).join("")}</div>`).join("");
+    $("#lnSchedNote").textContent=k==="sprint"?"Six weekends in 2026 are sprint weekends: only one practice session, and two races.":"Most weekends: three practice sessions, qualifying on Saturday, the race on Sunday."};
+  document.querySelectorAll("[data-wk]").forEach(b=>b.addEventListener("click",()=>sched(b.dataset.wk)));sched("standard");
+  $("#lnSched").addEventListener("click",e=>{const a=e.target.closest("[data-sess]");if(!a)return;e.preventDefault();const card=$("#ln-s-"+a.dataset.sess);card.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});card.classList.remove("flash");void card.offsetWidth;card.classList.add("flash")});
+  const pts=typeof POINTS!=="undefined"?POINTS:[25,18,15,12,10,8,6,4,2,1],spts=[8,7,6,5,4,3,2,1];
+  const bars=(arr,max,cls)=>arr.map((p,i)=>`<div class="pt ${cls}" style="--h:${(p/max*100).toFixed(1)}%;--d:${(i*.06).toFixed(2)}s"><b>${p}</b><i></i><span>P${i+1}</span></div>`).join("");
+  $("#lnPtsRace").innerHTML=bars(pts,25,"race");$("#lnPtsSprint").innerHTML=bars(spts,25,"spr");
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting||e.boundingClientRect.top<0){e.target.classList.add("go");io.unobserve(e.target)}}),{threshold:.3});
+  document.querySelectorAll(".wk-pts").forEach(el=>io.observe(el));
+}
+
+/* ---------- Trophies ---------- */
+/* constructors' titles to the end of 2025 (Autosport's list to 2024, plus McLaren's 2025 title) */
+const LN_WCC=[["Ferrari",16,"#ED1131"],["McLaren",10,"#F47600"],["Williams",9,"#1868DB"],["Mercedes",8,"#00D7B6"],["Lotus",7,"#E9C46A"],["Red Bull",6,"#4781D7"],["Brabham",2,"#9C9FA2"],["Cooper",2,"#2FA44F"],["Renault",2,"#FFD400"]];
+const LN_AWARDS=[
+ ["🥇","Race podium","The top three drivers get a trophy on the podium, plus one for the winning team, collected by a team member. The anthems of the winning driver and team are played, and then the spraying starts."],
+ ["⏱️","Pole position","The fastest driver in qualifying starts first and is recognised with a pole position award. Stringing poles together over a career is a record of pure speed."],
+ ["🗳️","Driver of the Day","Fans vote during every Grand Prix for the driver who impressed them most, whatever their result."],
+ ["🌟","Rookie of the Year","The FIA honours the best first-year driver at its prize-giving at the end of the season."],
+ ["🏛️","FIA Hall of Fame","Every Formula 1 world champion has a place in the FIA Hall of Fame."]
+];
+const TR3={ready:false,g:null,raf:0,sel:"wdc"};
+function lnTrophiesRender(){
+  const champs=typeof CHAMPIONS!=="undefined"?CHAMPIONS:[];
+  const cnt={};champs.forEach(c=>{cnt[c[1]]=(cnt[c[1]]||0)+1});const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const latest=champs[champs.length-1];
+  $("#trWdcBars").innerHTML=top.map(([n,k],i)=>`<div class="tr-bar" style="--w:${(k/7*100).toFixed(1)}%;--d:${(i*.08).toFixed(2)}s"><span>${esc(n)}</span><i></i><b>${k}</b></div>`).join("");
+  $("#trWccBars").innerHTML=LN_WCC.map(([n,k,c],i)=>`<div class="tr-bar" style="--w:${(k/16*100).toFixed(1)}%;--d:${(i*.08).toFixed(2)}s;--c:${c}"><span>${esc(n)}</span><i></i><b>${k}</b></div>`).join("");
+  $("#trWdcFacts").innerHTML=[["Since","1950"],["Champions",`${Object.keys(cnt).length} drivers`],["Most titles","7: Schumacher, Hamilton"],["Youngest","Kimi Antonelli, 20 (2026)"],["Oldest","Juan Manuel Fangio, 46 (1957)"],["Latest",latest?`${latest[1]} (${latest[0]})`:"–"]].map(([k,v])=>`<div><span class="label">${k}</span><b>${esc(v)}</b></div>`).join("");
+  $("#trWccFacts").innerHTML=[["Since","1958 (won by Vanwall)"],["Who scores","Both of a team's cars"],["Most titles","16: Ferrari"],["Worth it","Higher finishes earn a bigger share of the prize money"]].map(([k,v])=>`<div><span class="label">${k}</span><b>${esc(v)}</b></div>`).join("");
+  $("#trAwards").innerHTML=LN_AWARDS.map(([i,t,d])=>`<div class="tr-award"><div class="ic">${i}</div><b>${t}</b><p>${d}</p></div>`).join("");
+  /* podium celebration */
+  const conf=Array.from({length:40},(_,k)=>{const x=20+((k*53)%300),c=["#E9C46A","#E10600","#F1F3F7","#2FD480","#3C8DFF"][k%5],d=2+(k%7)*.35;return `<rect x="${x}" y="-10" width="5" height="9" fill="${c}" opacity=".9"><animate attributeName="y" values="-10;200" dur="${d}s" begin="${(k%9)*.25}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="0 ${x} 0;360 ${x} 200" dur="${d}s" begin="${(k%9)*.25}s" repeatCount="indefinite"/></rect>`}).join("");
+  const spray=(x,dir)=>Array.from({length:12},(_,k)=>`<circle cx="${x}" cy="88" r="${1.5+k%3}" fill="#fff3c4" opacity=".85"><animate attributeName="cx" values="${x};${x+dir*(40+k*7)}" dur="${.9+(k%4)*.2}s" begin="${k*.08}s" repeatCount="indefinite"/><animate attributeName="cy" values="88;${30+(k%5)*8};${120+k%4*6}" dur="${.9+(k%4)*.2}s" begin="${k*.08}s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;.6;0" dur="${.9+(k%4)*.2}s" begin="${k*.08}s" repeatCount="indefinite"/></circle>`).join("");
+  $("#trPodium").innerHTML=`<svg viewBox="0 0 320 200" class="ln-svg" role="img" aria-label="Podium celebration">${lnDefs}<rect width="320" height="200" fill="#12161E"/>${conf}
+   <rect x="110" y="120" width="100" height="80" fill="#2b2f36"/><rect x="20" y="146" width="90" height="54" fill="#22262d"/><rect x="210" y="158" width="90" height="42" fill="#22262d"/>
+   <text x="160" y="160" class="ln-t" text-anchor="middle" style="font-size:30px">1</text><text x="65" y="180" class="ln-t" text-anchor="middle" style="font-size:24px">2</text><text x="255" y="188" class="ln-t" text-anchor="middle" style="font-size:22px">3</text>
+   ${lnPerson(160,120,{suit:LN_TEAL,head:"hair",arm:"up",s:1})}${lnPerson(65,146,{suit:LN_BLUE,head:"hair",hair:"#c9a26b",arm:"wave",s:.95})}${lnPerson(255,158,{suit:LN_RED,head:"hair",arm:"wave",s:.92})}
+   <g transform="translate(176,52)"><path d="M-6,0 h12 l-2,12 h-8 z" fill="#E9C46A"/><rect x="-2" y="12" width="4" height="6" fill="#E9C46A"/><rect x="-5" y="18" width="10" height="3" fill="#E9C46A"/><animateTransform attributeName="transform" type="translate" values="176,56;176,46;176,56" dur="1.2s" repeatCount="indefinite"/></g>
+   ${spray(76,1)}${spray(244,-1)}</svg>`;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting||e.boundingClientRect.top<0){e.target.classList.add("go");io.unobserve(e.target)}}),{threshold:.3});
+  document.querySelectorAll(".tr-bars").forEach(el=>io.observe(el));
+  document.querySelectorAll("[data-tr]").forEach(b=>b.addEventListener("click",()=>trSel(b.dataset.tr)));trSel("wdc");
+}
+function trSel(id){TR3.sel=id;document.querySelectorAll("[data-tr]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tr===id));
+  $("#trWdc").hidden=id!=="wdc";$("#trWcc").hidden=id!=="wcc"}
+function tr3Init(){if(TR3.ready){tr3Resize();tr3Loop();return}TR3.ready=true;tkLoadThree().then(tr3Build).catch(()=>{$("#trLoading").textContent="3D isn't available in this browser."})}
+function tr3Env(){
+  /* a simple studio reflection so the metal reads as metal */
+  const face=(top,bot,stripe)=>{const c=document.createElement("canvas");c.width=c.height=128;const x=c.getContext("2d"),g=x.createLinearGradient(0,0,0,128);g.addColorStop(0,top);g.addColorStop(1,bot);x.fillStyle=g;x.fillRect(0,0,128,128);if(stripe){x.fillStyle="rgba(255,255,255,.9)";x.fillRect(0,40,128,14)}return c};
+  const t=new THREE.CubeTexture([face("#3a4150","#0a0c11",1),face("#3a4150","#0a0c11"),face("#ffffff","#c9cdd6"),face("#0a0c11","#05060a"),face("#4b515c","#0a0c11",1),face("#2b2f36","#0a0c11")]);t.needsUpdate=true;return t}
+function tr3Build(){
+  const host=$("#tr3"),r=new THREE.WebGLRenderer({antialias:true,alpha:true});r.setClearColor(0,0);host.appendChild(r.domElement);
+  const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(30,1,.1,100);cam.position.set(0,2.2,9.5);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x202430,.6));const k=new THREE.DirectionalLight(0xffffff,1.1);k.position.set(3,6,5);scene.add(k);
+  const warm=new THREE.PointLight(0xffd27a,1.2,20);warm.position.set(-3,3,3);scene.add(warm);const cool=new THREE.PointLight(0xcfe0ff,1.1,20);cool.position.set(3.5,2.5,3.5);scene.add(cool);
+  const env=tr3Env();
+  const gold=new THREE.MeshStandardMaterial({color:0xE9C46A,metalness:1,roughness:.18,envMap:env,envMapIntensity:1.2});
+  const silver=new THREE.MeshStandardMaterial({color:0xf2f4f8,metalness:.85,roughness:.2,envMap:env,envMapIntensity:1.8,emissive:0x1a1d22});
+  const base=new THREE.MeshStandardMaterial({color:0x101216,metalness:.3,roughness:.35,envMap:env,envMapIntensity:.4});
+  const lathe=(pts,mat)=>new THREE.Mesh(new THREE.LatheGeometry(pts.map(([x,y])=>new THREE.Vector2(x,y)),64),mat);
+  /* drivers' trophy (our own design): a tall cup on a ringed stem, with a laurel band */
+  const wdc=new THREE.Group();wdc.position.x=-1.5;scene.add(wdc);
+  wdc.add(lathe([[0,0],[.75,0],[.78,.08],[.7,.12],[.7,.42],[.62,.46],[0,.46]],base));
+  wdc.add(lathe([[0,.46],[.5,.46],[.46,.52],[.16,.62],[.12,1.1],[.2,1.18],[.12,1.26],[.1,1.5],[.26,1.6],[.58,1.86],[.76,2.3],[.8,2.75],[.74,2.82],[.7,2.4],[.5,1.98],[0,1.9]],gold));
+  const band=new THREE.Mesh(new THREE.TorusGeometry(.77,.035,8,64),gold);band.rotation.x=Math.PI/2;band.position.y=2.55;wdc.add(band);
+  for(const s of [-1,1]){const h=new THREE.Mesh(new THREE.TorusGeometry(.36,.05,10,32,Math.PI*1.2),gold);h.position.set(s*.82,2.1,0);h.rotation.z=s>0?-.7:Math.PI+.7;wdc.add(h)}
+  const plate=new THREE.Mesh(new THREE.BoxGeometry(.6,.16,.02),gold);plate.position.set(0,.28,.71);wdc.add(plate);
+  /* constructors' trophy (our own design): a twisting silver spire on a wide plinth */
+  const wcc=new THREE.Group();wcc.position.x=1.5;scene.add(wcc);
+  wcc.add(lathe([[0,0],[.85,0],[.88,.1],[.78,.14],[.78,.34],[.66,.38],[0,.38]],base));
+  const sh=new THREE.Shape();sh.moveTo(-.46,0);sh.lineTo(.46,0);sh.lineTo(.13,1);sh.lineTo(-.13,1);sh.closePath();
+  for(let i=0;i<3;i++){const fin=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.06,bevelEnabled:true,bevelThickness:.02,bevelSize:.02,bevelSegments:2}),silver);fin.scale.set(1,2.6,1);fin.position.y=.38;fin.rotation.y=i*Math.PI/3*2;fin.translateZ(-.03);wcc.add(fin)}
+  const orb=new THREE.Mesh(new THREE.IcosahedronGeometry(.26,1),gold);orb.position.y=3.05;wcc.add(orb);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.42,.03,8,48),silver);ring.position.y=2.1;ring.rotation.x=Math.PI/2.3;wcc.add(ring);
+  /* sparkles */
+  const N=70,pos=new Float32Array(N*3),seed=[];for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*6;pos[i*3+1]=Math.random()*3.6;pos[i*3+2]=(Math.random()-.5)*2.4;seed.push(Math.random()*6)}
+  const sg=new THREE.BufferGeometry();sg.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  const sc=document.createElement("canvas");sc.width=sc.height=32;const sx=sc.getContext("2d"),gr=sx.createRadialGradient(16,16,0,16,16,16);gr.addColorStop(0,"rgba(255,240,200,1)");gr.addColorStop(1,"rgba(255,240,200,0)");sx.fillStyle=gr;sx.fillRect(0,0,32,32);
+  const sparks=new THREE.Points(sg,new THREE.PointsMaterial({size:.12,map:new THREE.CanvasTexture(sc),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(sparks);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(4,64),new THREE.MeshStandardMaterial({color:0x0c0e13,metalness:.6,roughness:.4,envMap:env,envMapIntensity:.25}));floor.rotation.x=-Math.PI/2;scene.add(floor);
+  const ctr=new THREE.OrbitControls(cam,r.domElement);ctr.enableDamping=true;ctr.enablePan=false;ctr.minDistance=5;ctr.maxDistance=16;ctr.maxPolarAngle=Math.PI*.48;ctr.target.set(0,1.5,0);
+  const ray=new THREE.Raycaster(),pt=new THREE.Vector2();let down=null;
+  r.domElement.addEventListener("pointerdown",e=>{down={x:e.clientX,y:e.clientY}});
+  r.domElement.addEventListener("pointerup",e=>{if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>6){down=null;return}down=null;const rc=r.domElement.getBoundingClientRect();pt.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(pt,cam);
+    const h=ray.intersectObjects([wdc,wcc],true)[0];if(h){let o=h.object;while(o.parent&&o!==wdc&&o!==wcc)o=o.parent;trSel(o===wdc?"wdc":"wcc")}});
+  TR3.g={r,scene,cam,ctr,wdc,wcc,sparks,seed,pos};new ResizeObserver(()=>tr3Resize()).observe($("#trStage"));
+  $("#trLoading").hidden=true;tr3Resize();tr3Loop();
+}
+function tr3Resize(){const g=TR3.g;if(!g)return;const st=$("#trStage"),w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;g.r.setPixelRatio(Math.min(devicePixelRatio||1,2));g.r.setSize(w,h,false);g.cam.aspect=w/h;
+  g.cam.position.setLength(Math.min(15,9.5*Math.max(1,1.2/(w/h))));g.cam.updateProjectionMatrix()}
+function tr3Loop(){cancelAnimationFrame(TR3.raf);let last=performance.now();const f=now=>{if(!TR3.g||$("#p-learn").hidden||$("#lnTrophies").hidden||document.hidden)return;const dt=Math.min(.1,(now-last)/1000);last=now;const g=TR3.g;
+  if(!reduce){g.wdc.rotation.y+=dt*.6;g.wcc.rotation.y-=dt*.45}
+  const tgt=TR3.sel==="wdc"?g.wdc:g.wcc,oth=TR3.sel==="wdc"?g.wcc:g.wdc;tgt.position.y+=(.15-tgt.position.y)*Math.min(1,dt*4);oth.position.y+=(0-oth.position.y)*Math.min(1,dt*4);
+  tgt.scale.setScalar(tgt.scale.x+(1.08-tgt.scale.x)*Math.min(1,dt*4));oth.scale.setScalar(oth.scale.x+(.92-oth.scale.x)*Math.min(1,dt*4));
+  const p=g.pos;for(let i=0;i<g.seed.length;i++){p[i*3+1]+=dt*.25;if(p[i*3+1]>3.8)p[i*3+1]=0}g.sparks.geometry.attributes.position.needsUpdate=true;g.sparks.material.opacity=.6+Math.sin(now/300)*.3;
+  g.ctr.update();g.r.render(g.scene,g.cam);TR3.raf=requestAnimationFrame(f)};TR3.raf=requestAnimationFrame(f)}
 
 /* ---------- 3D steering wheel ---------- */
 /* a typical modern F1 wheel (not any one team's): layout in centimetres, x right, y up, front face at z=0 */
@@ -4429,12 +4640,13 @@ function lwLoop(){cancelAnimationFrame(LW.raf);let last=performance.now();const 
 /* ---------- Learn F1: page logic ---------- */
 const LN={ready:false,tab:"about",tyre:"soft"};
 function lnInit(){
-  const m=(location.hash||"").match(/^#learn\/(about|track|tyres|wheel|tech|people)/);
+  const m=(location.hash||"").match(/^#learn\/(about|weekend|trophies|track|tyres|wheel|tech|people)/);
   if(!LN.ready){
     LN.ready=true;
     $("#lnTerms").innerHTML=LN_TERMS.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><h3>${t.name}</h3><div class="ln-short">${t.short}</div><p>${t.body}</p></div></article>`).join("");
     $("#lnTechGrid").innerHTML=LN_TECH.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}${t.interactive==="aero"?'<div class="ln-ctl"><button type="button" data-aero="corner" aria-pressed="true">Corner mode</button><button type="button" data-aero="straight" aria-pressed="false">Straight mode</button></div>':""}${t.interactive==="diff"?'<div class="ln-ctl"><label>Open<input type="range" min="0" max="100" value="0" id="lnDiff" aria-label="Differential: open to locked"></label>Locked</div>':""}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
-    lnAboutRender();
+    lnAboutRender();lnWeekendRender();lnTrophiesRender();
+    document.addEventListener("click",e=>{const a=e.target.closest("[data-goto]");if(!a)return;e.preventDefault();lnTab(a.dataset.goto);history.replaceState(null,"","#learn/"+a.dataset.goto);document.querySelector(".ln-tabs").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
     $("#lnPeopleGrid").innerHTML=LN_PEOPLE.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
     $("#lnTyrePick").innerHTML=LN_TYRES.map(t=>`<button type="button" data-tyre="${t.id}" style="--c:${t.col}"><i></i>${t.name}</button>`).join("");
     $("#lnTyrePick").addEventListener("click",e=>{const b=e.target.closest("[data-tyre]");if(b)lnTyre(b.dataset.tyre)});
@@ -4458,9 +4670,11 @@ function lnInit(){
 function lnTab(t){
   LN.tab=t;
   document.querySelectorAll(".ln-tabs [data-ln]").forEach(b=>b.setAttribute("aria-selected",b.dataset.ln===t));
-  $("#lnAbout").hidden=t!=="about";$("#lnTrack").hidden=t!=="track";$("#lnTyres").hidden=t!=="tyres";$("#lnWheel").hidden=t!=="wheel";$("#lnTech").hidden=t!=="tech";$("#lnPeople").hidden=t!=="people";
+  $("#lnAbout").hidden=t!=="about";$("#lnWeekend").hidden=t!=="weekend";$("#lnTrophies").hidden=t!=="trophies";$("#lnTrack").hidden=t!=="track";$("#lnTyres").hidden=t!=="tyres";$("#lnWheel").hidden=t!=="wheel";$("#lnTech").hidden=t!=="tech";$("#lnPeople").hidden=t!=="people";
   if(t==="wheel")lwInit();
   if(t==="about")car3Init();
+  if(t==="trophies")tr3Init();
+  {const b=document.querySelector(`.ln-tabs [data-ln="${t}"]`);if(b){const n=b.parentElement;n.scrollTo({left:Math.max(0,b.offsetLeft-n.offsetLeft-(n.clientWidth-b.offsetWidth)/2)})}}
 }
 function lnTyre(id){
   const t=LN_TYRES.find(x=>x.id===id);LN.tyre=id;

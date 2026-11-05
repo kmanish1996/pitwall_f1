@@ -609,6 +609,8 @@ def build_learn(L):
 <p><a href="/#learn/about">Spin the 3D car on Pit Wall</a>.</p>
 <h3>How a race weekend works</h3>
 <p><b>Friday:</b> Practice 1 and 2. <b>Saturday:</b> Practice 3, then Qualifying. <b>Sunday:</b> the Grand Prix, about 305 km. Qualifying is a knockout: in Q1 the slowest six of the 22 cars are out, in Q2 another six, and the final ten fight for pole position in Q3. The top ten in the race score 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1 points. On the six sprint weekends of 2026, Practice 2 and 3 are replaced by Sprint Qualifying and a Saturday Sprint of about 100 km, with points for the top eight.</p>
+<h3>The trophies: two world championships</h3>
+<p><b>World Drivers' Championship</b> (since 1950): every point a driver scores in Grands Prix and Sprints counts, and the driver with the most at the end of the season is Formula 1 World Champion. Michael Schumacher and Lewis Hamilton hold the record with seven titles each. <b>World Constructors' Championship</b> (since 1958, first won by Vanwall): both of a team's drivers' points count, and the final order decides each team's share of the prize money. Ferrari have the most, with 16; McLaren have 10, Williams 9, Mercedes 8, Lotus 7 and Red Bull 6 (to the end of 2025). Race winners, the top three and the winning team also collect trophies on the podium every weekend.</p>
 <h3>A brief history of F1</h3><ul>{''.join(f'<li><b>{y}: {e(t)}.</b> {e(d)}</li>' for y, t, d in L.get("history", []))}</ul>
 <h2 id="track-talk">Track talk</h2><div class="lg">{''.join(card(t, t["short"]) for t in L["terms"])}</div>
 <h2 id="tyres">Tyres</h2>
