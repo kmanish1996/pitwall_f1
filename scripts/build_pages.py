@@ -42,6 +42,10 @@ const a=h.indexOf('const TEAMS={'),b=h.indexOf('const POINTS=');const c={};vm.cr
 vm.runInContext(h.slice(a,b)+';this.o={TEAMS,DRIVERS,CONSTRUCTORS,PER_RACE,RACES,SPRINT_WIN,LAP_RECORD,LONG_NAMES,COMPLETED,TOTAL,SESSIONS,CHAMPIONS:typeof CHAMPIONS!=="undefined"?CHAMPIONS:[]};',c);
 const t0=h.indexOf('const TRACK_INFO={'),t1=h.indexOf('const TK={');
 if(t0>0){vm.runInContext(h.slice(t0,t1)+';this.o.TRACK_INFO=TRACK_INFO;this.o.TRACK_SOURCES=TRACK_SOURCES;',c)}
+const l0=h.indexOf('/* ================= LEARN F1: illustrations'),l1=h.indexOf('/* ---------- 3D steering wheel'),l2=h.indexOf('const LW={');
+if(l0>0){vm.runInContext(h.slice(l0,l1)+h.slice(l1,l2)+`;this.o.LEARN={terms:LN_TERMS.map(t=>({id:t.id,name:t.name,short:t.short,body:t.body,svg:t.svg()})),
+ tyres:LN_TYRES.map(t=>({...t,svg:lnTyreSvg(t)})),tech:LN_TECH.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),
+ ctrl:LN_CTRL.map(c=>({id:c.id,name:c.name,txt:c.txt}))};`,c)}
 process.stdout.write(JSON.stringify(c.o));"""
     out = subprocess.run(["node", "-e", js, os.path.join(ROOT, "index.html")], capture_output=True, text=True, check=True).stdout
     return json.loads(out)
@@ -150,7 +154,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None):
 <header class="top"><div class="w">
 <a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
 {THEME_BTN}
-<nav class="main" aria-label="Main"><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/circuits/">Circuits</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a><a href="/#race-centre">Race centre</a></nav>
+<nav class="main" aria-label="Main"><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a><a href="/#race-centre">Race centre</a></nav>
 </div></header>
 <main class="w">
 <div class="crumbs">{crumb_html}</div>
@@ -158,7 +162,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None):
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<nav aria-label="Site"><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
 <p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
 </div></footer>
 </body>
@@ -394,8 +398,9 @@ def main():
 
     # ---------- circuits ----------
     pages += build_circuits(A, RACES, race_url, gp_long, drv, by_code, total, done)
-    # ---------- games ----------
+    # ---------- games and the F1 guide ----------
     pages += build_games()
+    if A.get("LEARN"): pages.append(build_learn(A["LEARN"]))
     # ---------- machine-readable data, llms.txt, robots.txt ----------
     write_api(A, D, C, RACES, wins, race_url, gp_long, dslug, tslug, done, total, champ_now)
     write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url)
@@ -576,6 +581,45 @@ def build_games():
     return out
 
 
+LEARN_CSS = """<style>
+.ln-svg,.ln-tyre{display:block;width:100%;height:auto;border-radius:4px;background:#12161E}
+.ln-t{font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:.06em;fill:#F1F3F7;text-transform:uppercase}
+.ln-t.y{fill:#FFC93C}.ln-t.r{fill:#ff5a52}.ln-t.g{fill:#2FD480}.ln-t.w{fill:#fff}.ln-t.k{fill:#111}.ln-t.s{font-size:10px;fill:#B9C0CF}.ln-t.big{font-size:30px;font-family:var(--fm)}
+.ln-gear{font-family:var(--fm);font-weight:700;font-size:84px;fill:#fff}
+.ln-dash,.ln-air{animation:lnDash 1.2s linear infinite}@keyframes lnDash{to{stroke-dashoffset:-24}}
+.ln-aero .ln-rflap{transform-box:fill-box;transform-origin:center;transform:rotate(-38deg)}.ln-aero .ln-fflap{transform-box:fill-box;transform-origin:center;transform:rotate(-24deg)}
+.ln-diff .ln-whl{animation:lnSpin .9s linear infinite}@keyframes lnSpin{to{transform:translateX(5px)}}
+.lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}.lg article{background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.lg .tx{padding:12px 14px}.lg h3{margin:0 0 4px}.lg .k{color:var(--red);font:700 12px var(--fd);text-transform:uppercase;letter-spacing:.08em}.lg p{margin:6px 0 0;font-size:15px}
+.tyres{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.tyres div{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px}
+@media (prefers-reduced-motion:reduce){.ln-dash,.ln-air,.ln-diff .ln-whl{animation:none}}
+</style>"""
+
+
+def build_learn(L):
+    card = lambda t, kick: f'<article id="{t["id"]}">{t["svg"]}<div class="tx"><h3>{e(t["name"])}</h3><div class="k">{e(kick)}</div><p>{t["body"]}</p></div></article>'
+    body = f"""<h1>Learn F1</h1>
+<p class="sub">A beginner's guide to Formula 1: track talk, tyres, the steering wheel and the tech in the 2026 cars.</p>
+<p class="lead">Everything you hear on a race broadcast, explained with moving pictures. For the full interactive version, with a 3D steering wheel you can spin and click, <a href="/#learn">open Learn F1 on Pit Wall</a>.</p>
+<h2 id="track-talk">Track talk</h2><div class="lg">{''.join(card(t, t["short"]) for t in L["terms"])}</div>
+<h2 id="tyres">Tyres</h2>
+<p>Pirelli brings five dry compounds in 2026, C1 (hardest) to C5 (softest), and picks three for each weekend: the hardest is called the Hard (white), the middle the Medium (yellow) and the softest the Soft (red). Intermediates (green) and full Wets (blue) are for the rain. In a dry race every driver must use at least two different dry compounds. The 2026 tyres stay on 18-inch wheels but are narrower: 25 mm at the front and 30 mm at the rear.</p>
+<div class="tyres">{''.join(f'<div>{t["svg"]}<h3>{e(t["name"])}</h3><p class="note">{e(t["tag"])}</p><p>{e(t["txt"])}</p></div>' for t in L["tyres"])}</div>
+<h2 id="steering-wheel">The steering wheel</h2>
+<p>A modern F1 steering wheel has 20 or more buttons, dials and paddles. These are the ones you'll hear about most. <a href="/#learn/wheel">Spin and click the 3D wheel</a>.</p>
+<dl>{''.join(f'<dt><b>{e(c["name"])}</b></dt><dd>{e(c["txt"])}</dd>' for c in L["ctrl"])}</dl>
+<h2 id="car-tech">Car tech</h2><div class="lg">{''.join(card(t, t["kick"]) for t in L["tech"])}</div>
+<p class="note" style="margin-top:16px">2026 figures from <a href="https://global.honda/en/F1/features/2026_Commentary/regulations/" rel="noopener">Honda's 2026 regulations overview</a>, <a href="https://www.autosport.com/f1/news/explained-f1-2026s-new-terminology-and-technology/10787702/" rel="noopener">Autosport</a> and <a href="https://www.formula1.com/en/latest/article/pirelli-confirm-2026-tyre-compounds-as-f1-gets-set-for-a-new-era-of.6la0zKVsCYwWk9AAISz4Yw" rel="noopener">Formula1.com</a>.</p>"""
+    terms = L["terms"] + L["tech"]
+    ld = {"@context": "https://schema.org", "@type": "DefinedTermSet", "name": "Formula 1 glossary", "url": f"{SITE}/learn-f1/",
+          "hasDefinedTerm": [{"@type": "DefinedTerm", "name": t["name"], "description": strip_tags(t["body"]), "url": f"{SITE}/learn-f1/#{t['id']}"} for t in terms]
+          + [{"@type": "DefinedTerm", "name": f'{t["name"]} tyre', "description": t["txt"]} for t in L["tyres"]]
+          + [{"@type": "DefinedTerm", "name": c["name"], "description": c["txt"]} for c in L["ctrl"]]}
+    return page("/learn-f1/", f"Learn F1: track terms, tyres, steering wheel and 2026 car tech explained | {BRAND}",
+                "Beginner's guide to Formula 1 with animated pictures: racing line, kerbs, chicanes, tyres and compounds, every steering wheel button, and the 2026 tech: active aero, overtake mode, ERS and more.",
+                body, [("Learn F1", "/learn-f1/")], ld, extra_head=LEARN_CSS)
+
+
 def write_json(rel, obj):
     p = os.path.join(ROOT, rel); os.makedirs(os.path.dirname(p), exist_ok=True)
     txt = json.dumps(obj, ensure_ascii=False, indent=1)
@@ -630,6 +674,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 - [Drivers]({SITE}/drivers/) and [Teams]({SITE}/teams/): one page each, with race-by-race results
 - [Circuits]({SITE}/circuits/): every {YEAR} track with length, corners, lap record, pole lap telemetry and facts
 - [World champions]({SITE}/formula-1-world-champions/): every champion since 1950
+- [Learn F1]({SITE}/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test]({SITE}/f1-reaction-test/): the five-light start, playable in the browser
 - [F1 qualifying game]({SITE}/f1-qualifying-game/): three-lap qualifying against the {YEAR} grid
 - Race pages: {SITE}/races/<grand-prix>-{YEAR}/ (for example {SITE}{race_url(last['rd'])})

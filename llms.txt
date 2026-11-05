@@ -14,6 +14,7 @@ Current state (after round 19 of 23, the Mexico City Grand Prix):
 - [Drivers](https://pitwallf1.in/drivers/) and [Teams](https://pitwallf1.in/teams/): one page each, with race-by-race results
 - [Circuits](https://pitwallf1.in/circuits/): every 2026 track with length, corners, lap record, pole lap telemetry and facts
 - [World champions](https://pitwallf1.in/formula-1-world-champions/): every champion since 1950
+- [Learn F1](https://pitwallf1.in/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test](https://pitwallf1.in/f1-reaction-test/): the five-light start, playable in the browser
 - [F1 qualifying game](https://pitwallf1.in/f1-qualifying-game/): three-lap qualifying against the 2026 grid
 - Race pages: https://pitwallf1.in/races/<grand-prix>-2026/ (for example https://pitwallf1.in/races/mexico-city-grand-prix-2026/)
