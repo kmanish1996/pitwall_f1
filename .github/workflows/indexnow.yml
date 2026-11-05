@@ -1,0 +1,22 @@
+name: Ping search engines
+
+# Pushes made by the session updater don't trigger other workflows, so it pings IndexNow itself.
+# This one covers changes pushed by hand (for example a merge to main).
+on:
+  push:
+    branches: [main]
+    paths: ["sitemap.xml"]
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Wait for Netlify to deploy, then submit changed URLs to IndexNow
+        run: |
+          sleep 120
+          python3 scripts/indexnow.py

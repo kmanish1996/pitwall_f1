@@ -49,6 +49,14 @@ jobs:
           fi
           git config user.name "pitwall-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data index.html races drivers teams formula-1-standings-2026 f1-calendar-2026 formula-1-world-champions sitemap.xml
+          git add -A data index.html races drivers teams circuits formula-1-standings-2026 f1-calendar-2026 formula-1-world-champions f1-reaction-test f1-qualifying-game api llms.txt robots.txt sitemap.xml
           git commit -m "Add newly finished sessions: replays, standings and pages"
           git push
+          echo "pushed=1" >> "$GITHUB_OUTPUT"
+        id: commit
+
+      - name: Tell search engines about the changed pages
+        if: steps.commit.outputs.pushed == '1'
+        run: |
+          sleep 120   # give Netlify time to deploy
+          python3 scripts/indexnow.py || true

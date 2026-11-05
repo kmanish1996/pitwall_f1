@@ -1,0 +1,16 @@
+{
+ "source": "https://pitwallf1.in",
+ "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
+ "season": 2026,
+ "afterRound": 19,
+ "rounds": 23,
+ "endpoints": {
+  "standings": "https://pitwallf1.in/api/standings.json",
+  "calendar": "https://pitwallf1.in/api/calendar.json",
+  "circuits": "https://pitwallf1.in/api/circuits.json",
+  "trackData": "https://pitwallf1.in/data/tracks/{slug}.json",
+  "sessionIndex": "https://pitwallf1.in/data/index.json",
+  "session": "https://pitwallf1.in/data/{sessionKey}.json"
+ },
+ "docs": "https://pitwallf1.in/llms.txt"
+}

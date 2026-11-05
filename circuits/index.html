@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>F1 circuits 2026: every track, map, length and lap record | Pit Wall</title>
+<meta name="description" content="All 23 Formula 1 circuits of 2026: length, corners, lap records, first F1 race and an interactive 3D model of every track.">
+<link rel="canonical" href="https://pitwallf1.in/circuits/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pit Wall">
+<meta property="og:title" content="F1 circuits 2026: every track, map, length and lap record | Pit Wall">
+<meta property="og:description" content="All 23 Formula 1 circuits of 2026: length, corners, lap records, first F1 race and an interactive 3D model of every track.">
+<meta property="og:url" content="https://pitwallf1.in/circuits/">
+<meta property="og:image" content="https://pitwallf1.in/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0C11">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#0A0C11;--panel:#12161E;--panel2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;--red:#E10600;--purple:#B54BE8;
+--fd:"Saira Condensed","Arial Narrow",Impact,sans-serif;--fb:"Barlow","Segoe UI",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--fb);-webkit-font-smoothing:antialiased}
+a{color:var(--red);font-weight:700;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:3px}
+.w{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{border-bottom:1px solid var(--line);background:var(--bg)}
+header.top .w{display:flex;align-items:center;gap:20px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--fg);font:italic 900 24px/1 var(--fd);text-transform:uppercase}
+.brand:hover{text-decoration:none}.brand i{width:22px;height:22px;background:conic-gradient(#F1F3F7 25%,#0A0C11 0 50%,#F1F3F7 0 75%,#0A0C11 0) 0 0/11px 11px;border:1px solid #F1F3F7;transform:skewX(-12deg)}
+.brand b{color:var(--red)}.brand small{display:block;font:500 11px var(--fb);text-transform:none;color:var(--muted);margin-top:2px}
+nav.main{display:flex;gap:4px 16px;flex-wrap:wrap;margin-left:auto}
+nav.main a{color:var(--muted);font:700 14px var(--fd);text-transform:uppercase;letter-spacing:.08em}nav.main a:hover{color:var(--fg);text-decoration:none}
+.crumbs{font-size:13px;color:var(--muted);margin:22px 0 6px}.crumbs a{color:var(--muted);font-weight:500}
+h1,h2,h3{font-family:var(--fd);text-transform:uppercase;line-height:1;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,58px);font-weight:900;font-style:italic;margin:4px 0 8px}
+h2{font-size:clamp(24px,3.4vw,32px);font-weight:900;font-style:italic;margin:36px 0 12px}
+h3{font-size:20px;font-weight:800;margin:24px 0 8px}
+.sub{color:var(--muted);margin:0 0 18px}
+.lead{font-size:18px;max-width:72ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:18px 0}
+.tile{background:var(--panel);padding:12px 14px}.tile span{display:block;font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.tile b{font:700 24px var(--fm)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:left;padding:9px 10px;background:var(--panel2);white-space:nowrap}
+td{padding:8px 10px;border-top:1px solid var(--line);white-space:nowrap}
+td.n{font:700 14px var(--fm);text-align:right}th.n{text-align:right}
+td.pos{font:italic 900 17px var(--fd);width:40px}
+.sw{display:inline-block;width:4px;height:16px;vertical-align:-3px;margin-right:8px;background:var(--team,#888)}
+.btn{display:inline-block;background:var(--red);color:#fff;font:800 13px var(--fd);text-transform:uppercase;letter-spacing:.08em;padding:9px 14px;border-radius:3px}
+.btn:hover{text-decoration:none;filter:brightness(1.1)}
+.note{color:var(--muted);font-size:14px}
+.rec{border-left:3px solid var(--purple);padding:8px 12px;background:var(--panel);margin:16px 0}.rec b{color:var(--purple);font-family:var(--fm)}
+.pager{display:flex;justify-content:space-between;gap:12px;margin:36px 0 0;flex-wrap:wrap}
+details{margin:10px 0}summary{cursor:pointer;font:800 18px var(--fd);text-transform:uppercase}
+footer.site{margin-top:48px;border-top:1px solid var(--line);padding:24px 0 32px;text-align:center;font-size:13px;color:var(--muted)}
+footer.site p{margin:8px auto;max-width:110ch}footer.site nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px}
+footer.site nav a{color:var(--fg);font-weight:500}
+@media (max-width:640px){header.top .w{padding-block:10px}nav.main{margin-left:0}}
+</style>
+
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pitwallf1.in/"}, {"@type": "ListItem", "position": 2, "name": "Circuits", "item": "https://pitwallf1.in/circuits/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "Formula 1 circuits 2026", "itemListElement": [{"@type": "ListItem", "position": 1, "url": "https://pitwallf1.in/circuits/albert-park/", "name": "Albert Park Circuit"}, {"@type": "ListItem", "position": 2, "url": "https://pitwallf1.in/circuits/shanghai/", "name": "Shanghai International Circuit"}, {"@type": "ListItem", "position": 3, "url": "https://pitwallf1.in/circuits/suzuka/", "name": "Suzuka International Racing Course"}, {"@type": "ListItem", "position": 4, "url": "https://pitwallf1.in/circuits/miami/", "name": "Miami International Autodrome"}, {"@type": "ListItem", "position": 5, "url": "https://pitwallf1.in/circuits/montreal/", "name": "Circuit Gilles Villeneuve"}, {"@type": "ListItem", "position": 6, "url": "https://pitwallf1.in/circuits/monaco/", "name": "Circuit de Monaco"}, {"@type": "ListItem", "position": 7, "url": "https://pitwallf1.in/circuits/barcelona/", "name": "Circuit de Barcelona-Catalunya"}, {"@type": "ListItem", "position": 8, "url": "https://pitwallf1.in/circuits/red-bull-ring/", "name": "Red Bull Ring"}, {"@type": "ListItem", "position": 9, "url": "https://pitwallf1.in/circuits/silverstone/", "name": "Silverstone Circuit"}, {"@type": "ListItem", "position": 10, "url": "https://pitwallf1.in/circuits/spa/", "name": "Circuit de Spa-Francorchamps"}, {"@type": "ListItem", "position": 11, "url": "https://pitwallf1.in/circuits/hungaroring/", "name": "Hungaroring"}, {"@type": "ListItem", "position": 12, "url": "https://pitwallf1.in/circuits/zandvoort/", "name": "Circuit Zandvoort"}, {"@type": "ListItem", "position": 13, "url": "https://pitwallf1.in/circuits/monza/", "name": "Autodromo Nazionale Monza"}, {"@type": "ListItem", "position": 14, "url": "https://pitwallf1.in/circuits/madring/", "name": "Madring"}, {"@type": "ListItem", "position": 15, "url": "https://pitwallf1.in/circuits/baku/", "name": "Baku City Circuit"}, {"@type": "ListItem", "position": 16, "url": "https://pitwallf1.in/circuits/sepang/", "name": "Sepang International Circuit"}, {"@type": "ListItem", "position": 17, "url": "https://pitwallf1.in/circuits/marina-bay/", "name": "Marina Bay Street Circuit"}, {"@type": "ListItem", "position": 18, "url": "https://pitwallf1.in/circuits/cota/", "name": "Circuit of the Americas"}, {"@type": "ListItem", "position": 19, "url": "https://pitwallf1.in/circuits/mexico-city/", "name": "Autódromo Hermanos Rodríguez"}, {"@type": "ListItem", "position": 20, "url": "https://pitwallf1.in/circuits/interlagos/", "name": "Autódromo José Carlos Pace"}, {"@type": "ListItem", "position": 21, "url": "https://pitwallf1.in/circuits/las-vegas/", "name": "Las Vegas Strip Circuit"}, {"@type": "ListItem", "position": 22, "url": "https://pitwallf1.in/circuits/lusail/", "name": "Lusail International Circuit"}, {"@type": "ListItem", "position": 23, "url": "https://pitwallf1.in/circuits/yas-marina/", "name": "Yas Marina Circuit"}]}</script>
+</head>
+<body>
+<header class="top"><div class="w">
+<a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
+<nav class="main" aria-label="Main"><a href="/formula-1-standings-2026/">Standings</a><a href="/f1-calendar-2026/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/circuits/">Circuits</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a><a href="/#race-centre">Race centre</a></nav>
+</div></header>
+<main class="w">
+<div class="crumbs"><a href="/">Home</a> › Circuits</div>
+<h1>F1 circuits 2026</h1>
+<p class="sub">All 23 tracks on the 2026 Formula 1 calendar, with length, corners, lap records and a 3D model of each.</p>
+<p class="lead">Every circuit is rebuilt from a real pole lap: its shape, its height and the car's speed and gears all the way round. Open any of them in 3D on <a href="/#tracks">Pit Wall</a>.</p>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Circuit</th><th>Location</th><th class="n">Length</th><th class="n">Corners</th><th class="n">Lap record</th><th class="n">First F1 race</th></tr></thead><tbody><tr><td class="pos">1</td><td><a href="/circuits/albert-park/">Albert Park Circuit</a></td><td>Melbourne</td><td class="n">5.278 km</td><td class="n">14</td><td class="n">1:19.813</td><td class="n">1996</td></tr><tr><td class="pos">2</td><td><a href="/circuits/shanghai/">Shanghai International Circuit</a></td><td>Shanghai</td><td class="n">5.451 km</td><td class="n">16</td><td class="n">1:32.238</td><td class="n">2004</td></tr><tr><td class="pos">3</td><td><a href="/circuits/suzuka/">Suzuka International Racing Course</a></td><td>Suzuka</td><td class="n">5.807 km</td><td class="n">18</td><td class="n">1:30.965</td><td class="n">1987</td></tr><tr><td class="pos">4</td><td><a href="/circuits/miami/">Miami International Autodrome</a></td><td>Miami Gardens</td><td class="n">5.412 km</td><td class="n">19</td><td class="n">1:29.708</td><td class="n">2022</td></tr><tr><td class="pos">5</td><td><a href="/circuits/montreal/">Circuit Gilles Villeneuve</a></td><td>Montréal</td><td class="n">4.361 km</td><td class="n">14</td><td class="n">1:13.078</td><td class="n">1978</td></tr><tr><td class="pos">6</td><td><a href="/circuits/monaco/">Circuit de Monaco</a></td><td>Monte Carlo</td><td class="n">3.337 km</td><td class="n">19</td><td class="n">1:12.909</td><td class="n">1950</td></tr><tr><td class="pos">7</td><td><a href="/circuits/barcelona/">Circuit de Barcelona-Catalunya</a></td><td>Montmeló</td><td class="n">4.657 km</td><td class="n">14</td><td class="n">1:15.743</td><td class="n">1991</td></tr><tr><td class="pos">8</td><td><a href="/circuits/red-bull-ring/">Red Bull Ring</a></td><td>Spielberg</td><td class="n">4.318 km</td><td class="n">10</td><td class="n">1:05.619</td><td class="n">1970</td></tr><tr><td class="pos">9</td><td><a href="/circuits/silverstone/">Silverstone Circuit</a></td><td>Silverstone</td><td class="n">5.891 km</td><td class="n">18</td><td class="n">1:27.097</td><td class="n">1950</td></tr><tr><td class="pos">10</td><td><a href="/circuits/spa/">Circuit de Spa-Francorchamps</a></td><td>Stavelot</td><td class="n">7.004 km</td><td class="n">20</td><td class="n">1:44.701</td><td class="n">1950</td></tr><tr><td class="pos">11</td><td><a href="/circuits/hungaroring/">Hungaroring</a></td><td>Mogyoród</td><td class="n">4.381 km</td><td class="n">14</td><td class="n">1:16.627</td><td class="n">1986</td></tr><tr><td class="pos">12</td><td><a href="/circuits/zandvoort/">Circuit Zandvoort</a></td><td>Zandvoort</td><td class="n">4.259 km</td><td class="n">14</td><td class="n">1:11.097</td><td class="n">1952</td></tr><tr><td class="pos">13</td><td><a href="/circuits/monza/">Autodromo Nazionale Monza</a></td><td>Monza</td><td class="n">5.793 km</td><td class="n">11</td><td class="n">1:20.901</td><td class="n">1950</td></tr><tr><td class="pos">14</td><td><a href="/circuits/madring/">Madring</a></td><td>Madrid</td><td class="n">5.414 km</td><td class="n">22</td><td class="n">1:35.587</td><td class="n">2026</td></tr><tr><td class="pos">15</td><td><a href="/circuits/baku/">Baku City Circuit</a></td><td>Baku</td><td class="n">6.003 km</td><td class="n">20</td><td class="n">1:43.009</td><td class="n">2016</td></tr><tr><td class="pos">16</td><td><a href="/circuits/sepang/">Sepang International Circuit</a></td><td>Sepang</td><td class="n">5.543 km</td><td class="n">15</td><td class="n">1:34.223</td><td class="n">1999</td></tr><tr><td class="pos">17</td><td><a href="/circuits/marina-bay/">Marina Bay Street Circuit</a></td><td>Singapore</td><td class="n">4.940 km</td><td class="n">19</td><td class="n">1:33.808</td><td class="n">2008</td></tr><tr><td class="pos">18</td><td><a href="/circuits/cota/">Circuit of the Americas</a></td><td>Austin</td><td class="n">5.513 km</td><td class="n">20</td><td class="n">1:36.169</td><td class="n">2012</td></tr><tr><td class="pos">19</td><td><a href="/circuits/mexico-city/">Autódromo Hermanos Rodríguez</a></td><td>Mexico City</td><td class="n">4.304 km</td><td class="n">17</td><td class="n">1:17.774</td><td class="n">1963</td></tr><tr><td class="pos">20</td><td><a href="/circuits/interlagos/">Autódromo José Carlos Pace</a></td><td>São Paulo</td><td class="n">4.309 km</td><td class="n">15</td><td class="n">1:10.540</td><td class="n">1973</td></tr><tr><td class="pos">21</td><td><a href="/circuits/las-vegas/">Las Vegas Strip Circuit</a></td><td>Las Vegas</td><td class="n">6.201 km</td><td class="n">17</td><td class="n">1:33.365</td><td class="n">2023</td></tr><tr><td class="pos">22</td><td><a href="/circuits/lusail/">Lusail International Circuit</a></td><td>Lusail</td><td class="n">5.419 km</td><td class="n">16</td><td class="n">1:22.384</td><td class="n">2021</td></tr><tr><td class="pos">23</td><td><a href="/circuits/yas-marina/">Yas Marina Circuit</a></td><td>Abu Dhabi</td><td class="n">5.281 km</td><td class="n">16</td><td class="n">1:25.637</td><td class="n">2009</td></tr></tbody></table></div>
+</main>
+<footer class="site"><div class="w">
+<p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
+<nav aria-label="Site"><a href="/formula-1-standings-2026/">2026 standings</a><a href="/f1-calendar-2026/">2026 calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="https://www.instagram.com/pitwall_f1_/" rel="noopener">Instagram</a></nav>
+<p>©2026 Pit Wall. Timing data from OpenF1.</p>
+</div></footer>
+</body>
+</html>

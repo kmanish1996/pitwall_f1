@@ -1,0 +1,56 @@
+# Pit Wall
+
+> Pit Wall (pitwallf1.in) is an unofficial Formula 1 fan hub for the 2026 season: championship standings, every race result, lap-by-lap replays with team radio, an interactive 3D model of every circuit built from real pole-lap telemetry, the calendar with lap records, race travel planning, and F1 games. Data comes from OpenF1 and updates automatically after every session.
+
+Current state (after round 19 of 23, the Mexico City Grand Prix):
+- World champion: Kimi Antonelli (Mercedes), 380 points; P2 Max Verstappen 261; P3 Lewis Hamilton 259.
+- Constructors: Mercedes 630, Ferrari 504, McLaren 371.
+- Last race: Mexico City Grand Prix, won by Max Verstappen.
+- Next race: São Paulo Grand Prix at Autódromo José Carlos Pace, 6–8 Nov (race start 2026-11-08T17:00:00.000Z).
+
+## Pages
+- [2026 standings](https://pitwallf1.in/formula-1-standings-2026/): drivers' and constructors' championship tables
+- [2026 calendar](https://pitwallf1.in/f1-calendar-2026/): every round with dates, circuits and winners
+- [Drivers](https://pitwallf1.in/drivers/) and [Teams](https://pitwallf1.in/teams/): one page each, with race-by-race results
+- [Circuits](https://pitwallf1.in/circuits/): every 2026 track with length, corners, lap record, pole lap telemetry and facts
+- [World champions](https://pitwallf1.in/formula-1-world-champions/): every champion since 1950
+- [F1 reaction test](https://pitwallf1.in/f1-reaction-test/): the five-light start, playable in the browser
+- [F1 qualifying game](https://pitwallf1.in/f1-qualifying-game/): three-lap qualifying against the 2026 grid
+- Race pages: https://pitwallf1.in/races/<grand-prix>-2026/ (for example https://pitwallf1.in/races/mexico-city-grand-prix-2026/)
+
+## Circuits
+- [Albert Park Circuit](https://pitwallf1.in/circuits/albert-park/): Melbourne, round 1
+- [Shanghai International Circuit](https://pitwallf1.in/circuits/shanghai/): Shanghai, round 2
+- [Suzuka International Racing Course](https://pitwallf1.in/circuits/suzuka/): Suzuka, round 3
+- [Miami International Autodrome](https://pitwallf1.in/circuits/miami/): Miami Gardens, round 4
+- [Circuit Gilles Villeneuve](https://pitwallf1.in/circuits/montreal/): Montréal, round 5
+- [Circuit de Monaco](https://pitwallf1.in/circuits/monaco/): Monte Carlo, round 6
+- [Circuit de Barcelona-Catalunya](https://pitwallf1.in/circuits/barcelona/): Montmeló, round 7
+- [Red Bull Ring](https://pitwallf1.in/circuits/red-bull-ring/): Spielberg, round 8
+- [Silverstone Circuit](https://pitwallf1.in/circuits/silverstone/): Silverstone, round 9
+- [Circuit de Spa-Francorchamps](https://pitwallf1.in/circuits/spa/): Stavelot, round 10
+- [Hungaroring](https://pitwallf1.in/circuits/hungaroring/): Mogyoród, round 11
+- [Circuit Zandvoort](https://pitwallf1.in/circuits/zandvoort/): Zandvoort, round 12
+- [Autodromo Nazionale Monza](https://pitwallf1.in/circuits/monza/): Monza, round 13
+- [Madring](https://pitwallf1.in/circuits/madring/): Madrid, round 14
+- [Baku City Circuit](https://pitwallf1.in/circuits/baku/): Baku, round 15
+- [Sepang International Circuit](https://pitwallf1.in/circuits/sepang/): Sepang, round 16
+- [Marina Bay Street Circuit](https://pitwallf1.in/circuits/marina-bay/): Singapore, round 17
+- [Circuit of the Americas](https://pitwallf1.in/circuits/cota/): Austin, round 18
+- [Autódromo Hermanos Rodríguez](https://pitwallf1.in/circuits/mexico-city/): Mexico City, round 19
+- [Autódromo José Carlos Pace](https://pitwallf1.in/circuits/interlagos/): São Paulo, round 20
+- [Las Vegas Strip Circuit](https://pitwallf1.in/circuits/las-vegas/): Las Vegas, round 21
+- [Lusail International Circuit](https://pitwallf1.in/circuits/lusail/): Lusail, round 22
+- [Yas Marina Circuit](https://pitwallf1.in/circuits/yas-marina/): Abu Dhabi, round 23
+
+## Data (JSON, CORS enabled, free to use with a link back)
+- https://pitwallf1.in/api/index.json: list of endpoints
+- https://pitwallf1.in/api/standings.json: drivers' and constructors' standings
+- https://pitwallf1.in/api/calendar.json: all rounds, start times and winners
+- https://pitwallf1.in/api/circuits.json: circuit facts and pole-lap stats
+- https://pitwallf1.in/data/tracks/<slug>.json: circuit outline, height and pole-lap telemetry every 5 m (columns x, y, z in metres, t in seconds, speed km/h, gear, throttle %, brake)
+- https://pitwallf1.in/data/index.json and https://pitwallf1.in/data/<sessionKey>.json: every session with results, laps, positions and race control
+
+## Notes
+- Unofficial and not associated with the Formula 1 companies. F1 and related marks belong to Formula One Licensing B.V.
+- Contact: kmanish1996@gmail.com · Instagram: https://www.instagram.com/pitwall_f1_/

@@ -1,0 +1,653 @@
+{
+ "source": "https://pitwallf1.in",
+ "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
+ "season": 2026,
+ "afterRound": 19,
+ "rounds": 23,
+ "circuits": [
+  {
+   "slug": "albert-park",
+   "name": "Albert Park Circuit",
+   "city": "Melbourne",
+   "round": 1,
+   "lengthKm": 5.278,
+   "corners": 14,
+   "firstF1Race": 1996,
+   "lapRecord": {
+    "time": "1:19.813",
+    "driver": "Charles Leclerc",
+    "team": "Ferrari",
+    "year": 2024
+   },
+   "poleLap": {
+    "driver": "George Russell",
+    "year": 2026,
+    "time": "1:18.518",
+    "vmax": 327,
+    "vmin": 94,
+    "fullThrottle": 65,
+    "braking": 12,
+    "gearChanges": 32,
+    "elev": 2.4
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/albert-park.json",
+   "url": "https://pitwallf1.in/circuits/albert-park/"
+  },
+  {
+   "slug": "shanghai",
+   "name": "Shanghai International Circuit",
+   "city": "Shanghai",
+   "round": 2,
+   "lengthKm": 5.451,
+   "corners": 16,
+   "firstF1Race": 2004,
+   "lapRecord": {
+    "time": "1:32.238",
+    "driver": "Michael Schumacher",
+    "team": "Ferrari",
+    "year": 2004
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:32.064",
+    "vmax": 332,
+    "vmin": 68,
+    "fullThrottle": 56,
+    "braking": 22,
+    "gearChanges": 53,
+    "elev": 6.8
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/shanghai.json",
+   "url": "https://pitwallf1.in/circuits/shanghai/"
+  },
+  {
+   "slug": "suzuka",
+   "name": "Suzuka International Racing Course",
+   "city": "Suzuka",
+   "round": 3,
+   "lengthKm": 5.807,
+   "corners": 18,
+   "firstF1Race": 1987,
+   "lapRecord": {
+    "time": "1:30.965",
+    "driver": "Kimi Antonelli",
+    "team": "Mercedes",
+    "year": 2025
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:28.778",
+    "vmax": 321,
+    "vmin": 74,
+    "fullThrottle": 66,
+    "braking": 41,
+    "gearChanges": 31,
+    "elev": 40.1
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/suzuka.json",
+   "url": "https://pitwallf1.in/circuits/suzuka/"
+  },
+  {
+   "slug": "miami",
+   "name": "Miami International Autodrome",
+   "city": "Miami Gardens",
+   "round": 4,
+   "lengthKm": 5.412,
+   "corners": 19,
+   "firstF1Race": 2022,
+   "lapRecord": {
+    "time": "1:29.708",
+    "driver": "Max Verstappen",
+    "team": "Red Bull",
+    "year": 2023
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:27.798",
+    "vmax": 343,
+    "vmin": 69,
+    "fullThrottle": 54,
+    "braking": 17,
+    "gearChanges": 36,
+    "elev": 2.7
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/miami.json",
+   "url": "https://pitwallf1.in/circuits/miami/"
+  },
+  {
+   "slug": "montreal",
+   "name": "Circuit Gilles Villeneuve",
+   "city": "Montréal",
+   "round": 5,
+   "lengthKm": 4.361,
+   "corners": 14,
+   "firstF1Race": 1978,
+   "lapRecord": {
+    "time": "1:13.078",
+    "driver": "Valtteri Bottas",
+    "team": "Mercedes",
+    "year": 2019
+   },
+   "poleLap": {
+    "driver": "George Russell",
+    "year": 2026,
+    "time": "1:12.578",
+    "vmax": 332,
+    "vmin": 60,
+    "fullThrottle": 60,
+    "braking": 19,
+    "gearChanges": 45,
+    "elev": 5.1
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/montreal.json",
+   "url": "https://pitwallf1.in/circuits/montreal/"
+  },
+  {
+   "slug": "monaco",
+   "name": "Circuit de Monaco",
+   "city": "Monte Carlo",
+   "round": 6,
+   "lengthKm": 3.337,
+   "corners": 19,
+   "firstF1Race": 1950,
+   "lapRecord": {
+    "time": "1:12.909",
+    "driver": "Lewis Hamilton",
+    "team": "Mercedes",
+    "year": 2021
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:12.051",
+    "vmax": 289,
+    "vmin": 44,
+    "fullThrottle": 37,
+    "braking": 27,
+    "gearChanges": 51,
+    "elev": 41.2
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/monaco.json",
+   "url": "https://pitwallf1.in/circuits/monaco/"
+  },
+  {
+   "slug": "barcelona",
+   "name": "Circuit de Barcelona-Catalunya",
+   "city": "Montmeló",
+   "round": 7,
+   "lengthKm": 4.657,
+   "corners": 14,
+   "firstF1Race": 1991,
+   "lapRecord": {
+    "time": "1:15.743",
+    "driver": "Oscar Piastri",
+    "team": "McLaren",
+    "year": 2025
+   },
+   "poleLap": {
+    "driver": "George Russell",
+    "year": 2026,
+    "time": "1:14.679",
+    "vmax": 341,
+    "vmin": 103,
+    "fullThrottle": 62,
+    "braking": 13,
+    "gearChanges": 33,
+    "elev": 29.4
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/barcelona.json",
+   "url": "https://pitwallf1.in/circuits/barcelona/"
+  },
+  {
+   "slug": "red-bull-ring",
+   "name": "Red Bull Ring",
+   "city": "Spielberg",
+   "round": 8,
+   "lengthKm": 4.318,
+   "corners": 10,
+   "firstF1Race": 1970,
+   "lapRecord": {
+    "time": "1:05.619",
+    "driver": "Carlos Sainz",
+    "team": "McLaren",
+    "year": 2020
+   },
+   "poleLap": {
+    "driver": "George Russell",
+    "year": 2026,
+    "time": "1:06.113",
+    "vmax": 329,
+    "vmin": 71,
+    "fullThrottle": 58,
+    "braking": 17,
+    "gearChanges": 38,
+    "elev": 63.2
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/red-bull-ring.json",
+   "url": "https://pitwallf1.in/circuits/red-bull-ring/"
+  },
+  {
+   "slug": "silverstone",
+   "name": "Silverstone Circuit",
+   "city": "Silverstone",
+   "round": 9,
+   "lengthKm": 5.891,
+   "corners": 18,
+   "firstF1Race": 1950,
+   "lapRecord": {
+    "time": "1:27.097",
+    "driver": "Max Verstappen",
+    "team": "Red Bull",
+    "year": 2020
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:28.111",
+    "vmax": 317,
+    "vmin": 87,
+    "fullThrottle": 65,
+    "braking": 11,
+    "gearChanges": 31,
+    "elev": 11.2
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/silverstone.json",
+   "url": "https://pitwallf1.in/circuits/silverstone/"
+  },
+  {
+   "slug": "spa",
+   "name": "Circuit de Spa-Francorchamps",
+   "city": "Stavelot",
+   "round": 10,
+   "lengthKm": 7.004,
+   "corners": 20,
+   "firstF1Race": 1950,
+   "lapRecord": {
+    "time": "1:44.701",
+    "driver": "Sergio Pérez",
+    "team": "Red Bull",
+    "year": 2024
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:44.361",
+    "vmax": 336,
+    "vmin": 75,
+    "fullThrottle": 69,
+    "braking": 10,
+    "gearChanges": 47,
+    "elev": 102.0
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/spa.json",
+   "url": "https://pitwallf1.in/circuits/spa/"
+  },
+  {
+   "slug": "hungaroring",
+   "name": "Hungaroring",
+   "city": "Mogyoród",
+   "round": 11,
+   "lengthKm": 4.381,
+   "corners": 14,
+   "firstF1Race": 1986,
+   "lapRecord": {
+    "time": "1:16.627",
+    "driver": "Lewis Hamilton",
+    "team": "Mercedes",
+    "year": 2020
+   },
+   "poleLap": {
+    "driver": "Lando Norris",
+    "year": 2026,
+    "time": "1:17.207",
+    "vmax": 331,
+    "vmin": 92,
+    "fullThrottle": 46,
+    "braking": 22,
+    "gearChanges": 46,
+    "elev": 34.6
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/hungaroring.json",
+   "url": "https://pitwallf1.in/circuits/hungaroring/"
+  },
+  {
+   "slug": "zandvoort",
+   "name": "Circuit Zandvoort",
+   "city": "Zandvoort",
+   "round": 12,
+   "lengthKm": 4.259,
+   "corners": 14,
+   "firstF1Race": 1952,
+   "lapRecord": {
+    "time": "1:11.097",
+    "driver": "Lewis Hamilton",
+    "team": "Mercedes",
+    "year": 2021
+   },
+   "poleLap": {
+    "driver": "Lando Norris",
+    "year": 2026,
+    "time": "1:11.163",
+    "vmax": 316,
+    "vmin": 93,
+    "fullThrottle": 52,
+    "braking": 17,
+    "gearChanges": 38,
+    "elev": 8.5
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/zandvoort.json",
+   "url": "https://pitwallf1.in/circuits/zandvoort/"
+  },
+  {
+   "slug": "monza",
+   "name": "Autodromo Nazionale Monza",
+   "city": "Monza",
+   "round": 13,
+   "lengthKm": 5.793,
+   "corners": 11,
+   "firstF1Race": 1950,
+   "lapRecord": {
+    "time": "1:20.901",
+    "driver": "Lando Norris",
+    "team": "McLaren",
+    "year": 2025
+   },
+   "poleLap": {
+    "driver": "Pierre Gasly",
+    "year": 2026,
+    "time": "1:21.786",
+    "vmax": 342,
+    "vmin": 71,
+    "fullThrottle": 78,
+    "braking": 12,
+    "gearChanges": 35,
+    "elev": 12.4
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/monza.json",
+   "url": "https://pitwallf1.in/circuits/monza/"
+  },
+  {
+   "slug": "madring",
+   "name": "Madring",
+   "city": "Madrid",
+   "round": 14,
+   "lengthKm": 5.414,
+   "corners": 22,
+   "firstF1Race": 2026,
+   "lapRecord": {
+    "time": "1:35.587",
+    "driver": "George Russell",
+    "team": "Mercedes",
+    "year": 2026
+   },
+   "poleLap": {
+    "driver": "Lando Norris",
+    "year": 2026,
+    "time": "1:31.824",
+    "vmax": 334,
+    "vmin": 81,
+    "fullThrottle": 54,
+    "braking": 16,
+    "gearChanges": 50,
+    "elev": 23.7
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/madring.json",
+   "url": "https://pitwallf1.in/circuits/madring/"
+  },
+  {
+   "slug": "baku",
+   "name": "Baku City Circuit",
+   "city": "Baku",
+   "round": 15,
+   "lengthKm": 6.003,
+   "corners": 20,
+   "firstF1Race": 2016,
+   "lapRecord": {
+    "time": "1:43.009",
+    "driver": "Charles Leclerc",
+    "team": "Ferrari",
+    "year": 2019
+   },
+   "poleLap": {
+    "driver": "George Russell",
+    "year": 2026,
+    "time": "1:42.526",
+    "vmax": 331,
+    "vmin": 71,
+    "fullThrottle": 60,
+    "braking": 20,
+    "gearChanges": 55,
+    "elev": 26.6
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/baku.json",
+   "url": "https://pitwallf1.in/circuits/baku/"
+  },
+  {
+   "slug": "sepang",
+   "name": "Sepang International Circuit",
+   "city": "Sepang",
+   "round": 16,
+   "lengthKm": 5.543,
+   "corners": 15,
+   "firstF1Race": 1999,
+   "lapRecord": {
+    "time": "1:34.223",
+    "driver": "Juan Pablo Montoya",
+    "team": "Williams",
+    "year": 2004
+   },
+   "poleLap": {
+    "driver": "Max Verstappen",
+    "year": 2026,
+    "time": "1:35.130",
+    "vmax": 321,
+    "vmin": 71,
+    "fullThrottle": 56,
+    "braking": 19,
+    "gearChanges": 54,
+    "elev": 21.4
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/sepang.json",
+   "url": "https://pitwallf1.in/circuits/sepang/"
+  },
+  {
+   "slug": "marina-bay",
+   "name": "Marina Bay Street Circuit",
+   "city": "Singapore",
+   "round": 17,
+   "lengthKm": 4.94,
+   "corners": 19,
+   "firstF1Race": 2008,
+   "lapRecord": {
+    "time": "1:33.808",
+    "driver": "Lewis Hamilton",
+    "team": "Ferrari",
+    "year": 2025
+   },
+   "poleLap": {
+    "driver": "Max Verstappen",
+    "year": 2026,
+    "time": "1:31.373",
+    "vmax": 308,
+    "vmin": 63,
+    "fullThrottle": 48,
+    "braking": 24,
+    "gearChanges": 58,
+    "elev": 5.1
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/marina-bay.json",
+   "url": "https://pitwallf1.in/circuits/marina-bay/"
+  },
+  {
+   "slug": "cota",
+   "name": "Circuit of the Americas",
+   "city": "Austin",
+   "round": 18,
+   "lengthKm": 5.513,
+   "corners": 20,
+   "firstF1Race": 2012,
+   "lapRecord": {
+    "time": "1:36.169",
+    "driver": "Charles Leclerc",
+    "team": "Ferrari",
+    "year": 2019
+   },
+   "poleLap": {
+    "driver": "Kimi Antonelli",
+    "year": 2026,
+    "time": "1:34.035",
+    "vmax": 341,
+    "vmin": 75,
+    "fullThrottle": 56,
+    "braking": 19,
+    "gearChanges": 55,
+    "elev": 29.3
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/cota.json",
+   "url": "https://pitwallf1.in/circuits/cota/"
+  },
+  {
+   "slug": "mexico-city",
+   "name": "Autódromo Hermanos Rodríguez",
+   "city": "Mexico City",
+   "round": 19,
+   "lengthKm": 4.304,
+   "corners": 17,
+   "firstF1Race": 1963,
+   "lapRecord": {
+    "time": "1:17.774",
+    "driver": "Valtteri Bottas",
+    "team": "Mercedes",
+    "year": 2021
+   },
+   "poleLap": {
+    "driver": "Lewis Hamilton",
+    "year": 2026,
+    "time": "1:16.514",
+    "vmax": 350,
+    "vmin": 63,
+    "fullThrottle": 42,
+    "braking": 24,
+    "gearChanges": 47,
+    "elev": 2.5
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/mexico-city.json",
+   "url": "https://pitwallf1.in/circuits/mexico-city/"
+  },
+  {
+   "slug": "interlagos",
+   "name": "Autódromo José Carlos Pace",
+   "city": "São Paulo",
+   "round": 20,
+   "lengthKm": 4.309,
+   "corners": 15,
+   "firstF1Race": 1973,
+   "lapRecord": {
+    "time": "1:10.540",
+    "driver": "Valtteri Bottas",
+    "team": "Mercedes",
+    "year": 2018
+   },
+   "poleLap": {
+    "driver": "Lando Norris",
+    "year": 2025,
+    "time": "1:09.511",
+    "vmax": 336,
+    "vmin": 85,
+    "fullThrottle": 59,
+    "braking": 18,
+    "gearChanges": 32,
+    "elev": 42.6
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/interlagos.json",
+   "url": "https://pitwallf1.in/circuits/interlagos/"
+  },
+  {
+   "slug": "las-vegas",
+   "name": "Las Vegas Strip Circuit",
+   "city": "Las Vegas",
+   "round": 21,
+   "lengthKm": 6.201,
+   "corners": 17,
+   "firstF1Race": 2023,
+   "lapRecord": {
+    "time": "1:33.365",
+    "driver": "Max Verstappen",
+    "team": "Red Bull",
+    "year": 2025
+   },
+   "poleLap": {
+    "driver": "Lando Norris",
+    "year": 2025,
+    "time": "1:47.934",
+    "vmax": 331,
+    "vmin": 69,
+    "fullThrottle": 49,
+    "braking": 19,
+    "gearChanges": 37,
+    "elev": 15.9
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/las-vegas.json",
+   "url": "https://pitwallf1.in/circuits/las-vegas/"
+  },
+  {
+   "slug": "lusail",
+   "name": "Lusail International Circuit",
+   "city": "Lusail",
+   "round": 22,
+   "lengthKm": 5.419,
+   "corners": 16,
+   "firstF1Race": 2021,
+   "lapRecord": {
+    "time": "1:22.384",
+    "driver": "Lando Norris",
+    "team": "McLaren",
+    "year": 2024
+   },
+   "poleLap": {
+    "driver": "Oscar Piastri",
+    "year": 2025,
+    "time": "1:19.387",
+    "vmax": 327,
+    "vmin": 99,
+    "fullThrottle": 69,
+    "braking": 12,
+    "gearChanges": 31,
+    "elev": 4.1
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/lusail.json",
+   "url": "https://pitwallf1.in/circuits/lusail/"
+  },
+  {
+   "slug": "yas-marina",
+   "name": "Yas Marina Circuit",
+   "city": "Abu Dhabi",
+   "round": 23,
+   "lengthKm": 5.281,
+   "corners": 16,
+   "firstF1Race": 2009,
+   "lapRecord": {
+    "time": "1:25.637",
+    "driver": "Kevin Magnussen",
+    "team": "Haas",
+    "year": 2024
+   },
+   "poleLap": {
+    "driver": "Max Verstappen",
+    "year": 2025,
+    "time": "1:22.207",
+    "vmax": 331,
+    "vmin": 68,
+    "fullThrottle": 67,
+    "braking": 14,
+    "gearChanges": 37,
+    "elev": 10.8
+   },
+   "trackData": "https://pitwallf1.in/data/tracks/yas-marina.json",
+   "url": "https://pitwallf1.in/circuits/yas-marina/"
+  }
+ ]
+}
