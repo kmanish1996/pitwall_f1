@@ -11,7 +11,7 @@ the constants in index.html (standings, calendar, lap records) and the session r
 Needs Node.js to read the constants from index.html.
 """
 import html, json, math, os, re, subprocess, unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://pitwallf1.in"
@@ -45,7 +45,7 @@ if(t0>0){vm.runInContext(h.slice(t0,t1)+';this.o.TRACK_INFO=TRACK_INFO;this.o.TR
 const l0=h.indexOf('/* ================= LEARN F1: illustrations'),l1=h.indexOf('/* ---------- 3D steering wheel'),l2=h.indexOf('const LW={');
 if(l0>0){vm.runInContext(h.slice(l0,l1)+h.slice(l1,l2)+`;this.o.LEARN={terms:LN_TERMS.map(t=>({id:t.id,name:t.name,short:t.short,body:t.body,svg:t.svg()})),
  tyres:LN_TYRES.map(t=>({...t,svg:lnTyreSvg(t)})),tech:LN_TECH.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),people:LN_PEOPLE.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),
- history:LN_HISTORY,limit:LN_LIMIT.map(c=>({t:c.t,d:c.d,svg:'<svg viewBox="0 0 200 110" class="ln-svg" role="img">'+lnDefs+c.svg+'</svg>'})),parts:LN_PARTS.map(p=>({name:p.name,txt:p.txt})),
+ history:LN_HISTORY,nums:LN_NUMS,wcc:LN_WCC,awards:LN_AWARDS,sess:LN_SESS.map(s=>({id:s.id,name:s.name,when:s.when,time:s.time,body:s.body,svg:'<svg viewBox="0 0 320 160" class="ln-svg" role="img">'+lnDefs+s.svg()+'</svg>'})),limit:LN_LIMIT.map(c=>({t:c.t,d:c.d,svg:'<svg viewBox="0 0 200 110" class="ln-svg" role="img">'+lnDefs+c.svg+'</svg>'})),parts:LN_PARTS.map(p=>({name:p.name,txt:p.txt})),
  ctrl:LN_CTRL.map(c=>({id:c.id,name:c.name,txt:c.txt}))};`,c)}
 process.stdout.write(JSON.stringify(c.o));"""
     out = subprocess.run(["node", "-e", js, os.path.join(ROOT, "index.html")], capture_output=True, text=True, check=True).stdout
@@ -121,7 +121,16 @@ THEME_BTN = """<button type="button" class="theme-btn" aria-label="Switch betwee
 CHANGED = {}
 
 
-def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None):
+OG_BY_PREFIX = [("/circuits/", "circuits"), ("/f1-reaction-test/", "reaction"), ("/f1-qualifying-game/", "quali"), ("/formula-1-standings-", "standings"),
+                ("/f1-calendar-", "calendar"), ("/races/", "calendar"), ("/formula-1-world-champions/", "champions"), ("/drivers/", "drivers"), ("/teams/", "teams")]
+
+
+def og_image(path, og):
+    og = og or next((k for p, k in OG_BY_PREFIX if path.startswith(p)), None)
+    return f"{SITE}/assets/og/{og}.jpg" if og and os.path.exists(os.path.join(ROOT, "assets", "og", f"{og}.jpg")) else f"{SITE}/assets/og-image.png"
+
+
+def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, og=None):
     url = f"{SITE}{path}"
     trail = [{"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + p} for i, (n, p) in enumerate([("Home", "/")] + crumbs)]
     blocks = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": trail}] + ([ld] if ld else []) + (ld_list or [])
@@ -139,8 +148,11 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}/assets/og-image.png">
+<meta property="og:image" content="{og_image(path, og)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{og_image(path, og)}">
 <meta name="theme-color" content="#0A0C11">
 {THEME_HEAD}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -155,7 +167,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None):
 <header class="top"><div class="w">
 <a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
 {THEME_BTN}
-<nav class="main" aria-label="Main"><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a><a href="/#race-centre">Race centre</a></nav>
+<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-results-{YEAR}/">Results</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
 </div></header>
 <main class="w">
 <div class="crumbs">{crumb_html}</div>
@@ -163,7 +175,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None):
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
 <p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
 </div></footer>
 </body>
@@ -235,7 +247,7 @@ def main():
 <h2>Drivers' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Nationality</th><th>Team</th><th class="n">Wins</th><th class="n">Points</th><th class="n">Gap</th></tr></thead><tbody>{rows}</tbody></table></div>
 <h2>Constructors' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{trows}</tbody></table></div>
 <p class="note" style="margin-top:16px">Want the title maths? <a href="/#title-fight">See who can still win the {YEAR} championship</a>, or <a href="/#replay">replay the season round by round</a>.</p>"""
-    pages.append(page(f"/formula-1-standings-{YEAR}/", f"F1 {YEAR} standings: drivers' and constructors' championship | {BRAND}",
+    pages.append(page(f"/formula-1-standings-{YEAR}/", f"F1 {YEAR} standings: drivers' & constructors' table | {BRAND}",
                       f"Formula 1 {YEAR} championship standings after round {done}: {leader['first']} {leader['last']} leads on {leader['pts']} points. Full drivers' and constructors' tables with wins and gaps.",
                       body, [(f"{YEAR} standings", f"/formula-1-standings-{YEAR}/")]))
 
@@ -401,7 +413,11 @@ def main():
     pages += build_circuits(A, RACES, race_url, gp_long, drv, by_code, total, done)
     # ---------- games and the F1 guide ----------
     pages += build_games()
-    if A.get("LEARN"): pages.append(build_learn(A["LEARN"]))
+    if A.get("LEARN"): pages += build_learn_pages(A["LEARN"], A, D)
+    # ---------- pages people search for every weekend ----------
+    pages += build_next_race(A, RACES, done, total, gp_long, race_url, drv)
+    pages += build_results(A, RACES, done, gp_long, race_url, drv, sess, sdata)
+    pages += build_speed(A)
     # ---------- machine-readable data, llms.txt, robots.txt ----------
     write_api(A, D, C, RACES, wins, race_url, gp_long, dslug, tslug, done, total, champ_now)
     write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url)
@@ -503,7 +519,7 @@ def build_circuits(A, RACES, race_url, gp_long, drv, by_code, total, done):
                  "description": strip_tags(bits[0]) if bits else ""}
         faq_ld = {"@context": "https://schema.org", "@type": "FAQPage",
                   "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}
-        title = f"{I['full']}: F1 circuit map, lap record and facts | {BRAND}"
+        title = f"{I['full']}: F1 track guide & lap record | {BRAND}"
         desc = f"{I['full']}, {I['city']}: {I['length']:.3f} km, {I['turns']} corners, {laps} laps. Lap record {L[0] if L else '—'}, {src['year']} pole {lt} by {src['driverName']}. Explore the track in 3D."
         out.append(page(url, title, desc, body, [("Circuits", "/circuits/"), (I["name"], url)], place, ld_list=[faq_ld]))
         rows.append(f'<tr><td class="pos">{I["rd"]}</td><td><a href="{url}">{e(I["full"])}</a></td><td>{e(I["city"])}</td><td class="n">{I["length"]:.3f} km</td><td class="n">{I["turns"]}</td><td class="n">{L[0] if L else "—"}</td><td class="n">{I["firstGP"]}</td></tr>')
@@ -597,39 +613,281 @@ LEARN_CSS = """<style>
 </style>"""
 
 
-def build_learn(L):
+LEARN_TOPICS = [
+    ("what-is-formula-1", "about", "What is Formula 1?", "What is Formula 1? F1 explained for beginners",
+     "What Formula 1 is, how fast the cars go, how they're built, and a brief history of F1 from 1950 to the 2026 rules, with animated pictures."),
+    ("race-weekend-format", "weekend", "Race weekend & points", "F1 race weekend explained: practice, qualifying, sprint and the points system",
+     "How an F1 weekend works: FP1, FP2, FP3, Sprint Qualifying, the Sprint, the Q1-Q2-Q3 qualifying knockout, the Grand Prix, and how many points each finish is worth."),
+    ("trophies-and-championships", "trophies", "Trophies & championships", "F1 trophies and championships: Drivers' and Constructors' titles explained",
+     "The F1 World Drivers' and Constructors' Championships explained: who has won the most titles, how they're decided, and the prizes at every race."),
+    ("track-terms", "track", "Track talk", "F1 terms explained: racing line, apex, kerbs, chicanes, VSC and flags",
+     "The words you hear on an F1 broadcast, explained with animations: racing line and apex, kerbs, chicanes, hairpins, slipstream, track limits, pit lane, the virtual safety car and every flag."),
+    ("f1-tyres-explained", "tyres", "Tyres", "F1 tyres explained: soft, medium, hard, intermediate and wet (2026)",
+     "How Formula 1 tyres work in 2026: the C1 to C5 compounds, soft, medium and hard, intermediates and wets, the two-compound rule, and tyre words like deg, graining and undercut."),
+    ("f1-steering-wheel-buttons", "wheel", "The steering wheel", "F1 steering wheel buttons explained: what every control does",
+     "What the buttons, dials and paddles on an F1 steering wheel do: pit limiter, radio, overtake mode, brake balance, differential, shift lights and more."),
+    ("f1-car-technology-2026", "tech", "Car tech & 2026 rules", "F1 2026 car technology explained: active aero, overtake mode, ERS and more",
+     "The tech inside a 2026 F1 car: the hybrid power unit, ERS, active aerodynamics (straight and corner mode), overtake mode, the differential, brakes, gearbox, halo, size and weight."),
+    ("people-of-f1", "people", "The people of F1", "Who's who in F1: drivers, race engineers, strategists, pit crews, marshals and stewards",
+     "The people who make a Grand Prix happen: drivers, team principals, race engineers, strategists, pit crews, mechanics, designers, marshals, race control, stewards, the safety car and more."),
+]
+SEO_TITLE = {"what-is-formula-1": "What is Formula 1? F1 explained for beginners", "race-weekend-format": "F1 race weekend & points system explained",
+             "trophies-and-championships": "F1 championships & trophies explained", "track-terms": "F1 terms explained: apex, kerbs, VSC & flags",
+             "f1-tyres-explained": "F1 tyres explained: compounds & colours (2026)", "f1-steering-wheel-buttons": "F1 steering wheel buttons explained",
+             "f1-car-technology-2026": "F1 2026 tech explained: active aero, ERS & more", "people-of-f1": "Who's who in F1: engineers, pit crews & more"}
+TYRE_TALK = [("Degradation (\"deg\")", "The tyre slowly losing grip as it wears and heats up, so lap times drop off."),
+             ("Graining", "Little rolls of rubber tear off and stick to the surface, making the tyre slide until they wear away."),
+             ("Blistering", "The rubber gets so hot underneath that pockets bubble up and break off."),
+             ("Undercut", "Pitting before a rival so your fresh tyres let you set faster laps and jump ahead when they stop."),
+             ("Overcut", "Staying out longer than a rival and using clear track to gain time instead."),
+             ("Marbles", "Bits of worn rubber that collect off the racing line and feel like driving on ball bearings.")]
+
+
+def article_ld(url, headline, desc):
+    return {"@context": "https://schema.org", "@type": "Article", "headline": headline, "description": desc, "url": url,
+            "inLanguage": "en", "dateModified": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "author": {"@type": "Organization", "name": BRAND, "url": SITE + "/"}, "publisher": {"@type": "Organization", "name": BRAND, "url": SITE + "/"}}
+
+
+def faq_ld(qa):
+    return {"@context": "https://schema.org", "@type": "FAQPage",
+            "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}} for q, a in qa]}
+
+
+def qa_html(qa): return "<h2>Questions and answers</h2>" + "".join(f"<h3>{e(q)}</h3><p>{a}</p>" for q, a in qa)
+
+
+def build_learn_pages(L, A, D):
+    """The Learn F1 hub plus one page per topic, each answering the questions people search for."""
+    out = []
     card = lambda t, kick: f'<article id="{t["id"]}">{t["svg"]}<div class="tx"><h3>{e(t["name"])}</h3><div class="k">{e(kick)}</div><p>{t["body"]}</p></div></article>'
-    body = f"""<h1>Learn F1</h1>
-<p class="sub">A beginner's guide to Formula 1: track talk, tyres, the steering wheel and the tech in the 2026 cars.</p>
-<p class="lead">Everything you hear on a race broadcast, explained with moving pictures. For the full interactive version, with a 3D steering wheel you can spin and click, <a href="/#learn">open Learn F1 on Pit Wall</a>.</p>
-<h2 id="what-is-f1">What is Formula 1?</h2>
-<p>Formula 1 is the world's fastest racing championship. Eleven teams build their own cars from scratch, pushing engineering, aerodynamics, materials and software as far as the rules allow, and 22 drivers race them at 23 Grands Prix around the world in 2026. The first World Championship race was held at Silverstone in 1950.</p>
-<h3>Pushing everything to the limit</h3><div class="lg">{''.join(f'<article>{c["svg"]}<div class="tx"><h3>{e(c["t"])}</h3><p>{e(c["d"])}</p></div></article>' for c in L.get("limit", []))}</div>
-<h3>Anatomy of an F1 car</h3><dl>{''.join(f'<dt><b>{e(x["name"])}</b></dt><dd>{e(x["txt"])}</dd>' for x in L.get("parts", []))}</dl>
-<p><a href="/#learn/about">Spin the 3D car on Pit Wall</a>.</p>
-<h3>How a race weekend works</h3>
-<p><b>Friday:</b> Practice 1 and 2. <b>Saturday:</b> Practice 3, then Qualifying. <b>Sunday:</b> the Grand Prix, about 305 km. Qualifying is a knockout: in Q1 the slowest six of the 22 cars are out, in Q2 another six, and the final ten fight for pole position in Q3. The top ten in the race score 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1 points. On the six sprint weekends of 2026, Practice 2 and 3 are replaced by Sprint Qualifying and a Saturday Sprint of about 100 km, with points for the top eight.</p>
-<h3>The trophies: two world championships</h3>
-<p><b>World Drivers' Championship</b> (since 1950): every point a driver scores in Grands Prix and Sprints counts, and the driver with the most at the end of the season is Formula 1 World Champion. Michael Schumacher and Lewis Hamilton hold the record with seven titles each. <b>World Constructors' Championship</b> (since 1958, first won by Vanwall): both of a team's drivers' points count, and the final order decides each team's share of the prize money. Ferrari have the most, with 16; McLaren have 10, Williams 9, Mercedes 8, Lotus 7 and Red Bull 6 (to the end of 2025). Race winners, the top three and the winning team also collect trophies on the podium every weekend.</p>
-<h3>A brief history of F1</h3><ul>{''.join(f'<li><b>{y}: {e(t)}.</b> {e(d)}</li>' for y, t, d in L.get("history", []))}</ul>
-<h2 id="track-talk">Track talk</h2><div class="lg">{''.join(card(t, t["short"]) for t in L["terms"])}</div>
-<h2 id="tyres">Tyres</h2>
-<p>Pirelli brings five dry compounds in 2026, C1 (hardest) to C5 (softest), and picks three for each weekend: the hardest is called the Hard (white), the middle the Medium (yellow) and the softest the Soft (red). Intermediates (green) and full Wets (blue) are for the rain. In a dry race every driver must use at least two different dry compounds. The 2026 tyres stay on 18-inch wheels but are narrower: 25 mm at the front and 30 mm at the rear.</p>
-<div class="tyres">{''.join(f'<div>{t["svg"]}<h3>{e(t["name"])}</h3><p class="note">{e(t["tag"])}</p><p>{e(t["txt"])}</p></div>' for t in L["tyres"])}</div>
-<h2 id="steering-wheel">The steering wheel</h2>
-<p>A modern F1 steering wheel has 20 or more buttons, dials and paddles. These are the ones you'll hear about most. <a href="/#learn/wheel">Spin and click the 3D wheel</a>.</p>
-<dl>{''.join(f'<dt><b>{e(c["name"])}</b></dt><dd>{e(c["txt"])}</dd>' for c in L["ctrl"])}</dl>
-<h2 id="car-tech">Car tech</h2><div class="lg">{''.join(card(t, t["kick"]) for t in L["tech"])}</div>
-<h2 id="people">The people who make F1</h2><p>A Grand Prix takes thousands of people: around a thousand or more at each big team, plus the FIA officials, the tyre makers, the medical crews and the marshals.</p><div class="lg">{''.join(card(t, t["kick"]) for t in L.get("people", []))}</div>
-<p class="note" style="margin-top:16px">2026 figures from <a href="https://global.honda/en/F1/features/2026_Commentary/regulations/" rel="noopener">Honda's 2026 regulations overview</a>, <a href="https://www.autosport.com/f1/news/explained-f1-2026s-new-terminology-and-technology/10787702/" rel="noopener">Autosport</a> and <a href="https://www.formula1.com/en/latest/article/pirelli-confirm-2026-tyre-compounds-as-f1-gets-set-for-a-new-era-of.6la0zKVsCYwWk9AAISz4Yw" rel="noopener">Formula1.com</a>.</p>"""
-    terms = L["terms"] + L["tech"] + L.get("people", [])
-    ld = {"@context": "https://schema.org", "@type": "DefinedTermSet", "name": "Formula 1 glossary", "url": f"{SITE}/learn-f1/",
-          "hasDefinedTerm": [{"@type": "DefinedTerm", "name": t["name"], "description": strip_tags(t["body"]), "url": f"{SITE}/learn-f1/#{t['id']}"} for t in terms]
-          + [{"@type": "DefinedTerm", "name": f'{t["name"]} tyre', "description": t["txt"]} for t in L["tyres"]]
-          + [{"@type": "DefinedTerm", "name": c["name"], "description": c["txt"]} for c in L["ctrl"]]}
-    return page("/learn-f1/", f"Learn F1: track terms, tyres, steering wheel, car tech and the people of F1 explained | {BRAND}",
-                "Beginner's guide to Formula 1 with animated pictures: what F1 is and its history, how a race weekend works, racing line, kerbs, chicanes, tyres, every steering wheel button, the 2026 tech (active aero, overtake mode, ERS) and the people: drivers, race engineers, strategists, pit crews, marshals and stewards.",
-                body, [("Learn F1", "/learn-f1/")], ld, extra_head=LEARN_CSS)
+    CH = A.get("CHAMPIONS") or []
+    counts = {}
+    for c in CH: counts[c[1]] = counts.get(c[1], 0) + 1
+    top = sorted(counts.items(), key=lambda x: -x[1])[:8]
+    pts = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1]
+    def topic_body(key):
+        if key == "about":
+            return (f"""<p class="lead">Formula 1 is the world's fastest racing championship. Eleven teams build their own cars from scratch, pushing engineering, aerodynamics, materials and software as far as the rules allow, and 22 drivers race them at 23 Grands Prix around the world in 2026.</p>
+<div class="tiles">{''.join(f'<div class="tile"><span>{e(l)}</span><b>{n:,}{e(u)}</b></div>' if n != 1950 else f'<div class="tile"><span>{e(l)}</span><b>1950</b></div>' for n, u, l in L.get("nums", []))}</div>
+<h2>Pushing everything to the limit</h2><div class="lg">{''.join(f'<article>{c["svg"]}<div class="tx"><h3>{e(c["t"])}</h3><p>{e(c["d"])}</p></div></article>' for c in L.get("limit", []))}</div>
+<h2>Anatomy of an F1 car</h2><dl>{''.join(f'<dt><b>{e(x["name"])}</b></dt><dd>{e(x["txt"])}</dd>' for x in L.get("parts", []))}</dl>
+<h2>A brief history of F1</h2><ul>{''.join(f'<li><b>{y}: {e(t)}.</b> {e(d)}</li>' for y, t, d in L.get("history", []))}</ul>""",
+                    [("What is Formula 1?", "Formula 1 (F1) is the top level of single-seater motor racing: 11 teams and 22 drivers race purpose-built cars at 23 Grands Prix around the world in 2026, competing for the Drivers' and Constructors' world championships."),
+                     ("How fast is an F1 car?", "F1 cars reach around 350 km/h on the longest straights; on 2026 pole laps the highest top speed was 350 km/h at Mexico City. They brake at more than 5 g. See <a href=\"/how-fast-is-an-f1-car/\">top speeds at every track</a>."),
+                     ("How much horsepower does an F1 car have?", "About 1,000 hp in 2026: roughly 400 kW from the 1.6-litre V6 turbo engine and up to 350 kW from the electric motor (MGU-K)."),
+                     ("When did Formula 1 start?", "The first World Championship race was held at Silverstone on 13 May 1950. Nino Farina won it and became the first world champion.")])
+        if key == "weekend":
+            sess = "".join(f'<article id="{s["id"]}">{s["svg"]}<div class="tx"><h3>{e(s["name"])}</h3><div class="k">{e(s["when"])} · {e(s["time"])}</div><p>{s["body"]}</p></div></article>' for s in L.get("sess", []))
+            return (f"""<p class="lead">A Grand Prix weekend runs from Friday to Sunday. Most weekends have three practice sessions, qualifying on Saturday and the race on Sunday. Six weekends in 2026 are <b>sprint weekends</b>, with Sprint Qualifying on Friday and a short Sprint race on Saturday.</p>
+<h2>Normal weekend</h2><p><b>Friday:</b> Practice 1, Practice 2. <b>Saturday:</b> Practice 3, Qualifying. <b>Sunday:</b> Grand Prix.</p>
+<h2>Sprint weekend</h2><p><b>Friday:</b> Practice 1, Sprint Qualifying. <b>Saturday:</b> Sprint, Qualifying. <b>Sunday:</b> Grand Prix.</p>
+<h2>Every session explained</h2><div class="lg">{sess}</div>
+<h2>The F1 points system</h2>
+<div class="tbl"><table><thead><tr><th>Finish</th>{''.join(f'<th class="n">P{i+1}</th>' for i in range(10))}</tr></thead><tbody>
+<tr><td>Grand Prix</td>{''.join(f'<td class="n">{p}</td>' for p in pts)}</tr>
+<tr><td>Sprint</td>{''.join(f'<td class="n">{p}</td>' for p in [8,7,6,5,4,3,2,1,0,0])}</tr></tbody></table></div>
+<p>A perfect weekend is worth 25 points, or 33 on a sprint weekend. There has been no bonus point for the fastest lap since 2025. Both of a team's drivers score for the Constructors' Championship, and ties are broken by countback: most wins, then most second places, and so on.</p>""",
+                    [("How many points do you get for winning an F1 race?", "25 points. The top ten score 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1."),
+                     ("How many points is an F1 sprint worth?", "The top eight in a Sprint score 8, 7, 6, 5, 4, 3, 2 and 1 points."),
+                     ("How does F1 qualifying work?", "It's a knockout in three parts. In Q1 (18 minutes) the slowest six of the 22 cars are eliminated, in Q2 (15 minutes) another six go, and the top ten fight for pole position in Q3 (12 minutes)."),
+                     ("What is a sprint race in F1?", "A short race of about 100 km on Saturday of a sprint weekend, roughly a third of a Grand Prix, with no compulsory pit stop. Its grid is set by Sprint Qualifying on Friday."),
+                     ("How long is an F1 race?", "About 305 km (Monaco is shorter), usually around 90 minutes, with a two-hour limit."),
+                     ("Is there a point for the fastest lap?", "Not any more. The bonus point for the fastest lap was dropped from 2025.")])
+        if key == "trophies":
+            wcc = L.get("wcc", [])
+            return (f"""<p class="lead">Two titles are decided every season: the <b>World Drivers' Championship</b> for the driver with the most points, and the <b>World Constructors' Championship</b> for the team. Both are presented at the FIA's prize-giving at the end of the year.</p>
+<h2>World Drivers' Championship</h2><p>Awarded since 1950. Every point a driver scores in Grands Prix and Sprints counts. {len(counts)} different drivers have been world champion; the youngest is Kimi Antonelli, who won in 2026 at the age of 20, and the oldest Juan Manuel Fangio, 46 when he won in 1957.</p>
+<div class="tbl"><table><thead><tr><th>Driver</th><th class="n">Titles</th></tr></thead><tbody>{''.join(f'<tr><td>{e(n)}</td><td class="n">{k}</td></tr>' for n, k in top)}</tbody></table></div>
+<p><a href="/formula-1-world-champions/">Every world champion since 1950</a>.</p>
+<h2>World Constructors' Championship</h2><p>Awarded since 1958, when Vanwall won it. Both of a team's drivers' points count, and the final order decides each team's share of the sport's prize money.</p>
+<div class="tbl"><table><thead><tr><th>Team</th><th class="n">Titles (to 2025)</th></tr></thead><tbody>{''.join(f'<tr><td>{e(n)}</td><td class="n">{k}</td></tr>' for n, k, c in wcc)}</tbody></table></div>
+<h2>Prizes at every race</h2><ul>{''.join(f'<li><b>{e(t)}.</b> {e(d)}</li>' for i, t, d in L.get("awards", []))}</ul>
+<p class="note">Constructors' title counts: Autosport (to 2024) plus McLaren's 2025 title.</p>""",
+                    [("Who has won the most F1 world championships?", f"Michael Schumacher and Lewis Hamilton, with seven titles each. Juan Manuel Fangio won five."),
+                     ("Which team has the most F1 constructors' championships?", "Ferrari, with 16 titles, followed by McLaren (10), Williams (9) and Mercedes (8), counting to the end of 2025."),
+                     ("Who is the youngest F1 world champion?", "Kimi Antonelli, who won the 2026 title for Mercedes at the age of 20."),
+                     ("What is the difference between the Drivers' and Constructors' Championship?", "The Drivers' Championship ranks individual drivers by their points; the Constructors' Championship adds up the points of both of a team's drivers to rank the teams.")])
+        if key == "track":
+            terms = L.get("terms", [])
+            ask = {"line": "What is the racing line and apex in F1?", "kerbs": "What are kerbs in F1?", "chicane": "What is a chicane in F1?", "hairpin": "What is a hairpin in F1?",
+                   "tow": "What is slipstream (a tow) in F1?", "limits": "What are track limits in F1?", "vsc": "What is a virtual safety car (VSC) in F1?", "flags": "What do the flags mean in F1?", "pit": "How does the pit lane work in F1?"}
+            return (f'<p class="lead">The words you hear on an F1 broadcast, each with an animated picture.</p><div class="lg">{"".join(card(t, t["short"]) for t in terms)}</div>',
+                    [(ask[t["id"]], t["body"]) for t in terms if t["id"] in ask])
+        if key == "tyres":
+            ty = L.get("tyres", [])
+            return (f"""<p class="lead">Tyres are the only part of the car touching the track, and managing them decides races.</p>
+<div class="tyres">{''.join(f'<div>{t["svg"]}<h3>{e(t["name"])}</h3><p class="note">{e(t["tag"])}</p><p>{e(t["txt"])}</p></div>' for t in ty)}</div>
+<h2>How tyres work in 2026</h2><ul><li><b>Five dry compounds, C1 to C5.</b> C1 is the hardest and C5 the softest; the C6 used in 2025 was dropped.</li>
+<li><b>Three per weekend.</b> Pirelli picks three: the hardest is called the Hard (white), the middle the Medium (yellow), the softest the Soft (red).</li>
+<li><b>Two for the rain:</b> Intermediates (green) and full Wets (blue).</li>
+<li><b>Two compounds in a dry race.</b> Every driver must use at least two different dry compounds, so everyone pits at least once.</li>
+<li><b>Narrower for 2026.</b> Still 18-inch wheels, but the fronts are 25 mm narrower and the rears 30 mm narrower.</li></ul>
+<h2>Tyre talk</h2><dl>{''.join(f'<dt><b>{e(k)}</b></dt><dd>{e(v)}</dd>' for k, v in TYRE_TALK)}</dl>""",
+                    [("What are the different F1 tyres?", "Three dry tyres each weekend, Soft (red), Medium (yellow) and Hard (white), chosen from five compounds C1 to C5, plus Intermediates (green) and full Wets (blue) for rain."),
+                     ("Why do F1 cars have to change tyres?", "In a dry race every driver must use at least two different dry compounds, and tyres lose grip as they wear, so drivers make at least one pit stop."),
+                     ("What is the undercut in F1?", TYRE_TALK[3][1]),
+                     ("What is tyre degradation in F1?", TYRE_TALK[0][1])])
+        if key == "wheel":
+            ct = L.get("ctrl", [])
+            dl = "".join(f"<dt><b>{e(c['name'])}</b></dt><dd>{e(c['txt'])}</dd>" for c in ct)
+            return (f'<p class="lead">A modern F1 steering wheel has 20 or more buttons, dials and paddles. These are the ones you\'ll hear about most. <a href="/#learn/wheel">Spin and click the 3D wheel</a>.</p><dl>{dl}</dl>',
+                    [(f"What does the {c['name']} do on an F1 steering wheel?", c["txt"]) for c in ct if c["id"] in ("pit", "ot", "bbal", "diff", "lights", "clutch")])
+        if key == "tech":
+            tech = L.get("tech", [])
+            return (f'<p class="lead">2026 brought the biggest rule change in years: active aerodynamics, a near 50:50 split of engine and electric power, 100% sustainable fuel, and smaller, lighter cars.</p><div class="lg">{"".join(card(t, t["kick"]) for t in tech)}</div>',
+                    [(f"What is {t['name'].lower()} in F1?", t["body"]) for t in tech if t["id"] in ("aero", "ot", "ers", "diff", "halo")])
+        if key == "people":
+            ppl = L.get("people", [])
+            return (f'<p class="lead">A Grand Prix takes thousands of people: around a thousand or more at each big team, plus FIA officials, tyre engineers, medical crews and the marshals.</p><div class="lg">{"".join(card(t, t["kick"]) for t in ppl)}</div>',
+                    [(f"What does {('an' if t['name'][0] in 'AEIOU' else 'a')} {t['name'].lower()} do in F1?", t["body"]) for t in ppl if t["id"] in ("tp", "engineer", "strategist", "pitcrew", "marshals", "stewards")])
+        return ("", [])
+    for n, (slug_, key, short, h1, desc) in enumerate(LEARN_TOPICS):
+        url = f"/learn-f1/{slug_}/"
+        content, qa = topic_body(key)
+        prev = f'<a href="/learn-f1/{LEARN_TOPICS[n-1][0]}/">← {e(LEARN_TOPICS[n-1][2])}</a>' if n else '<a href="/learn-f1/">← Learn F1</a>'
+        nxt = f'<a href="/learn-f1/{LEARN_TOPICS[n+1][0]}/">{e(LEARN_TOPICS[n+1][2])} →</a>' if n + 1 < len(LEARN_TOPICS) else '<a href="/learn-f1/">Learn F1 →</a>'
+        body = f"""<h1>{e(h1)}</h1><p class="sub">Learn F1 · {e(short)} · <a href="/#learn/{key}">Open the interactive version</a></p>
+{content}{qa_html(qa) if qa else ''}
+<div class="pager">{prev}<a href="/learn-f1/">All topics</a>{nxt}</div>"""
+        out.append(page(url, f"{SEO_TITLE.get(slug_, h1)} | {BRAND}", desc, body, [("Learn F1", "/learn-f1/"), (short, url)], article_ld(SITE + url, h1, desc),
+                        extra_head=LEARN_CSS, ld_list=[faq_ld(qa)] if qa else None, og=f"learn-{key}"))
+    hub = f"""<h1>Learn F1: Formula 1 explained for beginners</h1>
+<p class="sub">New to F1, or want to understand what the commentators are on about? Start here.</p>
+<p class="lead">Formula 1 is the world's fastest racing championship: 11 teams, 22 drivers, 23 Grands Prix and cars that reach 350 km/h. These guides explain it all with animated pictures, from how a race weekend works to what every button on the steering wheel does.</p>
+<div class="lg">{''.join(f'<article><div class="tx"><div class="k">{i+1:02d}</div><h3><a href="/learn-f1/{s}/">{e(short)}</a></h3><p>{e(d)}</p></div></article>' for i, (s, k, short, h1, d) in enumerate(LEARN_TOPICS))}</div>
+<h2>Try it hands-on</h2><ul><li><a href="/#learn">The interactive Learn F1 section</a>: a 3D car and steering wheel you can spin and click.</li>
+<li><a href="/f1-reaction-test/">F1 reaction test</a>: can you beat Valtteri Bottas's 0.201s start?</li>
+<li><a href="/f1-qualifying-game/">F1 qualifying game</a>: three laps against the 2026 grid.</li>
+<li><a href="/circuits/">Every 2026 circuit</a>, with maps and pole-lap telemetry.</li></ul>"""
+    hub_qa = [("Is F1 hard to understand?", "Not once you know the basics: 22 drivers race for points over a season, the fastest in Saturday's qualifying starts at the front, and the top ten in Sunday's race score points. These guides explain the rest."),
+              ("How many races are in an F1 season?", "23 Grands Prix in 2026, from Australia in March to Abu Dhabi in December, six of them with an extra Saturday sprint."),
+              ("What is the difference between F1 and other motorsport?", "Every F1 team designs and builds its own car, so the championship is as much an engineering contest as a driving one.")]
+    out.append(page("/learn-f1/", f"Learn F1: Formula 1 explained for beginners (2026 guide) | {BRAND}",
+                    "Formula 1 explained for beginners: what F1 is, how a race weekend and the points work, tyres, the steering wheel, 2026 car tech, the people of F1 and the trophies, with animated pictures.",
+                    hub + qa_html(hub_qa), [("Learn F1", "/learn-f1/")], article_ld(SITE + "/learn-f1/", "Learn F1: Formula 1 explained for beginners", "A beginner's guide to Formula 1."),
+                    extra_head=LEARN_CSS, ld_list=[faq_ld(hub_qa)], og="learn"))
+    return out
+
+
+def fetch_next_schedule(nxt):
+    """Session times for the next round from OpenF1 (kept in data/ so builds work offline too)."""
+    cache = os.path.join(ROOT, "data", "next_schedule.json")
+    try:
+        import urllib.request
+        start = datetime.fromisoformat(nxt["race"].replace("Z", "+00:00"))
+        url = f"https://api.openf1.org/v1/sessions?year={YEAR}&date_start%3E={(start - timedelta(days=4)).strftime('%Y-%m-%d')}&date_start%3C={(start + timedelta(days=1)).strftime('%Y-%m-%d')}"
+        rows = json.load(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "pitwall-pages"}), timeout=20))
+        sess = sorted(({"name": r["session_name"], "start": r["date_start"]} for r in rows), key=lambda r: r["start"])
+        if sess:
+            json.dump({"round": nxt["rd"], "sessions": sess}, open(cache, "w"), indent=1)
+            return sess
+    except Exception as ex:
+        print("  next-race schedule: OpenF1 not reachable, using saved copy", type(ex).__name__)
+    if os.path.exists(cache):
+        c = json.load(open(cache))
+        if c.get("round") == nxt["rd"]: return c["sessions"]
+    return [{"name": "Race", "start": nxt["race"]}]
+
+
+def build_next_race(A, RACES, done, total, gp_long, race_url, drv):
+    nxt = next((r for r in RACES if r["rd"] == done + 1), None)
+    TI = A.get("TRACK_INFO") or {}
+    last = RACES[done - 1] if done else None
+    if not nxt:
+        body = f"<h1>Next F1 race</h1><p class=\"lead\">The {YEAR} season is complete. The {YEAR + 1} calendar will appear here when it's confirmed.</p>"
+        return [page("/next-f1-race/", f"Next F1 race | {BRAND}", f"The {YEAR} Formula 1 season is complete.", body, [("Next F1 race", "/next-f1-race/")], og="next-race")]
+    name = gp_long(nxt)
+    sess = fetch_next_schedule(nxt)
+    csl = next((k for k, v in TI.items() if v["rd"] == nxt["rd"]), None)
+    I = TI.get(csl, {})
+    fmt = lambda iso: datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(timezone.utc)
+    rows = "".join(f'<tr><td>{e(s["name"])}</td><td>{fmt(s["start"]).strftime("%a %d %b")}</td><td class="n">{fmt(s["start"]).strftime("%H:%M")} UTC</td><td class="n" data-local="{fmt(s["start"]).isoformat()}"></td></tr>' for s in sess)
+    race_dt = fmt(nxt["race"])
+    sprint = any("Sprint" in s["name"] for s in sess)
+    lastline = f'The last race, the {e(gp_long(last))}, was won by {drv(last["win"])}.' if last and last.get("win") else ""
+    body = f"""<h1>Next F1 race: {e(name)} {YEAR}</h1>
+<p class="sub">Round {nxt["rd"]} of {total} · {e(nxt["circuit"])}, {e(nxt["place"])} · {e(nxt["dates"])} {YEAR}{" · Sprint weekend" if sprint else ""}</p>
+<p class="lead">The next Formula 1 race is the <b>{e(name)}</b> on <b>{race_dt.strftime("%A %d %B %Y")}</b>, starting at <b>{race_dt.strftime("%H:%M")} UTC</b> (<span data-local="{race_dt.isoformat()}" data-full="1"></span>). {lastline}</p>
+<div class="tiles"><div class="tile"><span>Lights out in</span><b id="cd">–</b></div><div class="tile"><span>Circuit</span><b style="font-size:16px">{e(nxt["circuit"])}</b></div>{f'<div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Race laps</span><b>{78 if I.get("rd") == 6 else math.ceil(305 / I["length"])}</b></div>' if I else ""}</div>
+<h2>Weekend schedule</h2>
+<div class="tbl"><table><thead><tr><th>Session</th><th>Day</th><th class="n">UTC</th><th class="n">Your time</th></tr></thead><tbody>{rows}</tbody></table></div>
+<p style="margin-top:14px"><a class="btn" href="/#calendar">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/#tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
+<h2>Championship so far</h2><p>After round {done}, see the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, every <a href="/f1-results-{YEAR}/">race result</a>, and the <a href="{race_url(nxt["rd"])}">{e(name)} page</a> for results as each session finishes.</p>
+<script>
+(function(){{document.querySelectorAll("[data-local]").forEach(function(el){{var d=new Date(el.getAttribute("data-local"));el.textContent=el.dataset.full?d.toLocaleString([], {{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}})+" your time":d.toLocaleString([], {{weekday:"short",hour:"2-digit",minute:"2-digit"}})}});
+var t=new Date("{race_dt.isoformat()}").getTime(),c=document.getElementById("cd");function f(){{var s=Math.max(0,(t-Date.now())/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);c.textContent=s>0?d+"d "+h+"h "+m+"m":"Race day!"}}f();setInterval(f,30000)}})();
+</script>"""
+    ld = {"@context": "https://schema.org", "@type": "SportsEvent", "name": f"{YEAR} {name}", "sport": "Formula 1", "startDate": nxt["race"],
+          "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+          "location": {"@type": "Place", "name": nxt["circuit"], "address": {"@type": "PostalAddress", "addressLocality": nxt["place"], "addressCountry": COUNTRY.get(nxt["short"], "")}},
+          "url": SITE + "/next-f1-race/", "subEvent": [{"@type": "SportsEvent", "name": f'{name}: {s["name"]}', "startDate": s["start"]} for s in sess]}
+    qa = [(f"When is the next F1 race?", f"The {name} on {race_dt.strftime('%A %d %B %Y')} at {race_dt.strftime('%H:%M')} UTC, at {nxt['circuit']} in {nxt['place']}."),
+          (f"What time does the {name} start?", f"Lights out is at {race_dt.strftime('%H:%M')} UTC on {race_dt.strftime('%d %B')}. " + (f"Qualifying is at {fmt(next(s['start'] for s in sess if s['name'] == 'Qualifying')).strftime('%H:%M')} UTC on {fmt(next(s['start'] for s in sess if s['name'] == 'Qualifying')).strftime('%A')}." if any(s['name'] == 'Qualifying' for s in sess) else ""))]
+    return [page("/next-f1-race/", f"Next F1 race: {name} {YEAR} start time & schedule | {BRAND}",
+                 f"The next F1 race is the {name} on {race_dt.strftime('%d %B %Y')}, lights out {race_dt.strftime('%H:%M')} UTC. Full weekend schedule in your time zone, countdown and circuit guide.",
+                 body + qa_html(qa), [("Next F1 race", "/next-f1-race/")], ld, ld_list=[faq_ld(qa)], og="next-race")]
+
+
+def build_results(A, RACES, done, gp_long, race_url, drv, sess, sdata):
+    rows, items = [], []
+    for r in RACES[:done]:
+        have = sess.get(r["rd"], {})
+        pod, pole = [], None
+        if have.get("Race"):
+            d = sdata(have["Race"]); dm = {x["n"]: x["c"] for x in d["drivers"]}
+            pod = [dm.get(x[1]) for x in d["result"][:3]]
+        if have.get("Qualifying"):
+            d = sdata(have["Qualifying"]); dm = {x["n"]: x["c"] for x in d["drivers"]}
+            pole = dm.get(d["result"][0][1]) if d["result"] else None
+        spr = A["SPRINT_WIN"].get(str(r["rd"]))
+        rows.append(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td>{"".join(f"<td>{drv(c) if c else chr(8211)}</td>" for c in (pod + [None] * 3)[:3])}<td>{drv(pole) if pole else "–"}</td><td>{drv(spr[0]) if spr else ""}</td></tr>')
+        items.append({"@type": "ListItem", "position": r["rd"], "url": SITE + race_url(r["rd"]), "name": f'{gp_long(r)} {YEAR}: won by {r.get("win") or "?"}'})
+    last = RACES[done - 1]
+    body = f"""<h1>F1 results {YEAR}</h1>
+<p class="sub">Every Grand Prix of the {YEAR} season so far: winner, podium, pole position and sprint winner.</p>
+<p class="lead">After {done} rounds, the latest race was the {e(gp_long(last))}, won by {drv(last["win"])}. Tap a race for full results from every session and a lap-by-lap replay.</p>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Winner</th><th>2nd</th><th>3rd</th><th>Pole</th><th>Sprint winner</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
+<p class="note" style="margin-top:12px">See also the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a> and the <a href="/next-f1-race/">next race</a>.</p>"""
+    return [page(f"/f1-results-{YEAR}/", f"F1 results {YEAR}: every Grand Prix winner, podium and pole | {BRAND}",
+                 f"Formula 1 {YEAR} results: winners, podiums, pole positions and sprint winners for all {done} races so far, latest the {gp_long(last)}.",
+                 body, [(f"{YEAR} results", f"/f1-results-{YEAR}/")], {"@context": "https://schema.org", "@type": "ItemList", "name": f"F1 {YEAR} race results", "itemListElement": items}, og="results")]
+
+
+def build_speed(A):
+    TI = A.get("TRACK_INFO") or {}
+    rows = []
+    for sl, I in TI.items():
+        fp = os.path.join(ROOT, "data", "tracks", f"{sl}.json")
+        if not os.path.exists(fp): continue
+        d = json.load(open(fp)); st = d["stats"]
+        rows.append((sl, I, st, round(d["length"] / d["lapTime"] * 3.6), d["source"]))
+    if not rows: return []
+    rows.sort(key=lambda x: -x[2]["vmax"])
+    fastest, slowest_top = rows[0], rows[-1]
+    by_avg = sorted(rows, key=lambda x: -x[3])
+    slow_corner = min(rows, key=lambda x: x[2]["vmin"])
+    table = "".join(f'<tr><td><a href="/circuits/{sl}/">{e(I["full"])}</a></td><td class="n">{st["vmax"]} km/h</td><td class="n">{avg} km/h</td><td class="n">{st["vmin"]} km/h</td><td class="n">{st["fullThrottle"]}%</td><td>{e(src["driver"])} {src["year"]}</td></tr>' for sl, I, st, avg, src in rows)
+    body = f"""<h1>How fast is an F1 car?</h1>
+<p class="sub">Top speeds, average speeds and the slowest corners at every 2026 circuit, from real pole-lap telemetry.</p>
+<p class="lead">On the {len(rows)} pole laps of the 2026 calendar, the highest top speed was <b>{fastest[2]["vmax"]} km/h</b> at {e(fastest[1]["full"])}, where the thin air at altitude means less drag. The fastest lap overall was at {e(by_avg[0][1]["full"])}, averaging <b>{by_avg[0][3]} km/h</b>, and the slowest corner was {e(slow_corner[1]["full"])}'s, taken at just <b>{slow_corner[2]["vmin"]} km/h</b>.</p>
+<div class="tiles"><div class="tile"><span>Top speed</span><b>{fastest[2]["vmax"]} km/h</b></div><div class="tile"><span>Power</span><b>~1,000 hp</b></div><div class="tile"><span>Weight</span><b>768 kg</b></div><div class="tile"><span>Braking</span><b>5 g+</b></div></div>
+<h2>Why F1 cars are so fast</h2><ul>
+<li><b>Power:</b> about 1,000 hp from a 1.6-litre V6 turbo and an electric motor, in a car weighing just 768 kg.</li>
+<li><b>Downforce:</b> the wings and floor press the car onto the track, so it can take corners at speeds no road car could.</li>
+<li><b>Braking:</b> carbon brakes at around 1,000°C slow the car with more than 5 g.</li>
+<li><b>2026 active aero:</b> on the straights the wings flatten to cut drag and raise top speed.</li></ul>
+<h2>Every 2026 circuit, by top speed</h2>
+<div class="tbl"><table><thead><tr><th>Circuit</th><th class="n">Top speed</th><th class="n">Average</th><th class="n">Slowest corner</th><th class="n">Full throttle</th><th>Pole lap</th></tr></thead><tbody>{table}</tbody></table></div>
+<p class="note" style="margin-top:10px">From OpenF1 telemetry of each weekend's pole lap (2025 for the circuits not yet raced in 2026; Las Vegas 2025 was wet). <a href="/#tracks">Ride along in 3D</a>.</p>"""
+    qa = [("How fast is an F1 car?", f"F1 cars reach around 350 km/h. On 2026 pole laps the highest top speed was {fastest[2]['vmax']} km/h at {fastest[1]['full']}."),
+          ("What is the fastest F1 track?", f"By average speed over a lap, {by_avg[0][1]['full']}: {by_avg[0][3]} km/h on the pole lap. {by_avg[1][1]['full']} was next at {by_avg[1][3]} km/h."),
+          ("What is the slowest corner in F1?", f"{slow_corner[1]['full']}'s, taken at {slow_corner[2]['vmin']} km/h on the pole lap."),
+          ("How much horsepower does a 2026 F1 car have?", "About 1,000 hp: roughly 400 kW from the engine and up to 350 kW from the electric motor.")]
+    return [page("/how-fast-is-an-f1-car/", f"How fast is an F1 car? Top speeds at every 2026 track | {BRAND}",
+                 f"How fast F1 cars really go: up to {fastest[2]['vmax']} km/h, with top speed, average speed and slowest corner for every 2026 circuit from real pole-lap telemetry.",
+                 body + qa_html(qa), [("How fast is an F1 car?", "/how-fast-is-an-f1-car/")], article_ld(SITE + "/how-fast-is-an-f1-car/", "How fast is an F1 car?", "Top speeds at every 2026 track."),
+                 ld_list=[faq_ld(qa)], og="speed")]
 
 
 def write_json(rel, obj):
@@ -686,11 +944,16 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 - [Drivers]({SITE}/drivers/) and [Teams]({SITE}/teams/): one page each, with race-by-race results
 - [Circuits]({SITE}/circuits/): every {YEAR} track with length, corners, lap record, pole lap telemetry and facts
 - [World champions]({SITE}/formula-1-world-champions/): every champion since 1950
+- [Next F1 race]({SITE}/next-f1-race/): date, start time and full weekend schedule of the next Grand Prix
+- [{YEAR} results]({SITE}/f1-results-{YEAR}/): winner, podium, pole and sprint winner of every race so far
+- [How fast is an F1 car?]({SITE}/how-fast-is-an-f1-car/): top speed, average speed and slowest corner at every circuit, from pole-lap telemetry
 - [Learn F1]({SITE}/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test]({SITE}/f1-reaction-test/): the five-light start, playable in the browser
 - [F1 qualifying game]({SITE}/f1-qualifying-game/): three-lap qualifying against the {YEAR} grid
 - Race pages: {SITE}/races/<grand-prix>-{YEAR}/ (for example {SITE}{race_url(last['rd'])})
 
+## Learn F1 topics
+""" + "".join(f"- [{t[3]}]({SITE}/learn-f1/{t[0]}/)\n" for t in LEARN_TOPICS) + f"""
 ## Circuits
 """ + "".join(f"- [{I['full']}]({SITE}/circuits/{sl}/): {I['city']}, round {I['rd']}\n" for sl, I in sorted(TI.items(), key=lambda kv: kv[1]["rd"])) + f"""
 ## Data (JSON, CORS enabled, free to use with a link back)
