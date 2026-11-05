@@ -851,8 +851,6 @@ footer a{color:var(--muted)}
 }
 
 /* ================= LEARN F1 ================= */
-nav.tabs a.ln-nav{color:var(--fg);position:relative}
-nav.tabs a.ln-nav::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:6px;vertical-align:2px;box-shadow:0 0 8px var(--red-glow)}
 .ln-hero p{color:var(--muted);max-width:62ch;margin:8px 0 0}
 .ln-tabs{display:flex;gap:6px;margin-top:18px;flex-wrap:wrap}
 .ln-tabs button{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:3px;padding:9px 14px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;cursor:pointer}
@@ -916,6 +914,27 @@ nav.tabs a.ln-nav::before{content:"";display:inline-block;width:7px;height:7px;b
 :root[data-theme="light"] :is(.ln-pic,.ln-tyrestage,.ln-wheelstage){--fg:#F1F3F7;--muted:#8C94A6}
 @media (prefers-reduced-motion:reduce){.ln-dash,.ln-air,.ln-diff .ln-whl{animation:none}}
 @media (max-width:560px){.ln-grid{grid-template-columns:1fr}.ln-bar{grid-template-columns:110px 1fr}}
+
+/* ===== header: top bar (brand + actions) and a full-width tab row ===== */
+.strip-in{row-gap:0}
+.strip-in>.brand{margin-right:auto}
+nav.tabs{flex:1 1 100%;margin-left:0;order:9;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+nav.tabs.nav-fr{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
+nav.tabs.nav-fl{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px);mask-image:linear-gradient(90deg,transparent,#000 48px)}
+nav.tabs.nav-fl.nav-fr{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent)}
+nav.tabs a:first-child{padding-left:0}
+.learn-cta{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--red);color:var(--fg);text-decoration:none;
+  font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;white-space:nowrap;background:color-mix(in srgb,var(--red) 10%,transparent);transition:background .2s}
+.learn-cta:hover,.learn-cta[aria-current="page"]{background:var(--red);color:#fff}
+.learn-cta i{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red-glow);animation:ctaPulse 2s ease-in-out infinite}
+.learn-cta:hover i,.learn-cta[aria-current="page"] i{background:#fff}
+@keyframes ctaPulse{50%{opacity:.35}}
+.learn-cta .short{display:none}
+@media (max-width:720px){.learn-cta .full{display:none}.learn-cta .short{display:inline}.learn-cta{padding:0 10px;font-size:12px}}
+@media (max-width:520px){nav.tabs a:first-child{padding-left:12px}}
+@media (max-width:440px){.strip-in{gap:6px}.brand{font-size:19px;gap:8px}.brand-tag{font-size:9.5px}.champ-btn{padding:5px 6px}.theme-btn{width:30px;height:30px}.learn-cta{height:30px;padding:0 8px;font-size:11.5px;letter-spacing:.04em}.learn-cta i{display:none}}
+@media (max-width:380px){.brand{font-size:17px;gap:6px}.brand i{width:22px;height:22px}.brand-tag{font-size:8.5px}.learn-cta{padding:0 7px;font-size:11px}.champ-btn{padding:4px 5px}}
+@media (prefers-reduced-motion:reduce){.learn-cta i{animation:none}}
 /* ===== light theme ===== */
 :root[data-theme="light"]{
   --carbon:#F3F4F7;--panel:#FFFFFF;--panel-2:#EEF0F4;--line:#DCE0E7;--fg:#12151C;--muted:#5A6272;
@@ -944,6 +963,7 @@ nav.tabs a.ln-nav::before{content:"";display:inline-block;width:7px;height:7px;b
   <div class="strip-in">
     <a class="brand" href="./" aria-label="Pit Wall home"><i aria-hidden="true"></i><span class="brand-txt"><span class="brand-name">Pit Wall <b>26</b></span><span class="brand-tag">The unofficial Formula 1 fan hub</span></span></a>
     <button type="button" class="champ-btn" id="champBtn" aria-label="Formula 1 world champions since 1950"><svg class="troph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v1.5A4.5 4.5 0 0 1 16.9 12 5.5 5.5 0 0 1 13 15.4V18h3v3H8v-3h3v-2.6A5.5 5.5 0 0 1 7.1 12 4.5 4.5 0 0 1 3 7.5V6a1 1 0 0 1 1-1h3V3Zm10 4v3.2A2.5 2.5 0 0 0 19 7.6V7h-2ZM5 7v.6A2.5 2.5 0 0 0 7 10.2V7H5Z" fill="currentColor"/></svg><span>Champions</span></button>
+    <a href="#learn" class="learn-cta" id="learnCta"><i aria-hidden="true"></i><span class="full">Wanna learn about F1?</span><span class="short">Learn F1</span></a>
     <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to light mode" title="Light / dark mode"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
     <nav class="tabs" aria-label="Sections">
       <a href="#standings">Standings</a>
@@ -954,7 +974,6 @@ nav.tabs a.ln-nav::before{content:"";display:inline-block;width:7px;height:7px;b
       <a href="#title-fight">Title fight</a>
       <a href="#travel">Race travel</a>
       <a href="#games">Games</a>
-      <a href="#learn" class="ln-nav">Wanna learn about F1?</a>
     </nav>
   </div>
 </header>
@@ -4084,6 +4103,13 @@ function lnTyre(id){
 }
 function lnLeave(){/* the wheel's render loop stops itself when the panel is hidden */}
 
+/* ================= NAV TABS: scroll hints ================= */
+function navFades(){const n=document.querySelector("nav.tabs");if(!n)return;const max=n.scrollWidth-n.clientWidth;
+  n.classList.toggle("nav-fl",n.scrollLeft>4);n.classList.toggle("nav-fr",max>4&&n.scrollLeft<max-4)}
+function navCenter(r){const n=document.querySelector("nav.tabs"),a=n&&n.querySelector(`a[href="#${r}"]`);
+  if(a&&n.scrollWidth>n.clientWidth){n.scrollTo({left:Math.max(0,a.offsetLeft-n.offsetLeft-(n.clientWidth-a.offsetWidth)/2),behavior:"auto"})}setTimeout(navFades,50)}
+(function(){const n=document.querySelector("nav.tabs");if(n){n.addEventListener("scroll",navFades,{passive:true});addEventListener("resize",navFades);navFades()}})();
+
 /* ================= THEME ================= */
 function themeNow(){return document.documentElement.dataset.theme==="light"?"light":"dark"}
 function themeApply(t,save){
@@ -4109,6 +4135,8 @@ function route(){
   if(isLegal){ROUTES.forEach(x=>{$("#p-"+x).hidden=true});document.querySelectorAll("nav.tabs a").forEach(a=>a.removeAttribute("aria-current"));renderLegal(h);gmLeave();if(typeof rcPause==="function"&&RCX.playing)rcPause();scrollTo(0,0);return}
   const hb=h.split("/")[0],r=ROUTES.includes(hb)?hb:"standings";
   ROUTES.forEach(x=>{$("#p-"+x).hidden=x!==r});
+  {const cta=$("#learnCta");if(cta){if(r==="learn")cta.setAttribute("aria-current","page");else cta.removeAttribute("aria-current")}}
+  navCenter(r);
   document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.getAttribute("href")==="#"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   if(r==="standings")renderTower();
   if(r==="replay"){if(!replayDrawn){replayDrawn=true;rd=0;drawReplay();setTimeout(()=>{if(!playing)play()},500)}drawLine()}
