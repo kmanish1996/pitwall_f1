@@ -936,6 +936,59 @@ nav.tabs a:first-child{padding-left:0}
 @media (max-width:380px){.brand{font-size:17px;gap:6px}.brand i{width:22px;height:22px}.brand-tag{font-size:8.5px}.learn-cta{padding:0 7px;font-size:11px}.champ-btn{padding:4px 5px}}
 @media (prefers-reduced-motion:reduce){.learn-cta i{animation:none}}
 .ln-intro{color:var(--muted);max-width:70ch;margin:0 0 14px}
+/* ===== What is F1? ===== */
+.ab-hero{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:stretch}
+@media (max-width:860px){.ab-hero{grid-template-columns:1fr}}
+.ab-intro{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.ab-intro h3{font-size:clamp(24px,3.2vw,32px);font-style:italic;font-weight:900;margin:6px 0 4px}
+.ab-intro p{line-height:1.6;margin:10px 0 0}
+.ln-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:520px){.ln-nums{grid-template-columns:repeat(2,1fr)}}
+.ln-num{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;justify-content:center}
+.ln-num b{font-family:var(--f-mono);font-size:28px;line-height:1;color:var(--fg)}.ln-num small{font-family:var(--f-display);font-weight:700;color:var(--red);font-size:13px;margin-top:2px}
+.ln-num span{color:var(--muted);font-size:12px;margin-top:2px}
+.ab-car{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:16px}
+@media (max-width:860px){.ab-car{grid-template-columns:1fr}}
+.ab-stage{position:relative;height:clamp(360px,58vh,560px);border-radius:var(--r);border:1px solid var(--line);background:radial-gradient(circle at 50% 35%,#283041,#0a0c11 72%);overflow:hidden;touch-action:none}
+.c3-labels{position:absolute;inset:0;pointer-events:none}
+.c3-lab{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(225,6,0,.9);color:#fff;font:700 12px var(--f-mono);pointer-events:auto;cursor:pointer;box-shadow:0 0 0 4px rgba(225,6,0,.25)}
+.c3-lab.on{background:#fff;color:#E10600;box-shadow:0 0 0 6px rgba(255,255,255,.25)}
+.c3-bar{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.c3-bar>button{background:rgba(5,7,10,.8);border:1px solid #3a4150;color:#B9C0CF;border-radius:3px;padding:6px 10px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:11px;cursor:pointer}
+.c3-bar>button[aria-pressed="true"]{color:#fff;border-color:#E10600}
+.c3-teams{display:flex;gap:5px;background:rgba(5,7,10,.8);border-radius:4px;padding:5px 6px;margin-right:auto;flex-wrap:wrap}
+.c3-teams button{width:18px;height:18px;border-radius:50%;border:2px solid transparent;background:var(--c);cursor:pointer;padding:0}
+.c3-teams button[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 2px var(--c)}
+.ab-carinfo{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.ab-carinfo h3{font-size:26px;font-style:italic;font-weight:900;margin-top:4px}.ab-carinfo p{line-height:1.55;margin:8px 0 0}
+.c3-parts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.c3-parts button{display:flex;gap:6px;align-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--fg);border-radius:3px;padding:5px 9px;font-size:12.5px;cursor:pointer}
+.c3-parts button b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font:700 10px var(--f-mono)}
+.c3-parts button.on{border-color:var(--red);background:color-mix(in srgb,var(--red) 14%,var(--panel-2))}
+.ab-h{font-size:26px;font-style:italic;font-weight:900;margin:30px 0 12px}
+.ab-limit{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.ln-mini{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ln-mini .ln-body h3{font-size:19px}
+.ab-week{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:860px){.ab-week{grid-template-columns:1fr}}
+.ab-days{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:620px){.ab-days{grid-template-columns:1fr}}
+.ab-days>div,.ab-q,.ab-pts{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.ab-days b{display:block;font-family:var(--f-display);font-size:20px;text-transform:uppercase;margin-top:4px}.ab-days p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.ab-q p,.ab-pts p{margin:10px 0 0;line-height:1.55;font-size:14.5px}
+.ab-q .ln-svg{border-radius:4px}
+.ab-ptsrow{display:flex;gap:6px;align-items:flex-end;height:96px;margin-top:10px}
+.ab-ptsrow div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.ab-ptsrow i{display:block;width:100%;max-width:30px;background:linear-gradient(180deg,var(--red),color-mix(in srgb,var(--red) 40%,transparent));border-radius:3px 3px 0 0}
+.ab-ptsrow b{font-family:var(--f-mono);font-size:13px}.ab-ptsrow span{font-size:10px;color:var(--muted)}
+.ab-hist{list-style:none;margin:0;padding:0 0 0 20px;border-left:3px solid var(--line);display:grid;gap:14px}
+.ab-hist li{position:relative;display:grid;grid-template-columns:62px 1fr;gap:12px;opacity:0;transform:translateX(16px);transition:opacity .6s,transform .6s}
+.ab-hist li.in{opacity:1;transform:none}
+.ab-hist li::before{content:"";position:absolute;left:-28px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px var(--carbon)}
+.ab-hist .yr{font-family:var(--f-mono);font-weight:700;font-size:18px;color:var(--red)}
+.ab-hist b{font-family:var(--f-display);text-transform:uppercase;font-size:18px;letter-spacing:.02em}.ab-hist p{margin:2px 0 0;color:var(--muted);line-height:1.5}
+@media (prefers-reduced-motion:reduce){.ab-hist li{opacity:1;transform:none}}
+:root[data-theme="light"] :is(.ab-stage,.ln-mini svg,.ab-q svg){--fg:#F1F3F7;--muted:#8C94A6}
 /* ===== light theme ===== */
 :root[data-theme="light"]{
   --carbon:#F3F4F7;--panel:#FFFFFF;--panel-2:#EEF0F4;--line:#DCE0E7;--fg:#12151C;--muted:#5A6272;
@@ -1357,7 +1410,8 @@ nav.tabs a:first-child{padding-left:0}
       <h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Wanna learn about F1?</h2>
       <p>New to Formula 1, or want to sound smart on race day? Here's the track talk, the tyres, the steering wheel, the tech and the people behind it all, explained with moving pictures.</p>
       <div class="ln-tabs" role="tablist" aria-label="Topics">
-        <button type="button" role="tab" data-ln="track" aria-selected="true"><span>🏁</span>Track talk</button>
+        <button type="button" role="tab" data-ln="about" aria-selected="true"><span>🏎️</span>What is F1?</button>
+        <button type="button" role="tab" data-ln="track" aria-selected="false"><span>🏁</span>Track talk</button>
         <button type="button" role="tab" data-ln="tyres" aria-selected="false"><span>🛞</span>Tyres</button>
         <button type="button" role="tab" data-ln="wheel" aria-selected="false"><span>🎮</span>Steering wheel</button>
         <button type="button" role="tab" data-ln="tech" aria-selected="false"><span>⚙️</span>Car tech</button>
@@ -1365,7 +1419,52 @@ nav.tabs a:first-child{padding-left:0}
       </div>
     </div>
 
-    <div class="ln-pane" id="lnTrack" role="tabpanel"><div class="ln-grid" id="lnTerms"></div></div>
+    <div class="ln-pane" id="lnAbout" role="tabpanel">
+      <div class="ab-hero">
+        <div class="ab-intro">
+          <div class="label">The pinnacle of motorsport</div>
+          <h3>Engineering at the limit, at 300 km/h</h3>
+          <p>Formula 1 is the world's fastest racing championship. Eleven teams build their own cars from scratch, pushing engineering, aerodynamics, materials and software as far as the rules allow, and then 22 of the best drivers on the planet race them around the world.</p>
+          <p>It's a sport, a technology race and a travelling show all at once: the cars change every few weeks, the season visits five continents, and the margin between winning and losing is often a few hundredths of a second.</p>
+        </div>
+        <div class="ln-nums" id="lnNums"></div>
+      </div>
+
+      <div class="ab-car">
+        <div class="ab-stage" id="c3Stage"><div id="c3" class="tk-layer"></div><div class="c3-labels" id="c3Labels"></div><div class="tk-loading" id="c3Loading">Building the car…</div>
+          <div class="tk-hint" id="c3Hint">Drag to spin it · Pinch or scroll to zoom · Tap the numbers</div>
+          <div class="c3-bar"><div class="c3-teams" id="c3Teams" role="group" aria-label="Team colours"></div>
+            <button type="button" id="c3Spin" aria-pressed="true">Auto-rotate</button><button type="button" id="c3Wheels" aria-pressed="true">Spin wheels</button></div></div>
+        <div class="ab-carinfo"><div class="label">Anatomy of a 2026 F1 car</div><h3 id="c3Name"></h3><p id="c3Txt"></p><div class="c3-parts" id="c3Parts"></div>
+          <p class="ln-note">A simplified model of a 2026-style car, not any one team's design.</p></div>
+      </div>
+
+      <h3 class="ab-h">Pushing everything to the limit</h3>
+      <div class="ab-limit" id="lnLimit"></div>
+
+      <h3 class="ab-h">How a race weekend works</h3>
+      <div class="ab-week">
+        <div class="ab-days">
+          <div><span class="label">Friday</span><b>Practice 1 &amp; 2</b><p>Teams test set-ups and tyres and learn the track.</p></div>
+          <div><span class="label">Saturday</span><b>Practice 3 · Qualifying</b><p>One last practice, then the fight for grid positions.</p></div>
+          <div><span class="label">Sunday</span><b>The Grand Prix</b><p>About 305 km (Monaco is shorter), usually around 90 minutes.</p></div>
+        </div>
+        <div class="ab-q">
+          <div id="lnQ"></div>
+          <p><b>Qualifying is a knockout.</b> In Q1 all 22 cars set lap times and the slowest six are out. In Q2 another six go. The final ten fight for pole position in Q3. The order sets the starting grid.</p>
+        </div>
+        <div class="ab-pts">
+          <div><span class="label">Race points, top 10</span><div class="ab-ptsrow" id="lnPts"></div></div>
+          <p>Sprint weekends (six in 2026) swap Practice 2 and 3 for <b>Sprint Qualifying</b> and a short Saturday <b>Sprint</b> of about 100 km, with points for the top eight (8 down to 1).</p>
+        </div>
+      </div>
+
+      <h3 class="ab-h">A brief history</h3>
+      <ol class="ab-hist" id="lnHist"></ol>
+      <p class="ln-note" id="lnChampNote"></p>
+    </div>
+
+    <div class="ln-pane" id="lnTrack" role="tabpanel" hidden><div class="ln-grid" id="lnTerms"></div></div>
 
     <div class="ln-pane" id="lnTyres" role="tabpanel" hidden>
       <div class="ln-tyrebox">
@@ -4007,6 +4106,168 @@ const LN_PEOPLE=[
     <g><rect x="-1.5" y="-32" width="3" height="32" fill="#E10600"/><animateTransform attributeName="transform" type="rotate" values="-110;30;10;20;-110" dur="4s" repeatCount="indefinite"/></g><circle r="5" fill="#8C94A6"/><text x="0" y="30" class="ln-t s" text-anchor="middle">PSI</text></g>`)}
 ];
 
+/* ---------- What is F1? ---------- */
+const LN_NUMS=[[22,"","drivers"],[11,"","teams"],[23,"","Grands Prix in 2026"],[350,"km/h","top speeds"],[5,"g+","under braking"],[1000,"hp","about, engine plus electric"],[768,"kg","minimum weight"],[1950,"","first world championship"]];
+const LN_LIMIT=[
+ {t:"Grip like glue",d:"At speed, the air pressing down on the car (downforce) is more than its own weight. In theory, an F1 car could drive upside down on a tunnel roof.",
+  svg:`<rect width="200" height="110" fill="#12161E"/><rect x="0" y="0" width="200" height="22" fill="#3a3f48"/><g transform="translate(100,30) scale(1.3,-1.3)">${lnCarSide(LN_RED)}</g>${[0,1,2,3,4].map(i=>`<path d="M${40+i*30},96 v-34" stroke="#2FD480" stroke-width="3" marker-end="url(#lnArrUp)"><animate attributeName="opacity" values=".3;1;.3" dur="1.2s" begin="${i*.15}s" repeatCount="indefinite"/></path>`).join("")}<defs><marker id="lnArrUp" markerWidth="8" markerHeight="8" refX="4" refY="2" orient="auto"><path d="M0,8 L4,0 L8,8" fill="#2FD480"/></marker></defs><text x="100" y="106" class="ln-t s" text-anchor="middle">UPSIDE DOWN? IN THEORY, YES</text>`},
+ {t:"Heavy braking",d:"Drivers brake from over 300 km/h for a hairpin in a few seconds, feeling more than 5 g. That's like having five times your body weight pushing you forwards into the belts.",
+  svg:`<rect width="200" height="110" fill="#12161E"/><circle cx="100" cy="55" r="36" fill="none" stroke="#262C39" stroke-width="8"/><circle cx="100" cy="55" r="36" fill="none" stroke="#E10600" stroke-width="8" stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 100 55)"><animate attributeName="stroke-dashoffset" values="226;20;226" dur="2.4s" repeatCount="indefinite"/></circle><text x="100" y="62" class="ln-t" text-anchor="middle" style="font-size:20px;font-family:var(--f-mono)">5 g</text>`},
+ {t:"Brains on board",d:"Hundreds of sensors stream data back to the garage and the factory live, and a driver makes thousands of gear changes in one race.",
+  svg:`<rect width="200" height="110" fill="#12161E"/>${Array.from({length:12},(_,i)=>`<circle cx="${20+(i%6)*32}" cy="${30+Math.floor(i/6)*40}" r="4" fill="#3C8DFF"><animate attributeName="r" values="3;6;3" dur="1.4s" begin="${i*.11}s" repeatCount="indefinite"/></circle>`).join("")}<path d="M10,96 L40,90 L70,98 L100,84 L130,92 L160,80 L190,88" stroke="#2FD480" stroke-width="2" fill="none" stroke-dasharray="200" stroke-dashoffset="200"><animate attributeName="stroke-dashoffset" values="200;0" dur="2s" repeatCount="indefinite"/></path>`},
+ {t:"Red-hot brakes",d:"Carbon brake discs glow at around 1,000°C, and the tyres only work properly once they're hot, which is why drivers weave behind the safety car.",
+  svg:`<rect width="200" height="110" fill="#12161E"/><circle cx="100" cy="55" r="40" fill="#2b2f36"><animate attributeName="fill" values="#2b2f36;#ff5a00;#ffb347;#ff5a00;#2b2f36" dur="3s" repeatCount="indefinite"/></circle><circle cx="100" cy="55" r="16" fill="#4b515c"/>`},
+ {t:"Greener power",d:"From 2026 the engines run on 100% sustainable fuel, and almost half the power comes from electricity recovered while braking.",
+  svg:`<rect width="200" height="110" fill="#12161E"/><path d="M100,18 C130,40 130,80 100,92 C70,80 70,40 100,18Z" fill="#2FD480" opacity=".85"><animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="1.6s" repeatCount="indefinite" additive="sum"/></path><path d="M100,30 V88" stroke="#0E3B22" stroke-width="3"/><text x="100" y="106" class="ln-t s" text-anchor="middle">100% SUSTAINABLE FUEL</text>`},
+ {t:"Built in a wind tunnel",d:"Every surface is shaped by thousands of hours of simulation and tests with 60% scale models, and teams bring new parts to almost every race.",
+  svg:`<rect width="200" height="110" fill="#12161E"/>${Array.from({length:6},(_,i)=>`<path d="M200,${22+i*14} C140,${22+i*14} 120,${i<3?18+i*10:40+i*12} 60,${26+i*13} S10,${28+i*13} 0,${28+i*13}" fill="none" stroke="rgba(120,190,255,.6)" stroke-width="1.3" stroke-dasharray="10 8"><animate attributeName="stroke-dashoffset" values="0;36" dur=".7s" repeatCount="indefinite"/></path>`).join("")}<g transform="translate(100,82) scale(1.2)">${lnCarSide("#9C9FA2")}</g>`}
+];
+const LN_HISTORY=[
+ [1950,"The first World Championship race","Silverstone, 13 May 1950. Nino Farina wins it and becomes the first world champion, for Alfa Romeo."],
+ [1958,"A title for the teams","The Constructors' Championship begins, won by Vanwall."],
+ [1959,"Engines move behind the driver","Cooper wins the title with a rear-engined car. Within a couple of years, every car follows."],
+ [1962,"The monocoque","Lotus builds the 25 around a stiff, light one-piece tub, the basic idea every F1 car still uses."],
+ [1967,"The Cosworth DFV","A Ford-badged V8 wins first time out at Zandvoort and goes on to power much of the grid for more than a decade."],
+ [1968,"Wings and sponsors","Wings appear to push the cars into the track, and teams swap national colours for sponsor liveries."],
+ [1977,"Turbo power","Renault brings a turbocharged engine; by the mid-1980s, turbo cars have well over 1,000 hp in qualifying."],
+ [1978,"Ground effect","Lotus shapes the whole underside of the car to suck it onto the road, and dominates the season."],
+ [1981,"Carbon fibre","McLaren's MP4/1 has the first carbon-fibre chassis: lighter, stiffer and far safer in a crash."],
+ [1989,"Paddle shifts","Ferrari introduces the semi-automatic gearbox with paddles behind the steering wheel."],
+ [1994,"Imola changes everything","Roland Ratzenberger and Ayrton Senna are killed at Imola. The sport's huge safety push that followed has saved many lives since."],
+ [2004,"Schumacher's fifth in a row","Michael Schumacher and Ferrari win five straight titles from 2000 to 2004; he finishes with a record seven."],
+ [2009,"KERS","Cars can store braking energy in batteries for the first time: the start of hybrid F1."],
+ [2014,"The hybrid era","1.6-litre V6 turbo hybrid power units arrive, among the most efficient engines ever built."],
+ [2018,"The halo","Titanium head protection becomes compulsory. Two years later it helps Romain Grosjean survive a fiery crash in Bahrain."],
+ [2020,"Seven titles for Hamilton","Lewis Hamilton equals Michael Schumacher's record of seven world championships."],
+ [2021,"A budget cap","A cost cap limits how much teams can spend, to close the gap between the biggest and smallest."],
+ [2022,"Ground effect returns","New cars use shaped floors again so they can follow each other more closely."],
+ [2026,"A new era","Active aero, a near 50:50 split of engine and electric power, 100% sustainable fuel, smaller and lighter cars. And Kimi Antonelli, aged 20, becomes the youngest champion ever."]
+];
+const LN_PARTS=[
+ {id:"fw",name:"Front wing",x:2.55,y:.18,z:0,txt:"The first part to meet the air. It makes downforce for the front tyres and steers the airflow around the rest of the car. In 2026 its flaps move: steep in corners, flatter on the straights."},
+ {id:"nose",name:"Nose & crash structure",x:1.7,y:.42,z:0,txt:"Holds the front wing and is built to crush in a big frontal impact, absorbing energy before it reaches the driver."},
+ {id:"halo",name:"Halo & cockpit",x:.25,y:.95,z:0,txt:"The titanium halo protects the driver's head. The driver sits in a carbon-fibre tub, the survival cell, with their feet higher than their hips."},
+ {id:"pods",name:"Sidepods",x:-.2,y:.55,z:.75,txt:"Hold the radiators that cool the engine, battery and electronics. Their shape is one of the biggest differences between the teams' cars."},
+ {id:"pu",name:"Power unit",x:-1.1,y:.8,z:0,txt:"Behind the driver: a 1.6-litre V6 turbo plus the MGU-K electric motor and the battery, about 1,000 hp together in 2026."},
+ {id:"floor",name:"Floor & diffuser",x:-2.1,y:.14,z:.55,txt:"The underside of the car makes a big share of its downforce, sucking it towards the track. The diffuser at the back helps the air escape quickly."},
+ {id:"rw",name:"Rear wing",x:-2.55,y:.95,z:0,txt:"Makes downforce for the rear tyres. In 2026 its flap opens on the straights (straight mode) to cut drag, replacing the old DRS."},
+ {id:"tyres",name:"Tyres",x:1.65,y:.36,z:.95,txt:"18-inch wheels with Pirelli tyres: narrower in 2026. The coloured stripe shows the compound: red soft, yellow medium, white hard."}
+];
+const CAR3={ready:false,g:null,raf:0,col:"Ferrari",spin:true,auto:true,sel:null};
+function car3Init(){
+  if(CAR3.ready){car3Resize();car3Loop();return}
+  CAR3.ready=true;
+  const pick=$("#c3Teams");pick.innerHTML=Object.entries(TEAMS).map(([k,t])=>`<button type="button" data-t="${esc(k)}" style="--c:${t.c}" aria-label="${esc(t.short)} colours"><i></i></button>`).join("");
+  pick.addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(b){CAR3.col=b.dataset.t;car3Paint()}});
+  $("#c3Parts").innerHTML=LN_PARTS.map((p,i)=>`<button type="button" data-p="${p.id}"><b>${i+1}</b>${p.name}</button>`).join("");
+  $("#c3Parts").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(b)car3Sel(b.dataset.p)});
+  $("#c3Spin").addEventListener("click",()=>{CAR3.auto=!CAR3.auto;$("#c3Spin").setAttribute("aria-pressed",CAR3.auto)});
+  $("#c3Wheels").addEventListener("click",()=>{CAR3.spin=!CAR3.spin;$("#c3Wheels").setAttribute("aria-pressed",CAR3.spin)});
+  car3Sel("fw");
+  tkLoadThree().then(car3Build).catch(()=>{$("#c3Loading").textContent="3D isn't available in this browser."});
+}
+function car3Build(){
+  const host=$("#c3"),r=new THREE.WebGLRenderer({antialias:true,alpha:true});r.setClearColor(0,0);host.appendChild(r.domElement);
+  const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(32,1,.1,100);cam.position.set(5.2,2.6,6.4);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x1b2230,.8));const sun=new THREE.DirectionalLight(0xffffff,1.05);sun.position.set(4,8,5);scene.add(sun);const fill=new THREE.DirectionalLight(0x9fc0ff,.35);fill.position.set(-6,3,-4);scene.add(fill);
+  const car=new THREE.Group();scene.add(car);
+  const paint=new THREE.MeshStandardMaterial({color:0xE10600,metalness:.35,roughness:.35}),carbon=new THREE.MeshStandardMaterial({color:0x17191e,metalness:.3,roughness:.55}),
+        black=new THREE.MeshStandardMaterial({color:0x0c0c0e,roughness:.9}),metal=new THREE.MeshStandardMaterial({color:0x9aa0aa,metalness:.85,roughness:.3}),accent=new THREE.MeshStandardMaterial({color:0xffffff,metalness:.2,roughness:.4});
+  const ext=(pts,depth,mat,bevel)=>{const sh=new THREE.Shape();pts.forEach(([x,y],i)=>i?sh.lineTo(x,y):sh.moveTo(x,y));sh.closePath();const g=new THREE.ExtrudeGeometry(sh,{depth,bevelEnabled:!!bevel,bevelThickness:bevel||0,bevelSize:bevel||0,bevelSegments:3,curveSegments:12});g.translate(0,0,-depth/2);return new THREE.Mesh(g,mat)};
+  const add=(m,x,y,z)=>{m.position.set(x||0,y||0,z||0);car.add(m);return m};
+  /* floor (top-view outline, extruded thin) */
+  const fl=new THREE.Shape();[[2.0,.2],[1.2,.55],[-.6,.8],[-1.9,.72],[-2.35,.5],[-2.35,-.5],[-1.9,-.72],[-.6,-.8],[1.2,-.55],[2.0,-.2]].forEach(([x,z],i)=>i?fl.lineTo(x,z):fl.moveTo(x,z));
+  const floor=new THREE.Mesh(new THREE.ExtrudeGeometry(fl,{depth:.04,bevelEnabled:false}),carbon);floor.rotation.x=Math.PI/2;floor.position.y=.12;car.add(floor);
+  /* tub + nose + engine cover from a side profile, extruded across the car */
+  add(ext([[2.9,.22],[2.0,.3],[1.0,.42],[.6,.62],[-.2,.66],[-.5,.92],[-1.2,.98],[-2.1,.62],[-2.2,.36],[-1.8,.2],[2.9,.18]],.62,paint,.06));
+  const nose=add(ext([[2.95,.2],[1.6,.24],[1.6,.42],[2.95,.26]],.28,paint,.04));
+  /* sidepods */
+  for(const s of [-1,1]){const p=ext([[.75,.25],[.7,.6],[-.3,.66],[-1.6,.45],[-1.7,.24]],.42,paint,.07);p.position.z=s*.5;car.add(p)}
+  /* shark fin and airbox */
+  const fin=ext([[-.6,.95],[-.3,1.12],[-.15,1.12],[-1.9,.72],[-2.05,.66]],.02,paint);car.add(fin);
+  const airbox=new THREE.Mesh(new THREE.CylinderGeometry(.12,.15,.2,16),black);airbox.rotation.z=Math.PI/2;airbox.position.set(-.32,1.07,0);car.add(airbox);
+  /* cockpit opening, driver, halo */
+  add(new THREE.Mesh(new THREE.BoxGeometry(.6,.06,.42),black),.15,.67,0);
+  const helm=add(new THREE.Mesh(new THREE.SphereGeometry(.16,20,14),new THREE.MeshStandardMaterial({color:0xf2f2f2,roughness:.3})),.08,.82,0);
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(.3,.035,8,24,Math.PI),carbon);halo.rotation.set(Math.PI/2,0,Math.PI/2);halo.position.set(.2,.95,0);car.add(halo);
+  const hp=new THREE.Mesh(new THREE.CylinderGeometry(.03,.04,.4,8),carbon);hp.rotation.z=-1.05;hp.position.set(.63,.82,0);car.add(hp);
+  /* front wing: three elements between endplates */
+  const fwg=new THREE.Group();fwg.position.set(2.62,.12,0);car.add(fwg);
+  [[0,0,.42,paint],[-.16,.07,.3,carbon],[-.3,.14,.2,paint]].forEach(([x,y,w,m])=>{const e=new THREE.Mesh(new THREE.BoxGeometry(w,.025,1.9),m);e.position.set(x,y,0);e.rotation.z=.12+(-x*.8);fwg.add(e)});
+  for(const s of [-1,1]){const ep=new THREE.Mesh(new THREE.BoxGeometry(.55,.26,.02),carbon);ep.position.set(-.1,.08,s*.95);fwg.add(ep)}
+  /* rear wing, beam wing, endplates, diffuser */
+  const rwg=new THREE.Group();rwg.position.set(-2.45,.92,0);car.add(rwg);
+  const mp=new THREE.Mesh(new THREE.BoxGeometry(.32,.03,1.0),carbon);mp.rotation.z=.15;rwg.add(mp);
+  const flap=new THREE.Mesh(new THREE.BoxGeometry(.22,.025,1.0),paint);flap.position.set(-.12,.14,0);flap.rotation.z=.6;rwg.add(flap);CAR3.flap=flap;
+  for(const s of [-1,1]){const ep=new THREE.Mesh(new THREE.BoxGeometry(.6,.62,.025),carbon);ep.position.set(-.05,-.08,s*.51);rwg.add(ep)}
+  const pylon=new THREE.Mesh(new THREE.BoxGeometry(.06,.5,.05),carbon);pylon.position.set(.05,-.3,0);rwg.add(pylon);
+  add(new THREE.Mesh(new THREE.BoxGeometry(.2,.03,.9),carbon),-2.3,.48,0);
+  const dif=new THREE.Mesh(new THREE.BoxGeometry(.6,.02,1.2),carbon);dif.position.set(-2.55,.22,0);dif.rotation.z=-.35;car.add(dif);
+  /* wheels with rims, compound stripe, and suspension */
+  const wheels=[];
+  for(const [x,z,w,rr] of [[1.7,.88,.3,.355],[1.7,-.88,.3,.355],[-1.65,.9,.37,.355],[-1.65,-.9,.37,.355]]){
+    const wg=new THREE.Group();wg.position.set(x,rr,z);car.add(wg);
+    const t=new THREE.Mesh(new THREE.CylinderGeometry(rr,rr,w,36),black);t.rotation.x=Math.PI/2;wg.add(t);
+    const side=z>0?1:-1;
+    const rim=new THREE.Mesh(new THREE.CylinderGeometry(.24,.24,.02,32),metal);rim.rotation.x=Math.PI/2;rim.position.z=side*(w/2+.002);wg.add(rim);
+    const stripe=new THREE.Mesh(new THREE.TorusGeometry(.29,.012,6,40),new THREE.MeshBasicMaterial({color:0xE10600}));stripe.position.z=side*(w/2+.004);wg.add(stripe);
+    for(let k=0;k<5;k++){const sp=new THREE.Mesh(new THREE.BoxGeometry(.04,.2,.01),metal);sp.position.z=side*(w/2+.012);sp.rotation.z=k*Math.PI/2.5;sp.position.x=Math.sin(k*Math.PI/2.5)*-.1;sp.position.y=Math.cos(k*Math.PI/2.5)*.1;wg.add(sp)}
+    wheels.push(wg);
+    for(const dy of [.06,-.06]){const arm=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,Math.abs(z)-.25,6),carbon);arm.rotation.x=Math.PI/2;arm.position.set(x+(x>0?-.15:.12),rr+dy+.06,z/2+side*.06);car.add(arm)}
+  }
+  /* mirrors */
+  for(const s of [-1,1]){add(new THREE.Mesh(new THREE.BoxGeometry(.06,.07,.16),paint),.55,.8,s*.42)}
+  /* ground shadow */
+  const sc=document.createElement("canvas");sc.width=sc.height=128;const sx=sc.getContext("2d"),gr=sx.createRadialGradient(64,64,4,64,64,64);gr.addColorStop(0,"rgba(0,0,0,.55)");gr.addColorStop(1,"rgba(0,0,0,0)");sx.fillStyle=gr;sx.fillRect(0,0,128,128);
+  const shadow=new THREE.Mesh(new THREE.PlaneGeometry(6.6,2.8),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sc),transparent:true,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.002;scene.add(shadow);
+  const grid=new THREE.GridHelper(14,28,0x2b3240,0x1b2230);grid.position.y=0;scene.add(grid);
+  const ctr=new THREE.OrbitControls(cam,r.domElement);ctr.enableDamping=true;ctr.enablePan=false;ctr.minDistance=4;ctr.maxDistance=14;ctr.maxPolarAngle=Math.PI*.49;ctr.target.set(0,.45,0);
+  ctr.addEventListener("start",()=>{CAR3.auto=false;$("#c3Spin").setAttribute("aria-pressed",false);$("#c3Hint").style.opacity=0});
+  CAR3.g={r,scene,cam,ctr,car,paint,wheels,stripes:wheels.map(w=>w.children[2])};
+  $("#c3Labels").innerHTML=LN_PARTS.map((p,i)=>`<button type="button" class="c3-lab" data-p="${p.id}" aria-label="${p.name}">${i+1}</button>`).join("");
+  $("#c3Labels").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(b)car3Sel(b.dataset.p)});
+  new ResizeObserver(()=>car3Resize()).observe($("#c3Stage"));
+  $("#c3Loading").hidden=true;car3Paint();car3Resize();car3Loop();
+}
+function car3Paint(){
+  document.querySelectorAll("#c3Teams [data-t]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===CAR3.col));
+  if(CAR3.g)CAR3.g.paint.color.set(TEAMS[CAR3.col].c);
+}
+function car3Sel(id){CAR3.sel=id;const p=LN_PARTS.find(x=>x.id===id);$("#c3Name").textContent=p.name;$("#c3Txt").textContent=p.txt;
+  document.querySelectorAll("#c3Parts [data-p],#c3Labels [data-p]").forEach(b=>b.classList.toggle("on",b.dataset.p===id))}
+function car3Resize(){const g=CAR3.g;if(!g)return;const st=$("#c3Stage"),w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;g.r.setPixelRatio(Math.min(devicePixelRatio||1,2));g.r.setSize(w,h,false);g.cam.aspect=w/h;
+  const asp=w/h,dist=Math.min(19,8.6*Math.max(1,1.4/asp));g.cam.position.setLength(dist);g.ctr.maxDistance=Math.max(14,dist+4);g.cam.updateProjectionMatrix()}
+function car3Visible(){return !$("#p-learn").hidden&&!$("#lnAbout").hidden&&!document.hidden}
+function car3Loop(){cancelAnimationFrame(CAR3.raf);let last=performance.now();const f=now=>{if(!car3Visible()||!CAR3.g)return;const dt=Math.min(.1,(now-last)/1000);last=now;const g=CAR3.g;
+  if(CAR3.auto&&!reduce){const a=Math.atan2(g.cam.position.z,g.cam.position.x)+dt*.25,rad=Math.hypot(g.cam.position.x,g.cam.position.z);g.cam.position.x=Math.cos(a)*rad;g.cam.position.z=Math.sin(a)*rad}
+  if(CAR3.spin)g.wheels.forEach(w=>{w.rotation.z-=dt*9});
+  if(CAR3.flap)CAR3.flap.rotation.z=.35+Math.sin(now/1400)*.25;
+  g.ctr.update();g.r.render(g.scene,g.cam);
+  const st=$("#c3Stage"),W=st.clientWidth,H=st.clientHeight,v=new THREE.Vector3();
+  [...$("#c3Labels").children].forEach((el,i)=>{const p=LN_PARTS[i];v.set(p.x,p.y,p.z).project(g.cam);const vis=v.z<1;el.style.display=vis?"":"none";el.style.transform=`translate(${((v.x+1)/2*W).toFixed(1)}px,${((1-v.y)/2*H).toFixed(1)}px) translate(-50%,-50%)`});
+  CAR3.raf=requestAnimationFrame(f)};CAR3.raf=requestAnimationFrame(f)}
+function lnAboutRender(){
+  $("#lnNums").innerHTML=LN_NUMS.map(([n,u,l])=>`<div class="ln-num"><b data-n="${n}">${n===1950?n:0}</b><small>${u}</small><span>${l}</span></div>`).join("");
+  $("#lnLimit").innerHTML=LN_LIMIT.map(c=>`<div class="ln-mini"><svg viewBox="0 0 200 110" class="ln-svg" role="img">${lnDefs}${c.svg}</svg><div class="ln-body"><h3>${c.t}</h3><p>${c.d}</p></div></div>`).join("");
+  $("#lnHist").innerHTML=LN_HISTORY.map(([y,t,d])=>`<li><span class="yr">${y}</span><div><b>${t}</b><p>${d}</p></div></li>`).join("");
+  /* qualifying knockout: 22 cars, six out in Q1, six more in Q2, ten fight for pole */
+  const dots=Array.from({length:22},(_,r)=>{const x=24+(r%11)*30,y=r<11?44:84,team=Object.values(TEAMS)[Math.floor(r/2)%11].c;
+    const out=r>=16?.3:r>=10?.6:null;
+    return `<circle cx="${x}" cy="${y}" r="9" fill="${team}">${out?`<animate attributeName="opacity" values="1;1;.12;.12" keyTimes="0;${out};${out+.04};1" dur="8s" repeatCount="indefinite"/>`:""}</circle>${r===0?`<circle cx="${x}" cy="${y}" r="13" fill="none" stroke="#B54BE8" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.82;.86;1" dur="8s" repeatCount="indefinite"/></circle>`:""}<text x="${x}" y="${y+24}" class="ln-t s" text-anchor="middle">${r+1}</text>`}).join("");
+  $("#lnQ").innerHTML=`<svg viewBox="0 0 360 140" class="ln-svg" role="img" aria-label="Qualifying knockout">${lnDefs}<rect width="360" height="140" fill="#12161E"/>${dots}
+    ${lnCycle(["Q1 · ALL 22 CARS","Q1 · SLOWEST 6 OUT","Q2 · 6 MORE OUT","Q3 · TOP 10 FOR POLE"],8,t=>`<text x="180" y="20" class="ln-t" text-anchor="middle">${t}</text>`)}<text x="180" y="132" class="ln-t s" text-anchor="middle">PURPLE RING = POLE POSITION</text></svg>`;
+  const pts=typeof POINTS!=="undefined"?POINTS:[25,18,15,12,10,8,6,4,2,1];
+  $("#lnPts").innerHTML=pts.map((p,i)=>`<div><i style="height:${p*2.4}px"></i><b>${p}</b><span>P${i+1}</span></div>`).join("");
+  const champs=typeof CHAMPIONS!=="undefined"?CHAMPIONS:[];const names=new Set(champs.map(c=>c[1]));
+  $("#lnChampNote").textContent=champs.length?`${names.size} different drivers have been world champion since 1950.`:"";
+  /* count the numbers up when they scroll into view */
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;io.unobserve(e.target);const el=e.target,n=+el.dataset.n;if(n===1950||reduce){el.textContent=n===1950?"1950":n.toLocaleString();return}
+    const t0=performance.now(),f=now=>{const k=Math.min(1,(now-t0)/1200);el.textContent=Math.round(n*(1-Math.pow(1-k,3))).toLocaleString();if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}),{threshold:.6});
+  document.querySelectorAll("#lnNums b").forEach(b=>io.observe(b));
+  const io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting||e.boundingClientRect.top<0){e.target.classList.add("in");io2.unobserve(e.target)}}),{threshold:.15});
+  document.querySelectorAll("#lnHist li").forEach(li=>io2.observe(li));
+}
+
 /* ---------- 3D steering wheel ---------- */
 /* a typical modern F1 wheel (not any one team's): layout in centimetres, x right, y up, front face at z=0 */
 const LN_CTRL=[
@@ -4166,13 +4427,14 @@ function lwLoop(){cancelAnimationFrame(LW.raf);let last=performance.now();const 
   lwDrawScreen(now);g.ctr.update();g.r.render(g.scene,g.cam);LW.raf=requestAnimationFrame(f)};LW.raf=requestAnimationFrame(f)}
 
 /* ---------- Learn F1: page logic ---------- */
-const LN={ready:false,tab:"track",tyre:"soft"};
+const LN={ready:false,tab:"about",tyre:"soft"};
 function lnInit(){
-  const m=(location.hash||"").match(/^#learn\/(track|tyres|wheel|tech|people)/);
+  const m=(location.hash||"").match(/^#learn\/(about|track|tyres|wheel|tech|people)/);
   if(!LN.ready){
     LN.ready=true;
     $("#lnTerms").innerHTML=LN_TERMS.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><h3>${t.name}</h3><div class="ln-short">${t.short}</div><p>${t.body}</p></div></article>`).join("");
     $("#lnTechGrid").innerHTML=LN_TECH.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}${t.interactive==="aero"?'<div class="ln-ctl"><button type="button" data-aero="corner" aria-pressed="true">Corner mode</button><button type="button" data-aero="straight" aria-pressed="false">Straight mode</button></div>':""}${t.interactive==="diff"?'<div class="ln-ctl"><label>Open<input type="range" min="0" max="100" value="0" id="lnDiff" aria-label="Differential: open to locked"></label>Locked</div>':""}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
+    lnAboutRender();
     $("#lnPeopleGrid").innerHTML=LN_PEOPLE.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
     $("#lnTyrePick").innerHTML=LN_TYRES.map(t=>`<button type="button" data-tyre="${t.id}" style="--c:${t.col}"><i></i>${t.name}</button>`).join("");
     $("#lnTyrePick").addEventListener("click",e=>{const b=e.target.closest("[data-tyre]");if(b)lnTyre(b.dataset.tyre)});
@@ -4196,8 +4458,9 @@ function lnInit(){
 function lnTab(t){
   LN.tab=t;
   document.querySelectorAll(".ln-tabs [data-ln]").forEach(b=>b.setAttribute("aria-selected",b.dataset.ln===t));
-  $("#lnTrack").hidden=t!=="track";$("#lnTyres").hidden=t!=="tyres";$("#lnWheel").hidden=t!=="wheel";$("#lnTech").hidden=t!=="tech";$("#lnPeople").hidden=t!=="people";
+  $("#lnAbout").hidden=t!=="about";$("#lnTrack").hidden=t!=="track";$("#lnTyres").hidden=t!=="tyres";$("#lnWheel").hidden=t!=="wheel";$("#lnTech").hidden=t!=="tech";$("#lnPeople").hidden=t!=="people";
   if(t==="wheel")lwInit();
+  if(t==="about")car3Init();
 }
 function lnTyre(id){
   const t=LN_TYRES.find(x=>x.id===id);LN.tyre=id;

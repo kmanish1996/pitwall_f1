@@ -45,6 +45,7 @@ if(t0>0){vm.runInContext(h.slice(t0,t1)+';this.o.TRACK_INFO=TRACK_INFO;this.o.TR
 const l0=h.indexOf('/* ================= LEARN F1: illustrations'),l1=h.indexOf('/* ---------- 3D steering wheel'),l2=h.indexOf('const LW={');
 if(l0>0){vm.runInContext(h.slice(l0,l1)+h.slice(l1,l2)+`;this.o.LEARN={terms:LN_TERMS.map(t=>({id:t.id,name:t.name,short:t.short,body:t.body,svg:t.svg()})),
  tyres:LN_TYRES.map(t=>({...t,svg:lnTyreSvg(t)})),tech:LN_TECH.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),people:LN_PEOPLE.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),
+ history:LN_HISTORY,limit:LN_LIMIT.map(c=>({t:c.t,d:c.d,svg:'<svg viewBox="0 0 200 110" class="ln-svg" role="img">'+lnDefs+c.svg+'</svg>'})),parts:LN_PARTS.map(p=>({name:p.name,txt:p.txt})),
  ctrl:LN_CTRL.map(c=>({id:c.id,name:c.name,txt:c.txt}))};`,c)}
 process.stdout.write(JSON.stringify(c.o));"""
     out = subprocess.run(["node", "-e", js, os.path.join(ROOT, "index.html")], capture_output=True, text=True, check=True).stdout
@@ -601,6 +602,14 @@ def build_learn(L):
     body = f"""<h1>Learn F1</h1>
 <p class="sub">A beginner's guide to Formula 1: track talk, tyres, the steering wheel and the tech in the 2026 cars.</p>
 <p class="lead">Everything you hear on a race broadcast, explained with moving pictures. For the full interactive version, with a 3D steering wheel you can spin and click, <a href="/#learn">open Learn F1 on Pit Wall</a>.</p>
+<h2 id="what-is-f1">What is Formula 1?</h2>
+<p>Formula 1 is the world's fastest racing championship. Eleven teams build their own cars from scratch, pushing engineering, aerodynamics, materials and software as far as the rules allow, and 22 drivers race them at 23 Grands Prix around the world in 2026. The first World Championship race was held at Silverstone in 1950.</p>
+<h3>Pushing everything to the limit</h3><div class="lg">{''.join(f'<article>{c["svg"]}<div class="tx"><h3>{e(c["t"])}</h3><p>{e(c["d"])}</p></div></article>' for c in L.get("limit", []))}</div>
+<h3>Anatomy of an F1 car</h3><dl>{''.join(f'<dt><b>{e(x["name"])}</b></dt><dd>{e(x["txt"])}</dd>' for x in L.get("parts", []))}</dl>
+<p><a href="/#learn/about">Spin the 3D car on Pit Wall</a>.</p>
+<h3>How a race weekend works</h3>
+<p><b>Friday:</b> Practice 1 and 2. <b>Saturday:</b> Practice 3, then Qualifying. <b>Sunday:</b> the Grand Prix, about 305 km. Qualifying is a knockout: in Q1 the slowest six of the 22 cars are out, in Q2 another six, and the final ten fight for pole position in Q3. The top ten in the race score 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1 points. On the six sprint weekends of 2026, Practice 2 and 3 are replaced by Sprint Qualifying and a Saturday Sprint of about 100 km, with points for the top eight.</p>
+<h3>A brief history of F1</h3><ul>{''.join(f'<li><b>{y}: {e(t)}.</b> {e(d)}</li>' for y, t, d in L.get("history", []))}</ul>
 <h2 id="track-talk">Track talk</h2><div class="lg">{''.join(card(t, t["short"]) for t in L["terms"])}</div>
 <h2 id="tyres">Tyres</h2>
 <p>Pirelli brings five dry compounds in 2026, C1 (hardest) to C5 (softest), and picks three for each weekend: the hardest is called the Hard (white), the middle the Medium (yellow) and the softest the Soft (red). Intermediates (green) and full Wets (blue) are for the rain. In a dry race every driver must use at least two different dry compounds. The 2026 tyres stay on 18-inch wheels but are narrower: 25 mm at the front and 30 mm at the rear.</p>
@@ -617,7 +626,7 @@ def build_learn(L):
           + [{"@type": "DefinedTerm", "name": f'{t["name"]} tyre', "description": t["txt"]} for t in L["tyres"]]
           + [{"@type": "DefinedTerm", "name": c["name"], "description": c["txt"]} for c in L["ctrl"]]}
     return page("/learn-f1/", f"Learn F1: track terms, tyres, steering wheel, car tech and the people of F1 explained | {BRAND}",
-                "Beginner's guide to Formula 1 with animated pictures: racing line, kerbs, chicanes, tyres, every steering wheel button, the 2026 tech (active aero, overtake mode, ERS) and the people: drivers, race engineers, strategists, pit crews, marshals and stewards.",
+                "Beginner's guide to Formula 1 with animated pictures: what F1 is and its history, how a race weekend works, racing line, kerbs, chicanes, tyres, every steering wheel button, the 2026 tech (active aero, overtake mode, ERS) and the people: drivers, race engineers, strategists, pit crews, marshals and stewards.",
                 body, [("Learn F1", "/learn-f1/")], ld, extra_head=LEARN_CSS)
 
 
