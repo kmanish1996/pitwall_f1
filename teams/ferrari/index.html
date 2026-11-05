@@ -14,6 +14,8 @@
 <meta property="og:image" content="https://pitwallf1.in/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C11">
+<meta name="color-scheme" content="dark light">
+<script>try{var t=localStorage.getItem("pw_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,6 +60,9 @@ footer.site{margin-top:48px;border-top:1px solid var(--line);padding:24px 0 32px
 footer.site p{margin:8px auto;max-width:110ch}footer.site nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px}
 footer.site nav a{color:var(--fg);font-weight:500}
 @media (max-width:640px){header.top .w{padding-block:10px}nav.main{margin-left:0}}
+:root[data-theme="light"]{--bg:#F3F4F7;--panel:#FFFFFF;--panel2:#EEF0F4;--line:#DCE0E7;--fg:#12151C;--muted:#5A6272;--red:#D70500;--purple:#8A32CF;color-scheme:light}
+.theme-btn{display:inline-grid;place-items:center;width:34px;height:32px;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.theme-btn svg{width:17px;height:17px}.theme-btn .sun{display:none}:root[data-theme="light"] .theme-btn .sun{display:block}:root[data-theme="light"] .theme-btn .moon{display:none}
 </style>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pitwallf1.in/"}, {"@type": "ListItem", "position": 2, "name": "Teams", "item": "https://pitwallf1.in/teams/"}, {"@type": "ListItem", "position": 3, "name": "Ferrari", "item": "https://pitwallf1.in/teams/ferrari/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "SportsTeam", "name": "Ferrari", "sport": "Formula 1", "athlete": [{"@type": "Person", "name": "Lewis Hamilton"}, {"@type": "Person", "name": "Charles Leclerc"}], "url": "https://pitwallf1.in/teams/ferrari/"}</script>
@@ -65,6 +70,7 @@ footer.site nav a{color:var(--fg);font-weight:500}
 <body>
 <header class="top"><div class="w">
 <a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
+<button type="button" class="theme-btn" aria-label="Switch between light and dark mode" title="Light / dark mode" onclick="var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('pw_theme',t)}catch(e){}"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
 <nav class="main" aria-label="Main"><a href="/formula-1-standings-2026/">Standings</a><a href="/f1-calendar-2026/">Calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/circuits/">Circuits</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a><a href="/#race-centre">Race centre</a></nav>
 </div></header>
 <main class="w">

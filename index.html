@@ -21,6 +21,8 @@
 <meta name="twitter:description" content="Unofficial Formula 1 fan hub for 2026: live standings, results and lap-by-lap replays of every session with team radio, 3D models of every F1 circuit, the calendar with lap records, race travel planning, an F1 reaction test and a qualifying game.">
 <meta name="twitter:image" content="https://pitwallf1.in/assets/og-image.png">
 <meta name="theme-color" content="#0A0C11">
+<meta name="color-scheme" content="dark light">
+<script>try{var t=localStorage.getItem("pw_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Site summary for AI assistants">
@@ -687,7 +689,7 @@ footer a{color:var(--muted)}
 .gm-hero p{color:var(--muted);max-width:60ch;margin:8px 0 0}
 .gm-tabs{display:flex;gap:6px;margin-top:18px;flex-wrap:wrap}
 .gm-tabs button{background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:3px;padding:9px 14px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;cursor:pointer}
-.gm-tabs button[aria-selected="true"]{color:#fff;border-color:var(--red);background:rgba(225,6,0,.14)}
+.gm-tabs button[aria-selected="true"]{color:var(--fg);border-color:var(--red);background:rgba(225,6,0,.14)}
 .gm-card{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;margin-top:16px}
 .gm-card[hidden]{display:none}
 @media (max-width:820px){.gm-card{grid-template-columns:1fr}}
@@ -746,10 +748,10 @@ footer a{color:var(--muted)}
 .q-mini{list-style:none;margin:10px auto 0;padding:0;font-family:var(--f-mono);font-size:13px;display:grid;gap:2px;width:min(300px,100%);text-align:left}
 .q-mini li,.q-sheet li{display:grid;grid-template-columns:26px 4px 38px 1fr auto;gap:6px;align-items:center;padding:2px 6px;border-radius:2px}
 .q-mini li i,.q-sheet li i{width:4px;height:14px;background:var(--c)}
-.q-mini li.me,.q-sheet li.me{background:rgba(225,6,0,.22);color:#fff;font-weight:700}
+.q-mini li.me,.q-sheet li.me{background:rgba(225,6,0,.22);color:var(--fg);font-weight:700}
 .q-mini li .g,.q-sheet li .g{color:var(--muted);font-size:11px;text-align:right}
 .q-sheet{list-style:none;margin:8px 0 0;padding:0;font-size:12px;display:grid;gap:1px;max-height:470px;overflow:auto}
-.q-sheet li:nth-child(10){border-bottom:1px dashed #3a4150}.q-sheet li:nth-child(16){border-bottom:1px dashed #3a4150}
+.q-sheet li:nth-child(10){border-bottom:1px dashed var(--line)}.q-sheet li:nth-child(16){border-bottom:1px dashed var(--line)}
 .q-pos{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .rx-ladder{position:relative;width:min(440px,88%);height:64px;margin-top:2px}
 .rx-ladder .track{position:absolute;left:0;right:0;top:30px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--green) 30%,var(--amber) 60%,#ff5a52)}
@@ -780,7 +782,7 @@ footer a{color:var(--muted)}
 .tk-seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .tk-seg button{background:transparent;border:0;color:var(--muted);padding:7px 11px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;cursor:pointer}
 .tk-seg button+button{border-left:1px solid var(--line)}
-.tk-seg button[aria-pressed="true"]{background:rgba(225,6,0,.16);color:#fff}
+.tk-seg button[aria-pressed="true"]{background:rgba(225,6,0,.16);color:var(--fg)}
 .tk-seg.sm button{padding:6px 9px}
 .tk-seg[hidden]{display:none}
 .tk-tog{display:inline-flex;gap:6px;align-items:center;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;color:var(--muted);cursor:pointer;padding:6px 4px}
@@ -815,7 +817,7 @@ footer a{color:var(--muted)}
 .tk-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-family:var(--f-display);text-transform:uppercase;letter-spacing:.1em;pointer-events:none}
 .tk-loading[hidden]{display:none}
 .tk-play{display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--line);flex-wrap:wrap}
-.tk-pp{width:38px;height:34px;border-radius:3px;border:1px solid var(--line);background:var(--panel-2);color:#fff;font-size:12px;cursor:pointer}
+.tk-pp{width:38px;height:34px;border-radius:3px;border:1px solid var(--line);background:var(--panel-2);color:var(--fg);font-size:12px;cursor:pointer}
 #tkScrub{flex:1;min-width:140px;accent-color:var(--red)}
 .tk-ex{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;color:var(--muted)}
 .tk-ex input{width:90px;accent-color:var(--amber)}
@@ -833,7 +835,7 @@ footer a{color:var(--muted)}
 .tk-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
 .tk-bits{margin:10px 0 0;padding-left:18px;display:grid;gap:9px}
 .tk-bits li::marker{color:var(--red)}
-.tk-bits b{color:#fff}
+.tk-bits b{color:var(--fg)}
 .tk-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .tk-nums div{border-left:2px solid var(--line);padding-left:10px}
 .tk-nums b{display:block;font-family:var(--f-mono);font-size:20px}
@@ -847,12 +849,36 @@ footer a{color:var(--muted)}
   .tk-reset{margin-left:0}
   .tk-lab{font-size:9.5px;padding:1px 4px}
 }
+
+/* ===== light theme ===== */
+:root[data-theme="light"]{
+  --carbon:#F3F4F7;--panel:#FFFFFF;--panel-2:#EEF0F4;--line:#DCE0E7;--fg:#12151C;--muted:#5A6272;
+  --red:#D70500;--red-glow:rgba(215,5,0,.28);--purple:#8A32CF;--green:#0E9A57;--amber:#B26A00;color-scheme:light}
+/* parts that are always a dark "screen": start lights, games, 3D viewer, overlays */
+:root[data-theme="light"] :is(.rx-stage,.dash-wrap,.tk-stage,.gantry,.celebr ){
+  --carbon:#0A0C11;--panel:#12161E;--panel-2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;
+  --red:#E10600;--purple:#B54BE8;--green:#2FD480;--amber:#FFC93C;color:var(--fg)}
+:root[data-theme="light"] .champ-btn{color:#8A6A12;border-color:rgba(160,120,20,.5)}
+:root[data-theme="light"] .tk-viewer{background:var(--panel)}
+:root[data-theme="light"] .champ-btn,
+:root[data-theme="light"] .troph,
+:root[data-theme="light"] .champ-badge,
+:root[data-theme="light"] .linkish,
+:root[data-theme="light"] .ch-t b,
+:root[data-theme="light"] .tap-hint,
+:root[data-theme="light"] .rx-hook b{color:#8A6A12}
+:root[data-theme="light"] .rx-hook b{color:#8A6A12}:root[data-theme="light"] .rx-hook{border-color:rgba(160,120,20,.45)!important;background:linear-gradient(180deg,rgba(233,196,106,.16),transparent 70%),var(--panel)!important}
+.theme-btn{display:inline-grid;place-items:center;width:34px;height:32px;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;flex:none}
+.theme-btn:hover{border-color:var(--muted)}
+.theme-btn svg{width:17px;height:17px}
+.theme-btn .sun{display:none}:root[data-theme="light"] .theme-btn .sun{display:block}:root[data-theme="light"] .theme-btn .moon{display:none}
 </style>
 
 <header class="strip">
   <div class="strip-in">
     <a class="brand" href="./" aria-label="Pit Wall home"><i aria-hidden="true"></i><span class="brand-txt"><span class="brand-name">Pit Wall <b>26</b></span><span class="brand-tag">The unofficial Formula 1 fan hub</span></span></a>
     <button type="button" class="champ-btn" id="champBtn" aria-label="Formula 1 world champions since 1950"><svg class="troph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v1.5A4.5 4.5 0 0 1 16.9 12 5.5 5.5 0 0 1 13 15.4V18h3v3H8v-3h3v-2.6A5.5 5.5 0 0 1 7.1 12 4.5 4.5 0 0 1 3 7.5V6a1 1 0 0 1 1-1h3V3Zm10 4v3.2A2.5 2.5 0 0 0 19 7.6V7h-2ZM5 7v.6A2.5 2.5 0 0 0 7 10.2V7H5Z" fill="currentColor"/></svg><span>Champions</span></button>
+    <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to light mode" title="Light / dark mode"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
     <nav class="tabs" aria-label="Sections">
       <a href="#standings">Standings</a>
       <a href="#race-centre">Race centre</a>
@@ -3524,6 +3550,21 @@ function tkFacts(){
     .map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
   $("#tkSrc").innerHTML=`Circuit shape, height and telemetry come from ${esc(d.source.driverName)}'s ${d.source.year} qualifying lap in <a href="https://openf1.org" target="_blank" rel="noopener">OpenF1</a> data, so they can differ slightly from the official map${d.source.year<YEAR_NOW?`. This circuit hasn't raced in ${YEAR_NOW} yet, so the lap is from ${d.source.year}`:""}. Height in the 3D view is exaggerated. Facts: ${TRACK_SOURCES.filter(([t])=>d.slug==="albert-park"||!t.includes("Albert Park")).map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(", ")}.`;
 }
+
+/* ================= THEME ================= */
+function themeNow(){return document.documentElement.dataset.theme==="light"?"light":"dark"}
+function themeApply(t,save){
+  document.documentElement.dataset.theme=t;
+  if(save)try{localStorage.setItem("pw_theme",t)}catch(e){}
+  const b=$("#themeBtn");if(b)b.setAttribute("aria-label",t==="light"?"Switch to dark mode":"Switch to light mode");
+  let m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="light"?"#F3F4F7":"#0A0C11");
+}
+(function(){let t=document.documentElement.dataset.theme;
+  if(t!=="light"&&t!=="dark"){try{t=localStorage.getItem("pw_theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}
+  themeApply(t,false);
+  $("#themeBtn").addEventListener("click",()=>{themeApply(themeNow()==="light"?"dark":"light",true);if(typeof route==="function")route();if(typeof tkDrawProfile==="function")tkDrawProfile()});
+  try{matchMedia("(prefers-color-scheme: light)").addEventListener("change",e=>{let saved=null;try{saved=localStorage.getItem("pw_theme")}catch(x){}if(!saved){themeApply(e.matches?"light":"dark",false);route()}})}catch(e){}
+})();
 
 /* ================= ROUTING ================= */
 const ROUTES=["standings","race-centre","replay","calendar","tracks","title-fight","travel","games"];
