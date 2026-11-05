@@ -44,7 +44,7 @@ const t0=h.indexOf('const TRACK_INFO={'),t1=h.indexOf('const TK={');
 if(t0>0){vm.runInContext(h.slice(t0,t1)+';this.o.TRACK_INFO=TRACK_INFO;this.o.TRACK_SOURCES=TRACK_SOURCES;',c)}
 const l0=h.indexOf('/* ================= LEARN F1: illustrations'),l1=h.indexOf('/* ---------- 3D steering wheel'),l2=h.indexOf('const LW={');
 if(l0>0){vm.runInContext(h.slice(l0,l1)+h.slice(l1,l2)+`;this.o.LEARN={terms:LN_TERMS.map(t=>({id:t.id,name:t.name,short:t.short,body:t.body,svg:t.svg()})),
- tyres:LN_TYRES.map(t=>({...t,svg:lnTyreSvg(t)})),tech:LN_TECH.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),
+ tyres:LN_TYRES.map(t=>({...t,svg:lnTyreSvg(t)})),tech:LN_TECH.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),people:LN_PEOPLE.map(t=>({id:t.id,name:t.name,kick:t.kick,body:t.body,svg:t.svg()})),
  ctrl:LN_CTRL.map(c=>({id:c.id,name:c.name,txt:c.txt}))};`,c)}
 process.stdout.write(JSON.stringify(c.o));"""
     out = subprocess.run(["node", "-e", js, os.path.join(ROOT, "index.html")], capture_output=True, text=True, check=True).stdout
@@ -609,14 +609,15 @@ def build_learn(L):
 <p>A modern F1 steering wheel has 20 or more buttons, dials and paddles. These are the ones you'll hear about most. <a href="/#learn/wheel">Spin and click the 3D wheel</a>.</p>
 <dl>{''.join(f'<dt><b>{e(c["name"])}</b></dt><dd>{e(c["txt"])}</dd>' for c in L["ctrl"])}</dl>
 <h2 id="car-tech">Car tech</h2><div class="lg">{''.join(card(t, t["kick"]) for t in L["tech"])}</div>
+<h2 id="people">The people who make F1</h2><p>A Grand Prix takes thousands of people: around a thousand or more at each big team, plus the FIA officials, the tyre makers, the medical crews and the marshals.</p><div class="lg">{''.join(card(t, t["kick"]) for t in L.get("people", []))}</div>
 <p class="note" style="margin-top:16px">2026 figures from <a href="https://global.honda/en/F1/features/2026_Commentary/regulations/" rel="noopener">Honda's 2026 regulations overview</a>, <a href="https://www.autosport.com/f1/news/explained-f1-2026s-new-terminology-and-technology/10787702/" rel="noopener">Autosport</a> and <a href="https://www.formula1.com/en/latest/article/pirelli-confirm-2026-tyre-compounds-as-f1-gets-set-for-a-new-era-of.6la0zKVsCYwWk9AAISz4Yw" rel="noopener">Formula1.com</a>.</p>"""
-    terms = L["terms"] + L["tech"]
+    terms = L["terms"] + L["tech"] + L.get("people", [])
     ld = {"@context": "https://schema.org", "@type": "DefinedTermSet", "name": "Formula 1 glossary", "url": f"{SITE}/learn-f1/",
           "hasDefinedTerm": [{"@type": "DefinedTerm", "name": t["name"], "description": strip_tags(t["body"]), "url": f"{SITE}/learn-f1/#{t['id']}"} for t in terms]
           + [{"@type": "DefinedTerm", "name": f'{t["name"]} tyre', "description": t["txt"]} for t in L["tyres"]]
           + [{"@type": "DefinedTerm", "name": c["name"], "description": c["txt"]} for c in L["ctrl"]]}
-    return page("/learn-f1/", f"Learn F1: track terms, tyres, steering wheel and 2026 car tech explained | {BRAND}",
-                "Beginner's guide to Formula 1 with animated pictures: racing line, kerbs, chicanes, tyres and compounds, every steering wheel button, and the 2026 tech: active aero, overtake mode, ERS and more.",
+    return page("/learn-f1/", f"Learn F1: track terms, tyres, steering wheel, car tech and the people of F1 explained | {BRAND}",
+                "Beginner's guide to Formula 1 with animated pictures: racing line, kerbs, chicanes, tyres, every steering wheel button, the 2026 tech (active aero, overtake mode, ERS) and the people: drivers, race engineers, strategists, pit crews, marshals and stewards.",
                 body, [("Learn F1", "/learn-f1/")], ld, extra_head=LEARN_CSS)
 
 

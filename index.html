@@ -935,6 +935,7 @@ nav.tabs a:first-child{padding-left:0}
 @media (max-width:440px){.strip-in{gap:6px}.brand{font-size:19px;gap:8px}.brand-tag{font-size:9.5px}.champ-btn{padding:5px 6px}.theme-btn{width:30px;height:30px}.learn-cta{height:30px;padding:0 8px;font-size:11.5px;letter-spacing:.04em}.learn-cta i{display:none}}
 @media (max-width:380px){.brand{font-size:17px;gap:6px}.brand i{width:22px;height:22px}.brand-tag{font-size:8.5px}.learn-cta{padding:0 7px;font-size:11px}.champ-btn{padding:4px 5px}}
 @media (prefers-reduced-motion:reduce){.learn-cta i{animation:none}}
+.ln-intro{color:var(--muted);max-width:70ch;margin:0 0 14px}
 /* ===== light theme ===== */
 :root[data-theme="light"]{
   --carbon:#F3F4F7;--panel:#FFFFFF;--panel-2:#EEF0F4;--line:#DCE0E7;--fg:#12151C;--muted:#5A6272;
@@ -1354,12 +1355,13 @@ nav.tabs a:first-child{padding-left:0}
     <div class="ln-hero">
       <div class="label">F1 school</div>
       <h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Wanna learn about F1?</h2>
-      <p>New to Formula 1, or want to sound smart on race day? Here's the track talk, the tyres, the steering wheel and the tech, explained with moving pictures.</p>
+      <p>New to Formula 1, or want to sound smart on race day? Here's the track talk, the tyres, the steering wheel, the tech and the people behind it all, explained with moving pictures.</p>
       <div class="ln-tabs" role="tablist" aria-label="Topics">
         <button type="button" role="tab" data-ln="track" aria-selected="true"><span>🏁</span>Track talk</button>
         <button type="button" role="tab" data-ln="tyres" aria-selected="false"><span>🛞</span>Tyres</button>
         <button type="button" role="tab" data-ln="wheel" aria-selected="false"><span>🎮</span>Steering wheel</button>
         <button type="button" role="tab" data-ln="tech" aria-selected="false"><span>⚙️</span>Car tech</button>
+        <button type="button" role="tab" data-ln="people" aria-selected="false"><span>👥</span>People</button>
       </div>
     </div>
 
@@ -1405,6 +1407,10 @@ nav.tabs a:first-child{padding-left:0}
         </div>
       </div>
     </div>
+
+    <div class="ln-pane" id="lnPeople" role="tabpanel" hidden>
+      <p class="ln-intro">A Grand Prix takes thousands of people: around a thousand or more at each big team, plus the FIA officials, the tyre makers, the medical crews and the marshals. Meet the main roles.</p>
+      <div class="ln-grid" id="lnPeopleGrid"></div></div>
 
     <div class="ln-pane" id="lnTech" role="tabpanel" hidden><div class="ln-grid tech" id="lnTechGrid"></div>
       <p class="ln-note" style="margin-top:12px">2026 figures from F1, Honda Racing and Autosport's guides to the new regulations.</p></div>
@@ -3903,6 +3909,94 @@ const LN_TECH=[
    <text x="20" y="30" class="ln-t">MIN. WEIGHT 768 kg</text></svg>`}
 ];
 
+/* ---------- the people who make F1 ---------- */
+/* a simple figure standing at (x,y) = feet; o.suit colour, o.head: helmet|cap|hair|headset, o.arm: up|wave|side */
+function lnPerson(x,y,o){o=o||{};const s=o.s||1,suit=o.suit||"#3a3f48",skin=o.skin||"#d9a07a";
+  const head=o.head==="helmet"?`<circle cx="0" cy="-58" r="11" fill="${o.hcol||LN_RED}"/><rect x="-9" y="-61" width="18" height="6" rx="3" fill="#111"/>`
+   :`<circle cx="0" cy="-57" r="9" fill="${skin}"/>`+(o.head==="cap"?`<path d="M-10,-60 Q0,-72 10,-60 Z" fill="${o.hcol||suit}"/><rect x="0" y="-62" width="13" height="3" rx="1.5" fill="${o.hcol||suit}"/>`:`<path d="M-9,-59 Q0,-70 9,-59 Q6,-64 0,-65 Q-6,-64 -9,-59Z" fill="${o.hair||"#2b1d14"}"/>`)
+   +(o.headset?`<path d="M-10,-58 Q0,-74 10,-58" stroke="#111" stroke-width="2.5" fill="none"/><rect x="-12" y="-61" width="4" height="8" rx="2" fill="#111"/><rect x="8" y="-61" width="4" height="8" rx="2" fill="#111"/><path d="M-10,-54 Q-8,-47 -2,-47" stroke="#111" stroke-width="1.5" fill="none"/>`:"");
+  const arm=o.arm==="up"?`<path d="M9,-40 L18,-62" stroke="${suit}" stroke-width="6" stroke-linecap="round"/>`:o.arm==="wave"?`<g><path d="M9,-40 L20,-58" stroke="${suit}" stroke-width="6" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="-12 9 -40;12 9 -40;-12 9 -40" dur=".7s" repeatCount="indefinite"/></g>`:o.arm==="fwd"?`<path d="M9,-40 L24,-38" stroke="${suit}" stroke-width="6" stroke-linecap="round"/>`:`<path d="M9,-40 L12,-22" stroke="${suit}" stroke-width="6" stroke-linecap="round"/>`;
+  return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-8" y="-24" width="7" height="24" rx="3" fill="${o.legs||"#22262d"}"/><rect x="1" y="-24" width="7" height="24" rx="3" fill="${o.legs||"#22262d"}"/>
+   <rect x="-11" y="-48" width="22" height="28" rx="6" fill="${suit}"/>${o.stripe?`<rect x="-11" y="-38" width="22" height="4" fill="${o.stripe}"/>`:""}<path d="M-9,-40 L-12,-22" stroke="${suit}" stroke-width="6" stroke-linecap="round"/>${arm}${head}</g>`}
+const lnBg=(c)=>`<rect width="320" height="180" fill="${c||"#12161E"}"/>`;
+const lnScreen=(x,y,w,h,inner)=>`<g transform="translate(${x},${y})"><rect width="${w}" height="${h}" rx="4" fill="#05070a" stroke="#3a4150"/>${inner}</g>`;
+const LN_PEOPLE=[
+ {id:"driver",name:"Driver",kick:"22 on the 2026 grid",
+  body:"The star of the show, but also a top athlete. Drivers handle more than <b>5 g</b> under braking, race for up to two hours in a cockpit that can get hotter than 50°C, and lose a few kilos in sweat. They train their necks to cope with the forces and spend hours in the simulator learning every track.",
+  svg:()=>lnScene(`${lnBg()}<g transform="translate(160,160) scale(2.6)">${lnCarSide(LN_RED)}</g>
+   ${[0,1,2].map(i=>`<path d="M${70-i*14},${70+i*10} h-40" stroke="rgba(255,255,255,.4)" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="1;0" dur=".5s" begin="${i*.15}s" repeatCount="indefinite"/></path>`).join("")}
+   <g transform="translate(240,40)"><rect x="0" y="0" width="70" height="40" rx="4" fill="rgba(5,7,10,.85)"/><text x="35" y="17" class="ln-t s" text-anchor="middle">G-FORCE</text><text x="35" y="33" class="ln-t r" text-anchor="middle">5.4 g<animate attributeName="opacity" values="1;.4;1" dur="1s" repeatCount="indefinite"/></text></g>`)},
+ {id:"tp",name:"Team principal",kick:"The boss",
+  body:"The <b>team principal</b> runs the whole operation: hundreds or even more than a thousand staff, the budget (capped by the rules), sponsors and the big decisions. On race day you'll see them on the pit wall with a headset, listening to every call, and in front of the TV cameras when things go well or badly.",
+  svg:()=>lnScene(`${lnBg()}<rect x="0" y="120" width="320" height="60" fill="#1b1e24"/><rect x="40" y="96" width="240" height="26" rx="3" fill="#2b2f36"/>${lnScreen(60,58,60,38,'<path d="M6,30 L18,18 L28,24 L40,10 L54,14" stroke="#2FD480" stroke-width="2" fill="none"/>')}${lnScreen(200,58,60,38,'<text x="30" y="25" class="ln-t s" text-anchor="middle">P1 +2.4s</text>')}
+   ${lnPerson(160,150,{suit:"#0d1b2a",stripe:LN_TEAL,head:"hair",headset:1,arm:"fwd",s:1.35})}
+   <text x="160" y="24" class="ln-t" text-anchor="middle">ON THE PIT WALL</text>`)},
+ {id:"engineer",name:"Race engineer",kick:"The voice in the driver's ear",
+  body:"Each driver has a <b>race engineer</b>: their main contact on the radio. They set up the car with the driver over the weekend and, in the race, pass on lap times, gaps, strategy calls, settings changes and warnings. Many driver–engineer pairs work together for years and become famous for their radio exchanges.",
+  svg:()=>lnScene(`${lnBg()}${lnPerson(70,160,{suit:"#2b2f36",stripe:LN_RED,head:"cap",hcol:LN_RED,headset:1,arm:"fwd",s:1.4})}
+   ${[0,1,2].map(i=>`<path d="M${108+i*16},${80-i*6} q10,12 0,24" stroke="#2FD480" stroke-width="3" fill="none" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin="${i*.25}s" repeatCount="indefinite"/></path>`).join("")}
+   <g transform="translate(250,130) scale(1.7)">${lnCarSide(LN_RED)}</g>
+   <rect x="168" y="18" width="140" height="26" rx="4" fill="rgba(5,7,10,.85)"/><text x="238" y="35" class="ln-t g" text-anchor="middle">"BOX THIS LAP"</text>`)},
+ {id:"strategist",name:"Race strategist",kick:"Plays chess at 300 km/h",
+  body:"<b>Strategists</b> decide when to pit and which tyres to fit. Before the race they simulate thousands of possible races; during it they watch gaps, tyre wear, weather radar and rivals, ready to react in seconds to a safety car or a shower. A good call can win a race; a bad one can throw it away.",
+  svg:()=>lnScene(`${lnBg()}${lnScreen(20,20,280,140,`<text x="12" y="20" class="ln-t s">TYRE STRATEGY</text>
+   ${[[0,LN_RED,90,"#FFD400",170],[1,"#3C8DFF",120,"#F2F2F2",150],[2,LN_TEAL,60,"#FFD400",200]].map(([i,team,a,c2,b])=>`<text x="12" y="${52+i*30}" class="ln-t s">CAR ${i+1}</text><rect x="60" y="${42+i*30}" width="${a}" height="12" rx="2" fill="#E10600"/><rect x="${62+a}" y="${42+i*30}" width="${270-60-a-12}" height="12" rx="2" fill="${c2}" opacity=".9"/>`).join("")}
+   <rect x="120" y="30" width="2" height="100" fill="#B54BE8"><animate attributeName="x" values="60;258" dur="6s" repeatCount="indefinite"/></rect><text x="12" y="132" class="ln-t s">PIT WINDOW OPENS · SAFETY CAR? BOX NOW</text>`)}`)},
+ {id:"pitcrew",name:"Pit crew",kick:"Four new tyres in about two seconds",
+  body:"Around <b>20 people</b> service the car in a pit stop: three per wheel (gun, tyre off, tyre on), front and rear jack operators, people steadying the car and someone checking it's safe to release. They practise hundreds of stops a season, and the best stops take barely two seconds.",
+  svg:()=>lnScene(`<rect width="320" height="180" fill="#4a505b"/><rect x="0" y="40" width="320" height="100" fill="#3a3f48"/><rect x="120" y="40" width="80" height="100" fill="none" stroke="#FFC93C" stroke-width="2" stroke-dasharray="6 4"/>
+   <g><g transform="translate(160,90) scale(1.6)">${lnCarTop(LN_ORANGE,1)}</g><animateTransform attributeName="transform" type="translate" values="-260,0;0,0;0,0;300,0;300,0" keyTimes="0;.25;.6;.85;1" dur="5s" repeatCount="indefinite"/></g>
+   ${[[128,62],[192,62],[128,118],[192,118]].map(([x,y],i)=>`<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.25;.28;.58;.62;1" dur="5s" repeatCount="indefinite"/>${lnPerson(x+(i%2?18:-18),y+(y<90?-8:38),{suit:"#F47600",head:"helmet",hcol:"#111",s:.55,arm:"fwd"})}<circle cx="${x}" cy="${y}" r="5" fill="#FFC93C"><animate attributeName="r" values="4;7;4" dur=".25s" repeatCount="indefinite"/></circle></g>`).join("")}
+   <rect x="250" y="12" width="60" height="22" rx="3" fill="#05070a"/><text x="280" y="28" class="ln-t g" text-anchor="middle" opacity="0">2.1s<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.58;.6;.95;1" dur="5s" repeatCount="indefinite"/></text>
+   <circle cx="230" cy="23" r="6" fill="#E10600"><animate attributeName="fill" values="#E10600;#E10600;#2FD480;#2FD480;#E10600" keyTimes="0;.58;.6;.95;1" dur="5s" repeatCount="indefinite"/></circle>`)},
+ {id:"mechanics",name:"Mechanics",kick:"Build it, fix it, rebuild it",
+  body:"<b>Mechanics</b> assemble the cars at every race, change set-ups between sessions, and rebuild them after crashes, sometimes late into the night. Each car has its own crew led by a chief mechanic, and many of them double up as the pit crew on Sunday.",
+  svg:()=>lnScene(`${lnBg("#1b1e24")}<rect x="0" y="140" width="320" height="40" fill="#2b2f36"/><rect x="60" y="120" width="200" height="8" fill="#4b515c"/><rect x="80" y="128" width="10" height="14" fill="#4b515c"/><rect x="230" y="128" width="10" height="14" fill="#4b515c"/>
+   <g transform="translate(160,118) scale(2.3)">${lnCarSide(LN_BLUE)}</g>
+   ${lnPerson(50,170,{suit:"#1868DB",head:"cap",hcol:"#1868DB",arm:"fwd",s:1.1})}${lnPerson(280,170,{suit:"#1868DB",head:"hair",arm:"up",s:1.1})}
+   <g transform="translate(80,124)"><path d="M0,0 l14,-4 l2,4 l-14,4 z" fill="#c7ccd4"/><animateTransform attributeName="transform" type="rotate" values="0 80 124;-25 80 124;0 80 124" dur=".8s" repeatCount="indefinite" additive="sum"/></g>`)},
+ {id:"designers",name:"Designers & aerodynamicists",kick:"Back at the factory",
+  body:"Led by a <b>technical director</b>, hundreds of designers and <b>aerodynamicists</b> create the car on computers, then test parts in the wind tunnel and with CFD simulations. The rules limit how much wind-tunnel time each team gets, and the teams lower down the championship are allowed more of it.",
+  svg:()=>lnScene(`${lnBg()}<rect x="0" y="30" width="320" height="120" rx="6" fill="#1b2230" stroke="#3a4150"/>
+   ${Array.from({length:7},(_,i)=>`<path d="M320,${50+i*14} C220,${50+i*14} 200,${(i<4?40+i*9:70+i*10)} 120,${55+i*13} S20,${60+i*13} 0,${60+i*13}" fill="none" stroke="rgba(120,190,255,.55)" stroke-width="1.5" stroke-dasharray="12 8"><animate attributeName="stroke-dashoffset" values="0;40" dur=".8s" repeatCount="indefinite"/></path>`).join("")}
+   <g transform="translate(160,130) scale(2.2)">${lnCarSide("#9C9FA2")}</g><text x="12" y="22" class="ln-t s">WIND TUNNEL · 60% SCALE MODEL</text>`)},
+ {id:"data",name:"Data & performance engineers",kick:"Hundreds of sensors, live",
+  body:"The car carries hundreds of sensors measuring everything from tyre temperatures to suspension movement. <b>Data and performance engineers</b> watch it live in the garage, while more engineers back at the factory follow along in a mission-control room and feed advice to the track.",
+  svg:()=>lnScene(`${lnBg()}${[0,1].map(i=>lnScreen(20+i*150,26,130,80,`<path d="${Array.from({length:14},(_,k)=>`${k?"L":"M"}${6+k*9},${40+Math.sin(k*(1.3+i))*22}`).join(" ")}" stroke="${i?"#FFC93C":"#2FD480"}" stroke-width="2" fill="none" stroke-dasharray="200" stroke-dashoffset="200"><animate attributeName="stroke-dashoffset" values="200;0" dur="${2+i}s" repeatCount="indefinite"/></path><text x="6" y="12" class="ln-t s">${i?"TYRE TEMPS":"THROTTLE / BRAKE"}</text>`)).join("")}
+   ${lnPerson(90,176,{suit:"#2b2f36",head:"hair",headset:1,arm:"fwd",s:.9})}${lnPerson(230,176,{suit:"#2b2f36",head:"hair",hair:"#c9a26b",headset:1,arm:"fwd",s:.9})}`)},
+ {id:"reserve",name:"Reserve & simulator drivers",kick:"Ready if called",
+  body:"Each team has a <b>reserve driver</b> who can step in if a race driver is ill or injured, sometimes at a few hours' notice. Reserve and development drivers spend long days in the team's <b>simulator</b>, testing set-ups and new parts before they ever reach the real car.",
+  svg:()=>lnScene(`${lnBg()}<path d="M40,30 Q160,0 280,30 L280,110 Q160,90 40,110 Z" fill="#05070a" stroke="#3a4150"/>
+   <path d="M160,104 L120,40 M160,104 L200,40" stroke="#3a3f48" stroke-width="18"/><path d="M160,104 L132,48 M160,104 L188,48" stroke="#8C94A6" stroke-width="2" stroke-dasharray="6 8"><animate attributeName="stroke-dashoffset" values="0;-28" dur=".5s" repeatCount="indefinite"/></path>
+   <rect x="110" y="120" width="100" height="40" rx="8" fill="#2b2f36"/>${lnPerson(160,158,{head:"helmet",hcol:"#229971",suit:"#229971",arm:"fwd",s:.85})}
+   <g><rect x="140" y="104" width="40" height="10" rx="5" fill="#111"/><animateTransform attributeName="transform" type="rotate" values="-8 160 109;8 160 109;-8 160 109" dur="2s" repeatCount="indefinite"/></g>`)},
+ {id:"marshals",name:"Marshals",kick:"The volunteers in orange",
+  body:"Hundreds of <b>marshals</b> line every circuit, most of them unpaid volunteers. They wave the flags, clear crashed cars, fight fires and help injured drivers. They're the first people on the scene of every incident, and races can't happen without them.",
+  svg:()=>lnScene(`${lnGrass}<rect x="0" y="120" width="320" height="60" fill="#3a3f48"/><rect x="40" y="70" width="70" height="50" rx="3" fill="#d6dbe2"/><rect x="40" y="70" width="70" height="10" fill="#E10600"/>
+   ${lnPerson(150,130,{suit:"#F47600",head:"hair",arm:"up",s:1.2})}<g transform="translate(172,56)"><rect x="0" y="0" width="2.5" height="40" fill="#8C94A6"/><path fill="#FFC93C" d="M2,2 C14,-2 22,6 36,2 L36,24 C22,28 14,20 2,24 Z"><animate attributeName="d" values="M2,2 C14,-2 22,6 36,2 L36,24 C22,28 14,20 2,24 Z;M2,2 C14,6 22,-4 36,4 L36,26 C22,18 14,28 2,24 Z;M2,2 C14,-2 22,6 36,2 L36,24 C22,28 14,20 2,24 Z" dur=".9s" repeatCount="indefinite"/></path><animateTransform attributeName="transform" type="rotate" values="-10 1 40;10 1 40;-10 1 40" dur=".9s" repeatCount="indefinite" additive="sum"/></g>
+   ${lnPerson(250,130,{suit:"#F47600",head:"hair",hair:"#8a6a3a",arm:"side",s:1.2})}<rect x="262" y="96" width="9" height="22" rx="3" fill="#E10600"/>`)},
+ {id:"control",name:"Race director & race control",kick:"Runs the race for the FIA",
+  body:"The FIA's <b>race director</b> runs every session from <b>race control</b>, surrounded by screens showing every camera and timing feed. Race control starts the race, shows the flags and lights, sends out the safety car, stops the session with a red flag, and reports incidents to the stewards.",
+  svg:()=>lnScene(`${lnBg()}${Array.from({length:8},(_,i)=>lnScreen(20+(i%4)*72,14+Math.floor(i/4)*46,64,40,`<rect x="4" y="4" width="56" height="32" fill="${["#1d5a2a","#30343d","#1b2230","#1d5a2a"][i%4]}"/>${i===5?`<rect x="10" y="10" width="44" height="20" fill="#FFC93C"><animate attributeName="opacity" values="1;.3;1" dur=".8s" repeatCount="indefinite"/></rect><text x="32" y="24" class="ln-t k" text-anchor="middle">SC</text>`:`<path d="M6,${26-i%3*4} q14,-12 26,0 t26,0" stroke="#3a3f48" stroke-width="5" fill="none"/>`}`)).join("")}
+   <rect x="0" y="120" width="320" height="60" fill="#1b1e24"/>${lnPerson(120,176,{suit:"#0f2a5c",head:"hair",headset:1,arm:"fwd",s:.9})}${lnPerson(200,176,{suit:"#0f2a5c",head:"hair",hair:"#888",headset:1,arm:"fwd",s:.9})}`)},
+ {id:"stewards",name:"Stewards",kick:"The referees",
+  body:"A panel of <b>stewards</b> decides penalties: time penalties, grid drops, warnings or worse. They look at video, data and team radio, and can call drivers and team managers in to explain themselves. The panel always includes a former racing driver to bring a driver's view.",
+  svg:()=>lnScene(`${lnBg()}<rect x="30" y="100" width="260" height="20" rx="3" fill="#2b2f36"/>${[70,130,190,250].map((x,i)=>lnPerson(x,118,{suit:i===3?"#7a1a00":"#0f2a5c",head:"hair",hair:["#2b1d14","#888","#c9a26b","#2b1d14"][i],arm:"fwd",s:.85})).join("")}
+   <rect x="100" y="20" width="120" height="44" rx="4" fill="rgba(5,7,10,.9)" stroke="#3a4150"/><text x="160" y="38" class="ln-t s" text-anchor="middle">DECISION</text><text x="160" y="56" class="ln-t r" text-anchor="middle">5s TIME PENALTY<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.4;.45;1" dur="4s" repeatCount="indefinite"/></text>
+   <text x="250" y="140" class="ln-t s" text-anchor="middle">FORMER DRIVER</text>`)},
+ {id:"safetycar",name:"Safety car & medical car",kick:"Slow the field, save lives",
+  body:"When there's danger on track, race control sends out the <b>safety car</b>: a fast road car driven by a professional racing driver. The field must line up behind it at a reduced speed while marshals clear the track. The <b>medical car</b>, with a doctor on board, follows the field on the first lap and races to any big accident.",
+  svg:()=>lnScene(`${lnGrass}${lnRoad("M-10,100 H330",60,false)}
+   <g><g transform="translate(250,100)"><rect x="-20" y="-11" width="40" height="22" rx="6" fill="#d6dbe2"/><rect x="-6" y="-9" width="14" height="18" rx="3" fill="#30343d"/><rect x="-3" y="-12" width="8" height="24" rx="2" fill="#FFC93C"><animate attributeName="fill" values="#FFC93C;#2b2f36;#FFC93C" dur=".5s" repeatCount="indefinite"/></rect><rect x="-3" y="-12" width="8" height="24" rx="2" fill="#3C8DFF" opacity="0"><animate attributeName="opacity" values="0;1;0" dur=".5s" repeatCount="indefinite"/></rect></g>
+    ${[LN_RED,LN_TEAL,LN_BLUE,LN_ORANGE].map((c,i)=>`<g transform="translate(${196-i*50},100)">${lnCarTop(c,.8)}</g>`).join("")}<animateTransform attributeName="transform" type="translate" values="-30,0;30,0;-30,0" dur="6s" repeatCount="indefinite"/></g>
+   <rect x="16" y="14" width="120" height="26" rx="3" fill="#FFC93C"/><text x="76" y="32" class="ln-t k" text-anchor="middle">SAFETY CAR</text>`)},
+ {id:"tyreeng",name:"Tyre engineers",kick:"Pressure and temperature",
+  body:"Engineers from the tyre supplier, Pirelli, look after every set of tyres at a race. They fit them to the rims, check pressures and temperatures, and set the minimum pressures every team must run. Each team also has its own tyre engineer to get the rubber into its best working window.",
+  svg:()=>lnScene(`${lnBg()}<g transform="translate(40,10) scale(.8)">${lnTyreSvg({name:"Medium",col:"#FFD400"}).replace(/^<svg[^>]*>/,"").replace(/<\/svg>$/,"")}</g>
+   <g transform="translate(230,90)"><circle r="44" fill="#05070a" stroke="#3a4150" stroke-width="3"/><path d="M-30,20 A36,36 0 1 1 30,20" stroke="#2b2f36" stroke-width="6" fill="none"/><path d="M-30,20 A36,36 0 0 1 -24,-26" stroke="#2FD480" stroke-width="6" fill="none"/>
+    <g><rect x="-1.5" y="-32" width="3" height="32" fill="#E10600"/><animateTransform attributeName="transform" type="rotate" values="-110;30;10;20;-110" dur="4s" repeatCount="indefinite"/></g><circle r="5" fill="#8C94A6"/><text x="0" y="30" class="ln-t s" text-anchor="middle">PSI</text></g>`)}
+];
+
 /* ---------- 3D steering wheel ---------- */
 /* a typical modern F1 wheel (not any one team's): layout in centimetres, x right, y up, front face at z=0 */
 const LN_CTRL=[
@@ -4064,11 +4158,12 @@ function lwLoop(){cancelAnimationFrame(LW.raf);let last=performance.now();const 
 /* ---------- Learn F1: page logic ---------- */
 const LN={ready:false,tab:"track",tyre:"soft"};
 function lnInit(){
-  const m=(location.hash||"").match(/^#learn\/(track|tyres|wheel|tech)/);
+  const m=(location.hash||"").match(/^#learn\/(track|tyres|wheel|tech|people)/);
   if(!LN.ready){
     LN.ready=true;
     $("#lnTerms").innerHTML=LN_TERMS.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><h3>${t.name}</h3><div class="ln-short">${t.short}</div><p>${t.body}</p></div></article>`).join("");
     $("#lnTechGrid").innerHTML=LN_TECH.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}${t.interactive==="aero"?'<div class="ln-ctl"><button type="button" data-aero="corner" aria-pressed="true">Corner mode</button><button type="button" data-aero="straight" aria-pressed="false">Straight mode</button></div>':""}${t.interactive==="diff"?'<div class="ln-ctl"><label>Open<input type="range" min="0" max="100" value="0" id="lnDiff" aria-label="Differential: open to locked"></label>Locked</div>':""}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
+    $("#lnPeopleGrid").innerHTML=LN_PEOPLE.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
     $("#lnTyrePick").innerHTML=LN_TYRES.map(t=>`<button type="button" data-tyre="${t.id}" style="--c:${t.col}"><i></i>${t.name}</button>`).join("");
     $("#lnTyrePick").addEventListener("click",e=>{const b=e.target.closest("[data-tyre]");if(b)lnTyre(b.dataset.tyre)});
     document.querySelectorAll(".ln-tabs [data-ln]").forEach(b=>b.addEventListener("click",()=>{lnTab(b.dataset.ln);history.replaceState(null,"","#learn/"+b.dataset.ln)}));
@@ -4091,7 +4186,7 @@ function lnInit(){
 function lnTab(t){
   LN.tab=t;
   document.querySelectorAll(".ln-tabs [data-ln]").forEach(b=>b.setAttribute("aria-selected",b.dataset.ln===t));
-  $("#lnTrack").hidden=t!=="track";$("#lnTyres").hidden=t!=="tyres";$("#lnWheel").hidden=t!=="wheel";$("#lnTech").hidden=t!=="tech";
+  $("#lnTrack").hidden=t!=="track";$("#lnTyres").hidden=t!=="tyres";$("#lnWheel").hidden=t!=="wheel";$("#lnTech").hidden=t!=="tech";$("#lnPeople").hidden=t!=="people";
   if(t==="wheel")lwInit();
 }
 function lnTyre(id){
