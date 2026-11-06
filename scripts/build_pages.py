@@ -77,8 +77,8 @@ a{color:var(--red);font-weight:700;text-decoration:none}a:hover{text-decoration:
 .w{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header.top{border-bottom:1px solid var(--line);background:var(--bg)}
 header.top .w{display:flex;align-items:center;gap:4px 20px;min-height:60px;flex-wrap:wrap;padding-top:14px;padding-bottom:6px}
-.brand{display:flex;align-items:center;gap:10px;color:var(--fg);font:italic 900 24px/1 var(--fd);text-transform:uppercase}
-.brand:hover{text-decoration:none}.brand i{width:22px;height:22px;background:conic-gradient(#F1F3F7 25%,#0A0C11 0 50%,#F1F3F7 0 75%,#0A0C11 0) 0 0/11px 11px;border:1px solid #F1F3F7;transform:skewX(-12deg)}
+.brand{display:flex;align-items:flex-start;gap:10px;color:var(--fg);font:italic 900 24px/1 var(--fd);text-transform:uppercase}
+.brand:hover{text-decoration:none}.brand i{flex:none;margin-top:var(--flag-top,.12em);width:22px;height:22px;background:conic-gradient(#F1F3F7 25%,#0A0C11 0 50%,#F1F3F7 0 75%,#0A0C11 0) 0 0/11px 11px;border:1px solid #F1F3F7;transform:skewX(-12deg)}
 .brand b{color:var(--red)}.brand small{display:block;font:500 11px var(--fb);text-transform:none;color:var(--muted);margin-top:2px}
 nav.main{display:flex;gap:4px 16px;flex-wrap:wrap;margin-left:auto}
 nav.main a{color:var(--muted);font:700 14px var(--fd);text-transform:uppercase;letter-spacing:.08em}nav.main a:hover{color:var(--fg);text-decoration:none}

@@ -81,6 +81,8 @@ h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;margin:0;text-wra
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:.02em;text-transform:uppercase;font-style:italic;color:var(--fg);text-decoration:none}
 .brand:hover i{transform:skewX(-12deg) rotate(-8deg)}
 .brand i{transition:transform .2s;flex:none}
+/* flag sits level with the top of PIT WALL F1, not centred on both lines */
+.strip-in>.brand{align-items:flex-start}.strip-in>.brand i{margin-top:var(--flag-top,.12em)}
 .brand-txt{display:grid;line-height:1}
 .brand-tag{font-family:var(--f-body);font-style:normal;font-weight:500;text-transform:none;letter-spacing:.02em;font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap}
 @media (max-width:360px){.brand-tag{font-size:10px}}
@@ -939,7 +941,7 @@ nav.tabs a:first-child{padding-left:0}
 .learn-cta .short{display:none}
 @media (max-width:720px){.learn-cta .full{display:none}.learn-cta .short{display:inline}.learn-cta{padding:0 10px;font-size:12px}}
 @media (max-width:520px){nav.tabs a:first-child{padding-left:12px}}
-@media (max-width:440px){.strip-in{gap:6px}.brand{font-size:19px;gap:8px}.brand-tag{font-size:9.5px}.champ-btn{padding:5px 6px}.theme-btn{width:30px;height:30px}.learn-cta{height:30px;padding:0 8px;font-size:11.5px;letter-spacing:.04em}.learn-cta i{display:none}}
+@media (max-width:440px){.strip-in{gap:6px}.brand{font-size:19px;gap:8px;--flag-top:.09em}.brand-tag{font-size:9.5px}.champ-btn{padding:5px 6px}.theme-btn{width:30px;height:30px}.learn-cta{height:30px;padding:0 8px;font-size:11.5px;letter-spacing:.04em}.learn-cta i{display:none}}
 @media (max-width:380px){.brand{font-size:17px;gap:6px}.brand i{width:22px;height:22px}.brand-tag{font-size:8.5px}.learn-cta{padding:0 7px;font-size:11px}.champ-btn{padding:4px 5px}}
 @media (prefers-reduced-motion:reduce){.learn-cta i{animation:none}}
 .ln-intro{color:var(--muted);max-width:70ch;margin:0 0 14px}
