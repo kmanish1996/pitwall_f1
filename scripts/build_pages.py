@@ -130,6 +130,16 @@ def og_image(path, og):
     return f"{SITE}/assets/og/{og}.jpg" if og and os.path.exists(os.path.join(ROOT, "assets", "og", f"{og}.jpg")) else f"{SITE}/assets/og-image.png"
 
 
+FIA = {"@type": "Organization", "name": "FIA (Fédération Internationale de l'Automobile)", "url": "https://www.fia.com/"}
+
+
+def event_extras(A, start, minutes, desc, image):
+    """Fields Google's Events report asks for: end time, description, image, who takes part and who runs it."""
+    st = datetime.fromisoformat(start.replace("Z", "+00:00"))
+    return {"endDate": (st + timedelta(minutes=minutes)).isoformat().replace("+00:00", "Z"), "description": desc, "image": [image],
+            "performer": [{"@type": "SportsTeam", "name": t} for t in A["TEAMS"]], "organizer": FIA}
+
+
 def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, og=None):
     url = f"{SITE}{path}"
     trail = [{"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + p} for i, (n, p) in enumerate([("Home", "/")] + crumbs)]
@@ -323,14 +333,14 @@ def main():
 <p class="lead">{lead}</p>{rec}
 {''.join(secs) or '<p class="note">Results appear here about 30 to 45 minutes after each session ends.</p>'}
 <div class="pager">{prev}<a href="/f1-calendar-{YEAR}/">Full calendar</a>{nxt}</div>"""
+        desc = (f'{name} {YEAR} results: {by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]} won at {r["circuit"]}. Race, qualifying and practice results, lap record and full replays.'
+                if r.get("win") and r["win"] in by_code else f'{name} {YEAR} at {r["circuit"]}, {r["dates"]}: schedule, results from every session, lap record and full replays.')
         ld = {"@context": "https://schema.org", "@type": "SportsEvent", "name": f"{YEAR} {name}", "sport": "Formula 1",
               "startDate": start, "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
               "location": {"@type": "Place", "name": r["circuit"], "address": {"@type": "PostalAddress", "addressLocality": r["place"], "addressCountry": COUNTRY.get(r["short"], "")}},
-              "url": SITE + race_url(rd)}
+              "url": SITE + race_url(rd), **event_extras(A, start, 120, desc, og_image(race_url(rd), None))}
         if r.get("win") and r["win"] in by_code:
             ld["winner"] = {"@type": "Person", "name": f'{by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]}'}
-        desc = (f'{name} {YEAR} results: {by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]} won at {r["circuit"]}. Race, qualifying and practice results, lap record and full replays.'
-                if r.get("win") and r["win"] in by_code else f'{name} {YEAR} at {r["circuit"]}, {r["dates"]}: schedule, results from every session, lap record and full replays.')
         pages.append(page(race_url(rd), f"{name} {YEAR}: results, qualifying and lap record | {BRAND}", desc, body,
                           [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/"), (name, race_url(rd))], ld))
 
@@ -825,7 +835,10 @@ var t=new Date("{race_dt.isoformat()}").getTime(),c=document.getElementById("cd"
     ld = {"@context": "https://schema.org", "@type": "SportsEvent", "name": f"{YEAR} {name}", "sport": "Formula 1", "startDate": nxt["race"],
           "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
           "location": {"@type": "Place", "name": nxt["circuit"], "address": {"@type": "PostalAddress", "addressLocality": nxt["place"], "addressCountry": COUNTRY.get(nxt["short"], "")}},
-          "url": SITE + "/next-f1-race/", "subEvent": [{"@type": "SportsEvent", "name": f'{name}: {s["name"]}', "startDate": s["start"]} for s in sess]}
+          "url": SITE + "/next-f1-race/", **event_extras(A, nxt["race"], 120, f"Round {nxt['rd']} of the {YEAR} Formula 1 World Championship at {nxt['circuit']}, {nxt['place']}: practice, qualifying and the race.", og_image("/next-f1-race/", "next-race")),
+          "subEvent": [{"@type": "SportsEvent", "name": f'{name}: {s["name"]}', "startDate": s["start"], "sport": "Formula 1",
+                        "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode", "location": {"@type": "Place", "name": nxt["circuit"], "address": {"@type": "PostalAddress", "addressLocality": nxt["place"], "addressCountry": COUNTRY.get(nxt["short"], "")}},
+                        **event_extras(A, s["start"], 120 if s["name"] == "Race" else 60, f"{s['name']} at the {YEAR} {name}, {nxt['circuit']}.", og_image("/next-f1-race/", "next-race"))} for s in sess]}
     qa = [(f"When is the next F1 race?", f"The {name} on {race_dt.strftime('%A %d %B %Y')} at {race_dt.strftime('%H:%M')} UTC, at {nxt['circuit']} in {nxt['place']}."),
           (f"What time does the {name} start?", f"Lights out is at {race_dt.strftime('%H:%M')} UTC on {race_dt.strftime('%d %B')}. " + (f"Qualifying is at {fmt(next(s['start'] for s in sess if s['name'] == 'Qualifying')).strftime('%H:%M')} UTC on {fmt(next(s['start'] for s in sess if s['name'] == 'Qualifying')).strftime('%A')}." if any(s['name'] == 'Qualifying' for s in sess) else ""))]
     return [page("/next-f1-race/", f"Next F1 race: {name} {YEAR} start time & schedule | {BRAND}",
