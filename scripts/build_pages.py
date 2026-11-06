@@ -140,6 +140,15 @@ def event_extras(A, start, minutes, desc, image):
             "performer": [{"@type": "SportsTeam", "name": t} for t in A["TEAMS"]], "organizer": FIA}
 
 
+def goatcounter_head():
+    """GoatCounter tag when SITE.goatcounter is set in index.html (free, no cookies)."""
+    try:
+        m = re.search(r'goatcounter:"([a-z0-9-]*)"', open(os.path.join(ROOT, "index.html"), encoding="utf-8").read())
+    except OSError:
+        return ""
+    return f'<script data-goatcounter="https://{m.group(1)}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n' if m and m.group(1) else ""
+
+
 def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, og=None):
     url = f"{SITE}{path}"
     trail = [{"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + p} for i, (n, p) in enumerate([("Home", "/")] + crumbs)]
@@ -165,7 +174,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 <meta name="twitter:image" content="{og_image(path, og)}">
 <meta name="theme-color" content="#0A0C11">
 {THEME_HEAD}
-<link rel="icon" href="/favicon.ico" sizes="48x48">
+{goatcounter_head()}<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -558,6 +567,7 @@ RX_PAGE = """<h1>F1 reaction test</h1>
 <div id="rxm" style="color:var(--muted);text-align:center;max-width:44ch">Can you beat Bottas's 0.201s? Tap here, or press Space, to start. When all five lights go out, tap as fast as you can.</div>
 </div>
 <div class="tiles"><div class="tile"><span>Your best</span><b id="rxb">–</b></div><div class="tile"><span>The time to beat</span><b>0.201s</b></div><div class="tile"><span>Average human</span><b>~0.25s</b></div></div>
+<style>.pw-share{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-6px 0 18px}.pw-share button{height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:700 13px var(--fd);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.pw-share button.main{background:var(--red);border-color:var(--red);color:#fff}.pw-share .ok{font-size:12.5px;color:#2FD480}</style><div id="rxs" class="pw-share" hidden></div>
 <h2>How the F1 start works</h2>
 <p>At the start of a Grand Prix, five pairs of red lights come on one after another, a second apart. After all five are lit there's a short, random pause, then they all go out together. That's the signal to go. React too early and it's a jump start; the stewards hand out a penalty.</p>
 <h2>The famous 0.201s</h2>
@@ -569,7 +579,13 @@ RX_PAGE = """<h1>F1 reaction test</h1>
 var g=document.getElementById("rxg"),tt=document.getElementById("rxt"),m=document.getElementById("rxm"),b=document.getElementById("rxb"),box=document.getElementById("rx");
 for(var i=0;i<5;i++){var c=document.createElement("div");c.style.cssText="display:grid;gap:8px;background:#0c0f15;border-radius:6px;padding:7px";c.innerHTML='<i style="display:block;width:clamp(30px,8vw,52px);aspect-ratio:1;border-radius:50%;background:#2a0a0a"></i><i style="display:block;width:clamp(30px,8vw,52px);aspect-ratio:1;border-radius:50%;background:#2a0a0a"></i>';g.appendChild(c)}
 function lit(n){[].forEach.call(g.children,function(c,i){[].forEach.call(c.children,function(l){l.style.background=i<n?"radial-gradient(circle at 40% 35%,#ff6a5e,#e10600 55%,#8a0300)":"#2a0a0a";l.style.boxShadow=i<n?"0 0 20px 3px rgba(225,6,0,.45)":"none"})})}
-function show(){b.textContent=best?(best/1000).toFixed(3)+"s":"–"}show();
+var sh=document.getElementById("rxs"),U="https://pitwallf1.in/f1-reaction-test/";
+function msg(){var t=(best/1000).toFixed(3);return(best<=201?"I beat Bottas! My F1 start reaction is "+t+"s, quicker than his famous 0.201s. Can you beat me?":"My F1 start reaction is "+t+"s. Bottas did 0.201s. Can you beat me?")+" \\ud83c\\udfc1"}
+if(navigator.share){sh.innerHTML='<button type="button" class="main">Share my result</button>';sh.firstChild.onclick=function(){navigator.share({title:"Pit Wall F1",text:msg(),url:U}).catch(function(){})}}
+else{sh.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
+ sh.onclick=function(e){var k=e.target.getAttribute("data-k");if(!k)return;if(k==="wa")window.open("https://wa.me/?text="+encodeURIComponent(msg()+" "+U),"_blank","noopener");else if(k==="x")window.open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(U),"_blank","noopener");
+ else{var ok=sh.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(msg()+" "+U):Promise.reject()).then(function(){ok.hidden=false;setTimeout(function(){ok.hidden=true},1800)}).catch(function(){prompt("Copy this:",msg()+" "+U)})}}}
+function show(){b.textContent=best?(best/1000).toFixed(3)+"s":"–";sh.hidden=!best}show();
 function start(){st="arm";tt.textContent="";tt.style.color="";lit(0);m.textContent="Wait for it…";for(var i=1;i<=5;i++)(function(i){T.push(setTimeout(function(){lit(i);if(i===5){st="wait";T.push(setTimeout(function(){requestAnimationFrame(function(){if(st!=="wait")return;lit(0);t0=performance.now();st="go";m.textContent="GO!"})},200+Math.random()*2800))}},i*1000))})(i)}
 function press(){var now=performance.now();
  if(st==="idle"||st==="done")return start();
