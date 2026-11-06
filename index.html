@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://pitwallf1.in/assets/og-image.png">
 <meta name="theme-color" content="#0A0C11">
 <meta name="color-scheme" content="dark light">
-<script>try{var t=localStorage.getItem("pw_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{var t=localStorage.getItem("pw_theme");if(t!=="light")t="dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
@@ -4723,10 +4723,10 @@ function themeApply(t,save){
   let m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="light"?"#F3F4F7":"#0A0C11");
 }
 (function(){let t=document.documentElement.dataset.theme;
-  if(t!=="light"&&t!=="dark"){try{t=localStorage.getItem("pw_theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}
+  if(t!=="light"&&t!=="dark"){try{t=localStorage.getItem("pw_theme")}catch(e){}if(t!=="light")t="dark"}
   themeApply(t,false);
   $("#themeBtn").addEventListener("click",()=>{themeApply(themeNow()==="light"?"dark":"light",true);if(typeof route==="function")route();if(typeof tkDrawProfile==="function")tkDrawProfile()});
-  try{matchMedia("(prefers-color-scheme: light)").addEventListener("change",e=>{let saved=null;try{saved=localStorage.getItem("pw_theme")}catch(x){}if(!saved){themeApply(e.matches?"light":"dark",false);route()}})}catch(e){}
+  // dark is the default; light only when the visitor picks it with the toggle
 })();
 
 /* ================= ROUTING ================= */
