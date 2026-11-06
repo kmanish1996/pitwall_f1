@@ -6,8 +6,8 @@ An unofficial Formula 1 fan hub for the 2026 season. It's a single static page, 
 - **Race centre:** every 2026 race and sprint replayed lap by lap, with a timing tower, track map, sector times, tyres, race control messages and team radio
 - **Season replay:** animated points race and points-progression chart
 - **Calendar:** every round with sprint and race winners, lap records, flags and countdowns in your time zone
-- **Race travel:** official ticket prices in 11 currencies, a trip cost planner and first-timer tips
-- **Legal pages:** Privacy, Affiliate Disclosure, Terms, Contact, About
+- **Race travel:** circuit ticket prices (compiled by GP Destinations) in 11 currencies, a trip cost planner and first-timer tips
+- **Legal pages:** Privacy, Terms, Contact, About (no ads, no affiliate links)
 
 ## Run locally
 

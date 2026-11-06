@@ -72,6 +72,7 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .label{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--muted)}
+.pw-h1{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;margin:0;text-wrap:balance;line-height:1}
 
 /* ---------- top strip ---------- */
@@ -103,7 +104,7 @@ nav.tabs a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--red)}
   background:repeating-linear-gradient(105deg,transparent 0 46px,rgba(255,255,255,.018) 46px 48px);}
 .next .speed{position:absolute;right:-40px;top:-40px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--red-glow),transparent 65%);opacity:.35;pointer-events:none}
 .next-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
-.next h1{font-size:clamp(34px,6vw,58px);font-weight:900;font-style:italic;letter-spacing:-.005em;margin-top:6px}
+.next #nxName{font-size:clamp(34px,6vw,58px);font-weight:900;font-style:italic;letter-spacing:-.005em;margin-top:6px}
 .next .circuit{color:var(--muted);margin-top:6px}
 .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:11px;
   padding:3px 8px;border-radius:2px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
@@ -773,6 +774,11 @@ footer a{color:var(--muted)}
 .rx-hook small{display:block;margin-top:6px;color:var(--muted);font-size:11.5px;line-height:1.4}
 .q-confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
 .dash-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pw-share{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.dash-over .pw-share{justify-content:center;margin-top:10px}
+.pw-share button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);background:var(--panel-2);color:var(--fg);
+  font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.pw-share button:hover{border-color:var(--fg)}.pw-share button.main{background:var(--red);border-color:var(--red);color:#fff}
+.pw-share .ok{font-size:12.5px;color:var(--green)}
 /* ================= TRACKS ================= */
 .tk-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .tk-hero p{color:var(--muted);max-width:58ch;margin:8px 0 0}
@@ -1089,14 +1095,15 @@ nav.tabs a:first-child{padding-left:0}
 </header>
 
 <main class="wrap">
+  <h1 class="pw-h1">Pit Wall F1: live Formula 1 2026 standings, stats, race replays and 3D tracks</h1>
   <div class="hero">
     <div class="next" id="nextCard">
       <div class="speed" aria-hidden="true"></div>
       <div class="next-head">
         <div>
-          <div class="label" id="nxRound">Round 19 · Next up</div>
-          <h1 id="nxName">Mexico City Grand Prix</h1>
-          <div class="circuit" id="nxCircuit">Autódromo Hermanos Rodríguez</div>
+          <div class="label" id="nxRound">Next up</div>
+          <h2 id="nxName">Next Grand Prix</h2>
+          <div class="circuit" id="nxCircuit"></div>
         </div>
         <span class="chip" id="nxStatus">Upcoming</span>
       </div>
@@ -1422,6 +1429,7 @@ nav.tabs a:first-child{padding-left:0}
       </div>
       <div class="rx-side">
         <div class="rx-stat"><span class="label">Your best</span><b class="mono" id="rxBest">–</b></div>
+        <div class="rx-stat" id="rxShareBox" hidden><span class="label">Challenge your friends</span><div class="pw-share" id="rxShare" style="margin-top:8px"></div></div>
         <div class="rx-stat"><span class="label">Average (last 5)</span><b class="mono" id="rxAvg">–</b></div>
         <div class="rx-stat"><span class="label">Attempts</span><ol class="rx-hist mono" id="rxHist"></ol></div>
         <div class="rx-stat rx-hook"><span class="label">The time to beat</span><b class="mono" style="font-size:26px">0.201s</b>
@@ -1446,6 +1454,7 @@ nav.tabs a:first-child{padding-left:0}
           <div id="dashSub"></div>
           <div class="dash-teams" id="dashTeams" role="radiogroup" aria-label="Pick your team"></div>
           <div class="dash-btns"><button type="button" class="btn primary" id="dashGo">Leave the garage</button><button type="button" class="btn" id="dashTeamBtn" hidden>Change team</button></div>
+          <div class="pw-share" id="dashShare" hidden></div>
           <p class="dash-keys" id="dashKeys">Steer: ← → or A D · Brake: ↓ or S · ERS: ↑ or W · Pause: P<br>On a phone: hold the left or right side to steer, with BRAKE and ⚡ buttons at the bottom.</p>
         </div>
         <button type="button" class="dash-pad brake" id="dashBrake" aria-label="Brake" hidden>BRAKE</button>
@@ -2905,7 +2914,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-replay]");
 
 /* ================= SITE SETTINGS — edit these before you go live ================= */
 const SITE={
-  name:"Pit Wall",                         // site name shown in the footer and legal pages
+  name:"Pit Wall F1",                      // site name shown in the footer and legal pages
   owner:"Kanathil Manish Nair",            // who runs the site (the legal operator)
   email:"kmanish1996@gmail.com",           // public contact address
   instagram:"pitwall_f1_",                  // Instagram handle without @; leave "" to hide
@@ -2913,10 +2922,15 @@ const SITE={
   country:"India",                          // where you (the operator) are based; governs the Terms
   city:"[Your city]",                       // courts with jurisdiction under the Terms
   updated:"30 October 2026",                // "last updated" date for all legal pages
-  otherAffiliates:"[e.g. ticket or hotel partners, or delete this line's text]", // other affiliate programmes you use
-  analytics:"",                             // analytics tool you add later, e.g. "Google Analytics"; leave "" if none
-  radioPlayer:true                          // true = play team radio in the page, streamed from F1's servers; false = each clip opens on F1's site
+  analytics:"",                             // set automatically when goatcounter is filled in
+  goatcounter:"",                           // your GoatCounter code (the "xyz" in xyz.goatcounter.com); "" = no analytics
+  radioPlayer:false                         // true = play team radio in the page, streamed from F1's servers; false = each clip opens on F1's site
 };
+/* free, cookie-free visitor counts (GoatCounter) once SITE.goatcounter is set; app sections are counted as /#section */
+if(SITE.goatcounter){SITE.analytics="GoatCounter";
+  window.goatcounter={path:()=>location.pathname+location.hash};
+  const g=document.createElement("script");g.async=true;g.src="https://gc.zgo.at/count.js";g.dataset.goatcounter=`https://${SITE.goatcounter}.goatcounter.com/count`;document.head.appendChild(g);
+  addEventListener("hashchange",()=>{try{window.goatcounter.count&&window.goatcounter.count({path:location.pathname+location.hash})}catch(e){}})}
 /* ============================================================================ */
 const ph=v=>/^\[.*\]$/.test(String(v))?`<mark class="ph" title="Placeholder: edit SITE settings">${esc(v)}</mark>`:esc(v);
 const IG_ICON=`<svg class="ig-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>`;
@@ -2940,12 +2954,12 @@ LEGAL.privacy=()=>`
 <p>You can clear it at any time through your browser's settings (clear site data). The site works normally without it.</p>
 <h3>Information collected automatically</h3>
 <p>Like any website, our hosting provider records standard server logs when your browser requests a page: IP address, browser type, the page requested, referring page and time. These logs are used for security and to keep the site running, and are deleted on the host's normal schedule.</p>
-${SITE.analytics?`<p>We use ${esc(SITE.analytics)} to understand how many people visit and which pages they use. It may set cookies and collect your IP address, device and usage data. You can opt out through your browser settings or the provider's opt-out tools.</p>`:`<p>We do not use analytics, advertising trackers or tracking cookies. If that changes, we will update this policy first.</p>`}
+${SITE.analytics?`<p>We use ${esc(SITE.analytics)}, a privacy-friendly visitor counter, to see how many people visit and which pages they use. It sets no cookies and doesn't store your IP address or any personal data: it counts page views along with the referring site, browser, screen size and country. Blocking it in your browser doesn't affect the site.</p>`:`<p>We do not use analytics, advertising trackers or tracking cookies. If that changes, we will update this policy first.</p>`}
 <h2>Third-party services</h2>
 <ul>
 <li><b>Google Fonts.</b> Our typefaces load from Google's servers, so your browser sends your IP address to Google when the page loads. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
 <li><b>Formula 1 team radio.</b> When you play a team radio clip, your browser loads it straight from Formula 1's servers (livetiming.formula1.com), which receive your IP address as part of that request.</li>
-<li><b>External links.</b> Links to other sites, including any affiliate links and the official team radio clips, take you to services with their own privacy policies. We are not responsible for how they handle your data.</li>
+<li><b>External links.</b> Links to other sites, including the official team radio clips, take you to services with their own privacy policies. We are not responsible for how they handle your data.</li>
 </ul>
 <h2>Why we process information</h2>
 <p>We process the limited data above to run and secure the site, to answer your messages, and to meet legal obligations. Where the EU or UK GDPR applies, our legal bases are legitimate interests (running and securing the site), your consent (when you contact us) and legal obligation.</p>
@@ -2963,24 +2977,6 @@ ${SITE.analytics?`<p>We use ${esc(SITE.analytics)} to understand how many people
 <p>We may update this policy when the site changes. The date at the top shows the latest version.</p>
 <h2>Contact</h2>
 <p>Questions about privacy: ${ph(SITE.email)}.</p>`;
-
-LEGAL.affiliate=()=>`
-<h1>Affiliate Disclosure</h1>
-<p class="lg-upd">Last updated ${esc(SITE.updated)}</p>
-<p>${esc(SITE.name)} is a free, independent fan project. To help cover hosting and data costs, some links on this site may be affiliate links.</p>
-<h2>What that means</h2>
-<p>If you click an affiliate link and then buy something, we may earn a small commission from the seller. <b>This costs you nothing extra.</b> The price you pay is the same as if you went to the seller directly.</p>
-${SITE.otherAffiliates&&!/^\[e\.g/.test(SITE.otherAffiliates)?`<h2>Other partners</h2><p>We may also earn commissions through: ${esc(SITE.otherAffiliates)}.</p>`:`<h2>Other partners</h2><p>We may also join affiliate programmes for race tickets, travel or accommodation: ${ph(SITE.otherAffiliates)}.</p>`}
-<h2>Our editorial promise</h2>
-<ul>
-<li>Affiliate relationships never decide what we show. Ticket prices on the Race travel page are the official prices published by each circuit, sorted cheapest first, whether or not we earn anything.</li>
-<li>Grandstand picks and travel tips are our own opinions.</li>
-<li>We will not hide or reword information to favour a partner.</li>
-</ul>
-<h2>Prices and availability</h2>
-<p>Prices shown on partner sites can change at any time. The price and terms on the seller's site at the moment you buy are the ones that apply.</p>
-<h2>Questions</h2>
-<p>Email ${ph(SITE.email)} if you want to know whether a specific link earns us a commission.</p>`;
 
 LEGAL.terms=()=>`
 <h1>Terms and Conditions</h1>
@@ -3003,7 +2999,7 @@ LEGAL.terms=()=>`
 <h2>5. Intellectual property</h2>
 <p>The site's design, code, written content and illustrations (including the helmet badges and flag artwork) belong to ${ph(SITE.owner)} unless stated otherwise. Timing data is provided through the OpenF1 project. Official team radio recordings remain the property of their rights holders. We do not host or copy them: clips play directly from Formula 1's own servers, where they are published. If you are a rights holder and want material removed, email ${ph(SITE.email)} and we will act promptly.</p>
 <h2>6. Third-party links</h2>
-<p>The site links to other websites, including affiliate partners. We don't control those sites and aren't responsible for their content, products or practices.</p>
+<p>The site links to other websites. We don't control those sites and aren't responsible for their content, products or practices.</p>
 <h2>7. No warranty</h2>
 <p>The site is provided “as is” and “as available”, without warranties of any kind, express or implied, including accuracy, availability or fitness for a particular purpose.</p>
 <h2>8. Limitation of liability</h2>
@@ -3023,8 +3019,9 @@ LEGAL.about=()=>`
 <li><b>Standings and title fight.</b> Live championship tables, season replays and a calculator showing who can still win it.</li>
 <li><b>Race centre.</b> Every 2026 race and sprint replayed lap by lap, with a timing tower, track map, race control messages and team radio.</li>
 <li><b>Calendar.</b> Every round with results, sprint winners, lap records and countdowns in your time zone.</li>
-<li><b>Race travel.</b> Official ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.</li>
+<li><b>Race travel.</b> Ticket prices for every circuit in 11 currencies (circuit price lists compiled by GP Destinations), a trip cost planner and first-timer tips.</li>
 </ul>
+<p><b>No ads, no affiliate links, no paywall.</b> Pit Wall F1 earns nothing from what it shows you or where it sends you.</p>
 <h2>Who runs it</h2>
 <p>${esc(SITE.name)} is built and run by ${ph(SITE.owner)}, an independent F1 fan. It's not affiliated with Formula 1, the FIA or any team.</p>
 <h2>Where the data comes from</h2>
@@ -3066,7 +3063,7 @@ ${SITE.instagram?`<div class="ct-card ct-ig"><span class="label">Instagram</span
 </ul>
 <p>We usually reply within 3 working days.</p>`;
 
-const LEGAL_ROUTES={privacy:"Privacy Policy",affiliate:"Affiliate Disclosure",terms:"Terms and Conditions",contact:"Contact us",about:"About us"};
+const LEGAL_ROUTES={privacy:"Privacy Policy",terms:"Terms and Conditions",contact:"Contact us",about:"About us"};
 function renderLegal(r){
   const box=$("#legalBody");box.innerHTML=LEGAL[r]();
   const toc=$("#legalToc");const hs=[...box.querySelectorAll("h2")];
@@ -3168,10 +3165,29 @@ function rxStart(){
 }
 function rxStats(){
   rxLadder();
+  const sb=$("#rxShareBox");if(sb){sb.hidden=RX.best==null;if(RX.best!=null)pwShareMount($("#rxShare"),rxShareText,"https://pitwallf1.in/f1-reaction-test/")}
   $("#rxBest").textContent=RX.best===null?"–":(RX.best/1000).toFixed(3)+"s";
   const ok=RX.hist.filter(h=>!h.js);$("#rxAvg").textContent=ok.length?(ok.reduce((a,h)=>a+h.ms,0)/ok.length/1000).toFixed(3)+"s":"–";
   $("#rxHist").innerHTML=RX.hist.length?RX.hist.map(h=>h.js?'<li class="js">Jump start</li>':`<li${h.pb?' class="pb"':""}>${(h.ms/1000).toFixed(3)}s${h.pb?" PB":""}</li>`).join(""):'<li style="list-style:none;margin-left:-22px;color:var(--muted)">No attempts yet</li>';
 }
+
+/* ---------- share a game result: the phone's share sheet, or WhatsApp / X / copy ---------- */
+function pwShareMount(el,getText,url){
+  if(!el||el.dataset.ready)return;el.dataset.ready="1";
+  const msg=()=>getText()+" 🏁",full=()=>msg()+" "+url;
+  if(navigator.share){
+    el.innerHTML='<button type="button" class="main">Share my result</button>';
+    el.querySelector("button").onclick=()=>navigator.share({title:"Pit Wall F1",text:msg(),url}).catch(()=>{});
+    return}
+  el.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
+  el.onclick=e=>{const k=(e.target.closest("button")||{}).dataset;if(!k||!k.k)return;
+    if(k.k==="wa")open("https://wa.me/?text="+encodeURIComponent(full()),"_blank","noopener");
+    else if(k.k==="x")open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(url),"_blank","noopener");
+    else{const ok=el.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(full()):Promise.reject()).then(()=>{ok.hidden=false;setTimeout(()=>ok.hidden=true,1800)}).catch(()=>{prompt("Copy this:",full())})}};
+}
+const rxShareText=()=>{const t=(RX.best/1000).toFixed(3);return RX.best<=201?`I beat Bottas! My F1 start reaction is ${t}s, quicker than his famous 0.201s. Can you beat me?`:`My F1 start reaction is ${t}s. Bottas did 0.201s. Can you beat me?`};
+function dashShare(show){const el=$("#dashShare");if(!el)return;el.hidden=!show||D.best==null;
+  pwShareMount(el,()=>{const p=qPosition(D.best);return p===1?`I took POLE in Pit Wall Dash with a ${qFmt(D.best)}, beating the whole 2026 grid. Can you beat me?`:`I qualified P${p} on the 2026 F1 grid in Pit Wall Dash with a ${qFmt(D.best)}. Can you beat me?`},"https://pitwallf1.in/f1-qualifying-game/")}
 
 /* ---------- Pit Wall Dash: three-lap qualifying against the grid ---------- */
 /* qualifying physics: shared by the player, the reference lap and the ghost.
@@ -3306,7 +3322,7 @@ function dashIntro(){
   $("#dashTitle").textContent="Qualifying";
   $("#dashSub").innerHTML=`<p>Three flying laps around Pit Wall Park. Your best lap counts, and putting all four wheels off the track deletes the lap. The car follows the track: you steer across it, and if you arrive too fast you slide wide. Brake when the line turns red, and use ERS on the green straights.</p>
     <p class="q-target">${D.best==null?`Pole to beat: <b>${tg.code} ${qFmt(tg.t)}</b>`:p===1?`You're on pole with <b>${qFmt(D.best)}</b>. Can you go faster?`:`You're P${p}. Next to beat: <b>${tg.code} ${qFmt(tg.t)}</b>`}</p>`;
-  $("#dashTeams").hidden=false;$("#dashKeys").hidden=false;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent=D.best==null?"Leave the garage":"Go again";
+  $("#dashTeams").hidden=false;$("#dashKeys").hidden=false;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent=D.best==null?"Leave the garage":"Go again";dashShare(true);
 }
 function dashResize(){
   if(!D.cv)return;const wrap=$("#dashWrap"),host=wrap.parentElement;
@@ -3322,7 +3338,7 @@ function dashStart(){
   Object.assign(D,{state:"out",t:0,lap:0,lapT0:0,del:false,laps:[],sec:[null,null,null],secIdx:0,secT0:0,coolT:0,acc:0,fx:[],sBest:[null,null,null],target:qTarget()});
   D.keys={};D.touch.clear();
   D.fx.push({x:DW/2,y:DH*0.3,t:0,txt:"OUT LAP",c:"#fff",big:1});
-  $("#dashOver").hidden=true;$("#dashHud").hidden=false;$("#dashBoost").hidden=false;$("#dashBrake").hidden=false;
+  $("#dashOver").hidden=true;dashShare(false);$("#dashHud").hidden=false;$("#dashBoost").hidden=false;$("#dashBrake").hidden=false;
   ["#hudS1","#hudS2","#hudS3"].forEach(i=>$(i).className="");
   $("#hudDeltaL").textContent="Δ "+D.target.code;$("#hudBest").textContent="–";
   dashFocus();dashLoop();
@@ -3332,7 +3348,7 @@ function dashFocus(){const w=$("#dashWrap"),hh=(document.querySelector("header")
 function dashPause(){
   if(D.state!=="out"&&D.state!=="lap")return;D.prev=D.state;D.state="paused";cancelAnimationFrame(D.raf);
   $("#dashTitle").textContent="Paused";$("#dashSub").innerHTML="<p>Box, box. The session clock stops while you're in the garage.</p>";
-  $("#dashTeams").hidden=true;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent="Resume";$("#dashOver").hidden=false;
+  $("#dashTeams").hidden=true;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent="Resume";dashShare(false);$("#dashOver").hidden=false;
 }
 function dashResume(){if(D.state!=="paused")return;D.state=D.prev||"lap";D.keys={};$("#dashOver").hidden=true;dashLoop()}
 function dashLoop(){D.last=performance.now();cancelAnimationFrame(D.raf);const f=t=>{const dt=Math.min(0.05,(t-D.last)/1000);D.last=t;
@@ -3399,7 +3415,7 @@ function dashOver(){
     if(p===1)qConfetti();
   }
   qRenderSheet();
-  $("#dashTeams").hidden=true;$("#dashKeys").hidden=true;$("#dashTeamBtn").hidden=false;$("#dashGo").textContent="Go again";$("#dashOver").hidden=false;
+  $("#dashTeams").hidden=true;$("#dashKeys").hidden=true;$("#dashTeamBtn").hidden=false;$("#dashGo").textContent="Go again";dashShare(sb!=null);$("#dashOver").hidden=false;
 }
 /* pole position: a burst of purple, team colours and chequered flags over the game */
 function qConfetti(){
