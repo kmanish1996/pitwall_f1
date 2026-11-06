@@ -922,7 +922,8 @@ footer a{color:var(--muted)}
 @media (max-width:560px){.ln-grid{grid-template-columns:1fr}.ln-bar{grid-template-columns:110px 1fr}}
 
 /* ===== header: top bar (brand + actions) and a full-width tab row ===== */
-.strip-in{row-gap:0}
+.strip-in{row-gap:0;padding-top:14px}
+@media (max-width:640px){.strip-in{padding-top:10px}}
 .strip-in>.brand{margin-right:auto}
 nav.tabs{flex:1 1 100%;margin-left:0;order:9;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 nav.tabs.nav-fr{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
