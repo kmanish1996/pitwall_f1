@@ -1,0 +1,18 @@
+# Clean URLs for the app's sections: Netlify serves the app (index.html) and the app shows the right section.
+# Real pages (e.g. /circuits/, /learn-f1/, /f1-reaction-test/) are files, so they are never caught by these rules.
+/standings        /index.html  200
+/race-centre      /index.html  200
+/replay           /index.html  200
+/calendar         /index.html  200
+/tracks           /index.html  200
+/tracks/*         /index.html  200
+/title-fight      /index.html  200
+/travel           /index.html  200
+/games            /index.html  200
+/games/*          /index.html  200
+/learn            /index.html  200
+/learn/*          /index.html  200
+/privacy          /index.html  200
+/terms            /index.html  200
+/contact          /index.html  200
+/about            /index.html  200

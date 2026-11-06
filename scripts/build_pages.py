@@ -200,7 +200,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} F1 stats</a><a href="/f1-{YEAR}-season-review/">{YEAR} season review</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<nav aria-label="Legal"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms</a><a href="/contact">Contact us</a><a href="/about">About us</a></nav>
 <p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
 </div></footer>
 </body>
@@ -271,7 +271,7 @@ def main():
 <p class="lead">{drv(leader["code"])} {"is the " + str(YEAR) + " Formula 1 World Champion. He has" if champ_now else "leads the " + str(YEAR) + " drivers' championship with"} {leader["pts"]} points, {leader["pts"]-second["pts"]} more than {drv(second["code"])}. With {total-done} races left, {left} points are still available. {team_link(C[0][0])} lead the constructors' championship on {C[0][1]} points.</p>
 <h2>Drivers' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Nationality</th><th>Team</th><th class="n">Wins</th><th class="n">Points</th><th class="n">Gap</th></tr></thead><tbody>{rows}</tbody></table></div>
 <h2>Constructors' championship</h2><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{trows}</tbody></table></div>
-<p class="note" style="margin-top:16px">Want the title maths? <a href="/#title-fight">See who can still win the {YEAR} championship</a>, or <a href="/#replay">replay the season round by round</a>.</p>"""
+<p class="note" style="margin-top:16px">Want the title maths? <a href="/title-fight">See who can still win the {YEAR} championship</a>, or <a href="/replay">replay the season round by round</a>.</p>"""
     pages.append(page(f"/formula-1-standings-{YEAR}/", f"F1 {YEAR} standings: drivers' & constructors' table | {BRAND}",
                       f"Formula 1 {YEAR} championship standings after round {done}: {leader['first']} {leader['last']} leads on {leader['pts']} points. Full drivers' and constructors' tables with wins and gaps.",
                       body, [(f"{YEAR} standings", f"/formula-1-standings-{YEAR}/")]))
@@ -287,7 +287,7 @@ def main():
 <p class="sub">All {total} rounds of the {YEAR} Formula 1 World Championship, with circuits, dates, winners and session results.</p>
 <p class="lead">The {YEAR} season runs from the {e(gp_long(RACES[0]))} in March to the {e(gp_long(RACES[-1]))} in December, with six sprint weekends. The Saudi Arabian Grand Prix was cancelled and the Bahrain Grand Prix moved to Sepang, Malaysia.</p>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Circuit</th><th>Dates</th><th>Result</th></tr></thead><tbody>{''.join(crow)}</tbody></table></div>
-<p class="note" style="margin-top:16px">Session times in your own time zone, with live countdowns: <a href="/#calendar">open the interactive calendar</a>.</p>"""
+<p class="note" style="margin-top:16px">Session times in your own time zone, with live countdowns: <a href="/calendar">open the interactive calendar</a>.</p>"""
     pages.append(page(f"/f1-calendar-{YEAR}/", f"F1 {YEAR} calendar: every Grand Prix, date and result | {BRAND}",
                       f"The full {YEAR} Formula 1 calendar: all {total} Grands Prix with circuits, dates, sprint weekends, winners and results.",
                       body, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/")]))
@@ -311,7 +311,7 @@ def main():
                 g = r[4] or (fmt_race(r[6]) if i == 0 else ("+%.3f" % r[3] if isinstance(r[3], (int, float)) else (r[3] or "")))
                 cells = f"<td class='n'>{e(str(g))}</td><td class='n'>{int(r[5]) if r[5] else ''}</td>"
             trs.append(f'<tr style="--team:{x["col"]}"><td class="pos">{r[0] if r[0] is not None else "–"}</td><td><span class="sw"></span>{name}</td><td>{e(x["t"])}</td>{cells}</tr>')
-        return f'<div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Team</th>{head}</tr></thead><tbody>{"".join(trs)}</tbody></table></div><p style="margin:10px 0 0"><a class="btn" href="/?replay={sk}#race-centre">Watch the {e(kind.lower())} replay</a></p>'
+        return f'<div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Team</th>{head}</tr></thead><tbody>{"".join(trs)}</tbody></table></div><p style="margin:10px 0 0"><a class="btn" href="/race-centre?replay={sk}">Watch the {e(kind.lower())} replay</a></p>'
 
     for i, r in enumerate(RACES):
         rd = r["rd"]; name = gp_long(r); have = sess.get(rd, {})
@@ -351,7 +351,7 @@ def main():
             rec += f"""<h2>The track in numbers</h2>
 <div class="tiles"><div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Corners</span><b>{I["turns"]}</b></div><div class="tile"><span>Race laps</span><b>{laps_n}</b></div><div class="tile"><span>Top speed</span><b>{st["vmax"]} km/h</b></div><div class="tile"><span>Full throttle</span><b>{st["fullThrottle"]}%</b></div></div>
 <p>On the {src["year"]} pole lap, {e(src["driverName"])} ({e(src["team"])}) went round in {fmt_lap(TJ["lapTime"])}: a top speed of {st["vmax"]} km/h, flat out for {st["fullThrottle"]}% of the lap, {st["gearChanges"]} gear changes{f', and the slowest corner taken at {slow["v"]} km/h in {slow["gear"]}{"st" if slow["gear"] == 1 else "nd" if slow["gear"] == 2 else "rd" if slow["gear"] == 3 else "th"} gear' if slow else ''}. The lap climbs and falls {st["elev"]:.0f} metres from its lowest to its highest point.</p>"""
-        if csl: rec += f'<p class="note">About the track: <a href="/circuits/{csl}/">{e(r["circuit"])} map, facts and pole lap telemetry</a>, or <a href="/#tracks/{csl}">explore it in 3D</a>.</p>'
+        if csl: rec += f'<p class="note">About the track: <a href="/circuits/{csl}/">{e(r["circuit"])} map, facts and pole lap telemetry</a>, or <a href="/tracks/{csl}">explore it in 3D</a>.</p>'
         rp_links = " ".join(f'<a class="btn" href="{race_url(rd)}{"replay" if k == "Race" else "sprint-replay"}/">{"Race" if k == "Race" else "Sprint"} story &amp; lap chart →</a>' for k in ("Race", "Sprint") if have.get(k))
         if rp_links: rp_links = f'<p style="margin:14px 0">{rp_links}</p>'
         prev = f'<a href="{race_url(RACES[i-1]["rd"])}">← {e(gp_long(RACES[i-1]))}</a>' if i else "<span></span>"
@@ -398,7 +398,7 @@ def main():
             rbody = f"""<h1>{e(name)} {YEAR}: {word} replay &amp; lap-by-lap story</h1>
 <p class="sub">Round {rd} of {total} · {e(r["circuit"])}, {e(r["place"])} · {e(r["dates"])} {YEAR} · {S["total"]} laps</p>
 <p class="lead">{paras[0]}</p>
-<div class="rp-cta"><a class="btn primary" href="/?replay={sk}#race-centre">▶ Watch the full {word} replay</a><span class="note">Timing tower, track map, race control messages and team radio, lap by lap.</span></div>
+<div class="rp-cta"><a class="btn primary" href="/race-centre?replay={sk}">▶ Watch the full {word} replay</a><span class="note">Timing tower, track map, race control messages and team radio, lap by lap.</span></div>
 <h2>How the {word} unfolded</h2><div class="story">{"".join(f"<p>{x}</p>" for x in paras[1:])}</div>
 <h2>Lap by lap</h2>{RP.position_chart(d, S, f"Position of every driver on every lap of the {YEAR} {name} {word}")}
 <h2>Tyre strategy</h2>{RP.tyre_chart(d, S)}
@@ -748,7 +748,7 @@ def build_circuits(A, RACES, race_url, gp_long, drv, by_code, total, done):
         body = f"""<h1>{e(I['full'])}</h1>
 <p class="sub">{e(I['city'])} · Round {I['rd']} of the {YEAR} season{f' · <a href="{race_url(r["rd"])}">{e(gp)} {YEAR}</a>' if r else ''}</p>
 <p class="lead">{e(I['full'])} is a {I['length']:.3f} km Formula 1 circuit in {e(I['city'])} with {I['turns']} corners, first used for a world championship Grand Prix in {I['firstGP']}. {f"{e(winner)} won the {YEAR} {e(gp)} here." if winner else (f"The {YEAR} {e(gp)} is on {nice_date(r['race'])}." if r else "")} {e(src['driverName'])}'s {src['year']} pole lap of {lt} peaked at {st['vmax']} km/h.</p>
-<p><a class="btn" href="/#tracks/{sl}">Explore {e(I['name'])} in 3D</a></p>
+<p><a class="btn" href="/tracks/{sl}">Explore {e(I['name'])} in 3D</a></p>
 {track_svg(d)}
 <p class="note">Circuit outline drawn from {e(src['driverName'])}'s {src['year']} pole lap, with the four slowest corners marked.</p>
 <div class="tiles">{''.join(f'<div class="tile"><span>{k}</span><b>{e(str(v))}</b></div>' for k, v in tiles)}</div>
@@ -773,7 +773,7 @@ def build_circuits(A, RACES, race_url, gp_long, drv, by_code, total, done):
     if rows:
         body = f"""<h1>F1 circuits {YEAR}</h1>
 <p class="sub">All {len(rows)} tracks on the {YEAR} Formula 1 calendar, with length, corners, lap records and a 3D model of each.</p>
-<p class="lead">Every circuit is rebuilt from a real pole lap: its shape, its height and the car's speed and gears all the way round. Open any of them in 3D on <a href="/#tracks">Pit Wall</a>.</p>
+<p class="lead">Every circuit is rebuilt from a real pole lap: its shape, its height and the car's speed and gears all the way round. Open any of them in 3D on <a href="/tracks">Pit Wall</a>.</p>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Circuit</th><th>Location</th><th class="n">Length</th><th class="n">Corners</th><th class="n">Lap record</th><th class="n">First F1 race</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>"""
         out.append(page("/circuits/", f"F1 circuits {YEAR}: every track, map, length and lap record | {BRAND}",
                         f"All {len(rows)} Formula 1 circuits of {YEAR}: length, corners, lap records, first F1 race and an interactive 3D model of every track.",
@@ -789,35 +789,43 @@ RX_PAGE = """<h1>F1 reaction test</h1>
 <div id="rxg" style="display:flex;gap:clamp(8px,2vw,14px);background:#05070a;border:1px solid #1d2230;border-radius:8px;padding:12px" aria-hidden="true"></div>
 <div id="rxt" style="font:700 clamp(40px,9vw,68px)/1 var(--fm);min-height:1em" aria-live="polite"></div>
 <div id="rxm" style="color:var(--muted);text-align:center;max-width:44ch">Can you beat Bottas's 0.201s? Tap here, or press Space, to start. When all five lights go out, tap as fast as you can.</div>
+<div id="rxa" class="gm-actions" hidden><button type="button" class="gbtn" id="rxsb">Share result</button><button type="button" class="gbtn main" id="rxr">Retry</button></div>
 </div>
+<style>.gm-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}.gm-actions[hidden]{display:none}.gbtn{min-width:132px;height:40px;padding:0 16px;border-radius:3px;border:1px solid var(--line);background:var(--panel2,#1A1F2A);color:var(--fg);font:800 13px var(--fd);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.gbtn.main{background:var(--red);border-color:var(--red);color:#fff}
+.pw-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;flex-wrap:nowrap!important;z-index:5;display:flex;gap:6px;padding:8px;border-radius:20px;background:var(--panel);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap}.pw-menu button{height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:700 12px var(--fd);text-transform:uppercase;letter-spacing:.06em;cursor:pointer}.pw-menu button.main{background:var(--red);border-color:var(--red);color:#fff}.pw-menu .ok{font-size:12px;color:#2FD480;align-self:center}</style>
 <div class="tiles"><div class="tile"><span>Your best</span><b id="rxb">–</b></div><div class="tile"><span>The time to beat</span><b>0.201s</b></div><div class="tile"><span>Average human</span><b>~0.25s</b></div></div>
-<style>.pw-share{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-6px 0 18px}.pw-share button{height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:700 13px var(--fd);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.pw-share button.main{background:var(--red);border-color:var(--red);color:#fff}.pw-share .ok{font-size:12.5px;color:#2FD480}</style><div id="rxs" class="pw-share" hidden></div>
+
 <h2>How the F1 start works</h2>
 <p>At the start of a Grand Prix, five pairs of red lights come on one after another, a second apart. After all five are lit there's a short, random pause, then they all go out together. That's the signal to go. React too early and it's a jump start; the stewards hand out a penalty.</p>
 <h2>The famous 0.201s</h2>
 <p>At the 2017 Austrian Grand Prix, Valtteri Bottas got away so fast that rivals thought he had jumped the start. The FIA looked at the data, found he had reacted in 0.201 seconds, and let his win stand. His time was measured from lights out to the car moving; yours here is from lights out to your tap.</p>
 <h2>More to play</h2>
-<p>Try <a href="/f1-qualifying-game/">Pit Wall Dash</a>, a three-lap qualifying game against the 2026 grid, or open the <a href="/#games">games page</a> for your full history.</p>
+<p>Try <a href="/f1-qualifying-game/">Pit Wall Dash</a>, a three-lap qualifying game against the 2026 grid, or open the <a href="/games">games page</a> for your full history.</p>
 <script>
 (function(){var st="idle",T=[],t0=0,best=null;try{best=parseFloat(localStorage.getItem("pw_rx_best"))||null}catch(e){}
 var g=document.getElementById("rxg"),tt=document.getElementById("rxt"),m=document.getElementById("rxm"),b=document.getElementById("rxb"),box=document.getElementById("rx");
 for(var i=0;i<5;i++){var c=document.createElement("div");c.style.cssText="display:grid;gap:8px;background:#0c0f15;border-radius:6px;padding:7px";c.innerHTML='<i style="display:block;width:clamp(30px,8vw,52px);aspect-ratio:1;border-radius:50%;background:#2a0a0a"></i><i style="display:block;width:clamp(30px,8vw,52px);aspect-ratio:1;border-radius:50%;background:#2a0a0a"></i>';g.appendChild(c)}
 function lit(n){[].forEach.call(g.children,function(c,i){[].forEach.call(c.children,function(l){l.style.background=i<n?"radial-gradient(circle at 40% 35%,#ff6a5e,#e10600 55%,#8a0300)":"#2a0a0a";l.style.boxShadow=i<n?"0 0 20px 3px rgba(225,6,0,.45)":"none"})})}
-var sh=document.getElementById("rxs"),U="https://pitwallf1.in/f1-reaction-test/";
-function msg(){var t=(best/1000).toFixed(3);return(best<=201?"I beat Bottas! My F1 start reaction is "+t+"s, quicker than his famous 0.201s. Can you beat me?":"My F1 start reaction is "+t+"s. Bottas did 0.201s. Can you beat me?")+" \\ud83c\\udfc1"}
-if(navigator.share){sh.innerHTML='<button type="button" class="main">Share my result</button>';sh.firstChild.onclick=function(){navigator.share({title:"Pit Wall F1",text:msg(),url:U}).catch(function(){})}}
-else{sh.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
- sh.onclick=function(e){var k=e.target.getAttribute("data-k");if(!k)return;if(k==="wa")window.open("https://wa.me/?text="+encodeURIComponent(msg()+" "+U),"_blank","noopener");else if(k==="x")window.open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(U),"_blank","noopener");
- else{var ok=sh.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(msg()+" "+U):Promise.reject()).then(function(){ok.hidden=false;setTimeout(function(){ok.hidden=true},1800)}).catch(function(){prompt("Copy this:",msg()+" "+U)})}}}
-function show(){b.textContent=best?(best/1000).toFixed(3)+"s":"–";sh.hidden=!best}show();
-function start(){st="arm";tt.textContent="";tt.style.color="";lit(0);m.textContent="Wait for it…";for(var i=1;i<=5;i++)(function(i){T.push(setTimeout(function(){lit(i);if(i===5){st="wait";T.push(setTimeout(function(){requestAnimationFrame(function(){if(st!=="wait")return;lit(0);t0=performance.now();st="go";m.textContent="GO!"})},200+Math.random()*2800))}},i*1000))})(i)}
+var A=document.getElementById("rxa"),SB=document.getElementById("rxsb"),U="https://pitwallf1.in/f1-reaction-test/",last=null;
+function msg(){var t=(last/1000).toFixed(3);return(last<=201?"I beat Bottas! My F1 start reaction: "+t+"s, quicker than his famous 0.201s. Can you beat me?":"My F1 start reaction: "+t+"s. Bottas did 0.201s. Can you beat me?")+" \\ud83c\\udfc1"}
+function acts(show,share){A.hidden=!show;SB.hidden=!share;var m=A.querySelector(".pw-menu");if(m)m.remove()}
+A.addEventListener("pointerdown",function(e){e.stopPropagation()});
+document.getElementById("rxr").onclick=function(e){e.stopPropagation();start()};
+SB.onclick=function(e){e.stopPropagation();if(navigator.share){navigator.share({title:"Pit Wall F1",text:msg(),url:U}).catch(function(){});return}
+ var old=A.querySelector(".pw-menu");if(old){old.remove();return}var m=document.createElement("div");m.className="pw-menu";
+ m.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
+ m.onclick=function(ev){var k=ev.target.getAttribute("data-k");if(!k)return;ev.stopPropagation();if(k==="wa")window.open("https://wa.me/?text="+encodeURIComponent(msg()+" "+U),"_blank","noopener");else if(k==="x")window.open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(U),"_blank","noopener");
+  else{var ok=m.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(msg()+" "+U):Promise.reject()).then(function(){ok.hidden=false;setTimeout(function(){m.remove()},1400)}).catch(function(){prompt("Copy this:",msg()+" "+U)});return}m.remove()};
+ A.appendChild(m)};
+function show(){b.textContent=best?(best/1000).toFixed(3)+"s":"–"}show();
+function start(){acts(false);st="arm";tt.textContent="";tt.style.color="";lit(0);m.textContent="Wait for it…";for(var i=1;i<=5;i++)(function(i){T.push(setTimeout(function(){lit(i);if(i===5){st="wait";T.push(setTimeout(function(){requestAnimationFrame(function(){if(st!=="wait")return;lit(0);t0=performance.now();st="go";m.textContent="GO!"})},200+Math.random()*2800))}},i*1000))})(i)}
 function press(){var now=performance.now();
  if(st==="idle"||st==="done")return start();
- if(st==="arm"||st==="wait"){T.forEach(clearTimeout);T=[];st="done";lit(0);tt.textContent="JUMP START";tt.style.color="#E10600";m.textContent="You went before the lights went out. Tap to try again.";return}
- if(st==="go"){var ms=now-t0;st="done";if(ms<100){tt.textContent=(ms/1000).toFixed(3);tt.style.color="#E10600";m.textContent="Under 0.1s is a guess, not a reaction. Tap to go again.";return}
+ if(st==="arm"||st==="wait"){T.forEach(clearTimeout);T=[];st="done";lit(0);tt.textContent="JUMP START";tt.style.color="#E10600";m.textContent="You went before the lights went out. That's a drive-through penalty.";acts(true,false);return}
+ if(st==="go"){var ms=now-t0;st="done";if(ms<100){tt.textContent=(ms/1000).toFixed(3);tt.style.color="#E10600";m.textContent="Under 0.1s is a guess, not a reaction, so it doesn't count.";acts(true,false);return}
   var pb=!best||ms<best;if(pb){best=ms;try{localStorage.setItem("pw_rx_best",ms.toFixed(1))}catch(e){}}show();
   tt.textContent=(ms/1000).toFixed(3)+"s";tt.style.color=pb?"#B54BE8":ms<250?"#2FD480":"#F1F3F7";
-  var gap=(ms-201)/1000;m.textContent=(pb?"New personal best! ":"")+(ms<=201?"You beat Bottas by "+(-gap).toFixed(3)+"s! ":gap.toFixed(3)+"s off Bottas's 0.201s. ")+"Tap to go again."}}
+  var gap=(ms-201)/1000;m.textContent=(pb?"New personal best! ":"")+(ms<=201?"You beat Bottas by "+(-gap).toFixed(3)+"s! ":gap.toFixed(3)+"s off Bottas's 0.201s. ").trim();last=ms;acts(true,true)}}
 box.addEventListener("pointerdown",function(e){if(e.button>0)return;e.preventDefault();press()});
 box.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();if(!e.repeat)press()}});})();
 </script>"""
@@ -986,7 +994,7 @@ def build_learn_pages(L, A, D):
         if key == "wheel":
             ct = L.get("ctrl", [])
             dl = "".join(f"<dt><b>{e(c['name'])}</b></dt><dd>{e(c['txt'])}</dd>" for c in ct)
-            return (f'<p class="lead">A modern F1 steering wheel has 20 or more buttons, dials and paddles. These are the ones you\'ll hear about most. <a href="/#learn/wheel">Spin and click the 3D wheel</a>.</p><dl>{dl}</dl>',
+            return (f'<p class="lead">A modern F1 steering wheel has 20 or more buttons, dials and paddles. These are the ones you\'ll hear about most. <a href="/learn/wheel">Spin and click the 3D wheel</a>.</p><dl>{dl}</dl>',
                     [(f"What does the {c['name']} do on an F1 steering wheel?", c["txt"]) for c in ct if c["id"] in ("pit", "ot", "bbal", "diff", "lights", "clutch")])
         if key == "tech":
             tech = L.get("tech", [])
@@ -1002,7 +1010,7 @@ def build_learn_pages(L, A, D):
         content, qa = topic_body(key)
         prev = f'<a href="/learn-f1/{LEARN_TOPICS[n-1][0]}/">← {e(LEARN_TOPICS[n-1][2])}</a>' if n else '<a href="/learn-f1/">← Learn F1</a>'
         nxt = f'<a href="/learn-f1/{LEARN_TOPICS[n+1][0]}/">{e(LEARN_TOPICS[n+1][2])} →</a>' if n + 1 < len(LEARN_TOPICS) else '<a href="/learn-f1/">Learn F1 →</a>'
-        body = f"""<h1>{e(h1)}</h1><p class="sub">Learn F1 · {e(short)} · <a href="/#learn/{key}">Open the interactive version</a></p>
+        body = f"""<h1>{e(h1)}</h1><p class="sub">Learn F1 · {e(short)} · <a href="/learn/{key}">Open the interactive version</a></p>
 {content}{qa_html(qa) if qa else ''}
 <div class="pager">{prev}<a href="/learn-f1/">All topics</a>{nxt}</div>"""
         out.append(page(url, f"{SEO_TITLE.get(slug_, h1)} | {BRAND}", desc, body, [("Learn F1", "/learn-f1/"), (short, url)], article_ld(SITE + url, h1, desc),
@@ -1011,7 +1019,7 @@ def build_learn_pages(L, A, D):
 <p class="sub">New to F1, or want to understand what the commentators are on about? Start here.</p>
 <p class="lead">Formula 1 is the world's fastest racing championship: 11 teams, 22 drivers, 23 Grands Prix and cars that reach 350 km/h. These guides explain it all with animated pictures, from how a race weekend works to what every button on the steering wheel does.</p>
 <div class="lg">{''.join(f'<article><div class="tx"><div class="k">{i+1:02d}</div><h3><a href="/learn-f1/{s}/">{e(short)}</a></h3><p>{e(d)}</p></div></article>' for i, (s, k, short, h1, d) in enumerate(LEARN_TOPICS))}</div>
-<h2>Try it hands-on</h2><ul><li><a href="/#learn">The interactive Learn F1 section</a>: a 3D car and steering wheel you can spin and click.</li>
+<h2>Try it hands-on</h2><ul><li><a href="/learn">The interactive Learn F1 section</a>: a 3D car and steering wheel you can spin and click.</li>
 <li><a href="/f1-reaction-test/">F1 reaction test</a>: can you beat Valtteri Bottas's 0.201s start?</li>
 <li><a href="/f1-qualifying-game/">F1 qualifying game</a>: three laps against the 2026 grid.</li>
 <li><a href="/circuits/">Every 2026 circuit</a>, with maps and pole-lap telemetry.</li></ul>"""
@@ -1067,7 +1075,7 @@ def build_next_race(A, RACES, done, total, gp_long, race_url, drv):
 <div class="tiles"><div class="tile"><span>Lights out in</span><b id="cd">–</b></div><div class="tile"><span>Circuit</span><b style="font-size:16px">{e(nxt["circuit"])}</b></div>{f'<div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Race laps</span><b>{78 if I.get("rd") == 6 else math.ceil(305 / I["length"])}</b></div>' if I else ""}</div>
 <h2>Weekend schedule</h2>
 <div class="tbl"><table><thead><tr><th>Session</th><th>Day</th><th class="n">UTC</th><th class="n">Your time</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p style="margin-top:14px"><a class="btn" href="/#calendar">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/#tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
+<p style="margin-top:14px"><a class="btn" href="/calendar">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
 <h2>Championship so far</h2><p>After round {done}, see the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, every <a href="/f1-results-{YEAR}/">race result</a>, and the <a href="{race_url(nxt["rd"])}">{e(name)} page</a> for results as each session finishes.</p>
 <script>
 (function(){{document.querySelectorAll("[data-local]").forEach(function(el){{var d=new Date(el.getAttribute("data-local"));el.textContent=el.dataset.full?d.toLocaleString([], {{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}})+" your time":d.toLocaleString([], {{weekday:"short",hour:"2-digit",minute:"2-digit"}})}});
@@ -1157,7 +1165,7 @@ def build_stats(A, RACES, done, gp_long, race_url, drv, team_link, sess, sdata):
 <h2>Team stats</h2>
 <div class="tbl"><table><thead><tr><th>Team</th><th>Pts</th><th>Wins</th><th>Podiums</th><th>Poles</th><th>Fastest laps</th></tr></thead><tbody>{trows}</tbody></table></div>
 <h2>More F1 numbers</h2>
-<p>How fast do they go? See <a href="/how-fast-is-an-f1-car/">top speeds at every track</a>. Want the race by race story? See every <a href="/f1-results-{YEAR}/">{YEAR} result</a>, the <a href="/formula-1-standings-{YEAR}/">championship standings</a>, or relive any race lap by lap in the <a href="/#replay">race replay</a>.</p>
+<p>How fast do they go? See <a href="/how-fast-is-an-f1-car/">top speeds at every track</a>. Want the race by race story? See every <a href="/f1-results-{YEAR}/">{YEAR} result</a>, the <a href="/formula-1-standings-{YEAR}/">championship standings</a>, or relive any race lap by lap in the <a href="/replay">race replay</a>.</p>
 <p class="note">Stats are calculated from official timing data via OpenF1 and update automatically after every session. Fastest laps are the quickest race lap of each Grand Prix.</p>"""
     faq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
         {"@type": "Question", "name": f"Who has the most F1 wins in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{nm(mw)}, with {S[mw]['w']} wins after {done} rounds."}},
@@ -1193,7 +1201,7 @@ def build_speed(A):
 <li><b>2026 active aero:</b> on the straights the wings flatten to cut drag and raise top speed.</li></ul>
 <h2>Every 2026 circuit, by top speed</h2>
 <div class="tbl"><table><thead><tr><th>Circuit</th><th class="n">Top speed</th><th class="n">Average</th><th class="n">Slowest corner</th><th class="n">Full throttle</th><th>Pole lap</th></tr></thead><tbody>{table}</tbody></table></div>
-<p class="note" style="margin-top:10px">From OpenF1 telemetry of each weekend's pole lap (2025 for the circuits not yet raced in 2026; Las Vegas 2025 was wet). <a href="/#tracks">Ride along in 3D</a>.</p>"""
+<p class="note" style="margin-top:10px">From OpenF1 telemetry of each weekend's pole lap (2025 for the circuits not yet raced in 2026; Las Vegas 2025 was wet). <a href="/tracks">Ride along in 3D</a>.</p>"""
     qa = [("How fast is an F1 car?", f"F1 cars reach around 350 km/h. On 2026 pole laps the highest top speed was {fastest[2]['vmax']} km/h at {fastest[1]['full']}."),
           ("What is the fastest F1 track?", f"By average speed over a lap, {by_avg[0][1]['full']}: {by_avg[0][3]} km/h on the pole lap. {by_avg[1][1]['full']} was next at {by_avg[1][3]} km/h."),
           ("What is the slowest corner in F1?", f"{slow_corner[1]['full']}'s, taken at {slow_corner[2]['vmin']} km/h on the pole lap."),
