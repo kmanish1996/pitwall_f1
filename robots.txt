@@ -1,4 +1,4 @@
-# Pit Wall welcomes search engines and AI assistants.
+# Pit Wall F1 welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
 

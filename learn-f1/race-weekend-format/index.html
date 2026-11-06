@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>F1 race weekend &amp; points system explained | Pit Wall</title>
+<title>F1 race weekend &amp; points system explained | Pit Wall F1</title>
 <meta name="description" content="How an F1 weekend works: FP1, FP2, FP3, Sprint Qualifying, the Sprint, the Q1-Q2-Q3 qualifying knockout, the Grand Prix, and how many points each finish is worth.">
 <link rel="canonical" href="https://pitwallf1.in/learn-f1/race-weekend-format/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Pit Wall">
-<meta property="og:title" content="F1 race weekend &amp; points system explained | Pit Wall">
+<meta property="og:site_name" content="Pit Wall F1">
+<meta property="og:title" content="F1 race weekend &amp; points system explained | Pit Wall F1">
 <meta property="og:description" content="How an F1 weekend works: FP1, FP2, FP3, Sprint Qualifying, the Sprint, the Q1-Q2-Q3 qualifying knockout, the Grand Prix, and how many points each finish is worth.">
 <meta property="og:url" content="https://pitwallf1.in/learn-f1/race-weekend-format/">
 <meta property="og:image" content="https://pitwallf1.in/assets/og/learn-weekend.jpg">
@@ -18,9 +18,12 @@
 <meta name="twitter:image" content="https://pitwallf1.in/assets/og/learn-weekend.jpg">
 <meta name="theme-color" content="#0A0C11">
 <meta name="color-scheme" content="dark light">
-<script>try{var t=localStorage.getItem("pw_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{var t=localStorage.getItem("pw_theme");if(t!=="light")t="dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
@@ -30,9 +33,9 @@
 a{color:var(--red);font-weight:700;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:3px}
 .w{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header.top{border-bottom:1px solid var(--line);background:var(--bg)}
-header.top .w{display:flex;align-items:center;gap:20px;min-height:60px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;color:var(--fg);font:italic 900 24px/1 var(--fd);text-transform:uppercase}
-.brand:hover{text-decoration:none}.brand i{width:22px;height:22px;background:conic-gradient(#F1F3F7 25%,#0A0C11 0 50%,#F1F3F7 0 75%,#0A0C11 0) 0 0/11px 11px;border:1px solid #F1F3F7;transform:skewX(-12deg)}
+header.top .w{display:flex;align-items:center;gap:4px 20px;min-height:60px;flex-wrap:wrap;padding-top:14px;padding-bottom:6px}
+.brand{display:flex;align-items:flex-start;gap:10px;color:var(--fg);font:italic 900 24px/1 var(--fd);text-transform:uppercase}
+.brand:hover{text-decoration:none}.brand i{flex:none;margin-top:var(--flag-top,.12em);width:22px;height:22px;background:conic-gradient(#F1F3F7 25%,#0A0C11 0 50%,#F1F3F7 0 75%,#0A0C11 0) 0 0/11px 11px;border:1px solid #F1F3F7;transform:skewX(-12deg)}
 .brand b{color:var(--red)}.brand small{display:block;font:500 11px var(--fb);text-transform:none;color:var(--muted);margin-top:2px}
 nav.main{display:flex;gap:4px 16px;flex-wrap:wrap;margin-left:auto}
 nav.main a{color:var(--muted);font:700 14px var(--fd);text-transform:uppercase;letter-spacing:.08em}nav.main a:hover{color:var(--fg);text-decoration:none}
@@ -45,7 +48,7 @@ h3{font-size:20px;font-weight:800;margin:24px 0 8px}
 .lead{font-size:18px;max-width:72ch}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:18px 0}
 .tile{background:var(--panel);padding:12px 14px}.tile span{display:block;font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
-.tile b{font:700 24px var(--fm)}
+.tile b{font:700 24px var(--fm)}.tile small{display:block;color:var(--muted);font-size:12px}
 .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th{font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:left;padding:9px 10px;background:var(--panel2);white-space:nowrap}
@@ -80,13 +83,13 @@ footer.site nav a{color:var(--fg);font-weight:500}
 .tyres{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.tyres div{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px}
 @media (prefers-reduced-motion:reduce){.ln-dash,.ln-air,.ln-diff .ln-whl{animation:none}}
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pitwallf1.in/"}, {"@type": "ListItem", "position": 2, "name": "Learn F1", "item": "https://pitwallf1.in/learn-f1/"}, {"@type": "ListItem", "position": 3, "name": "Race weekend & points", "item": "https://pitwallf1.in/learn-f1/race-weekend-format/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "F1 race weekend explained: practice, qualifying, sprint and the points system", "description": "How an F1 weekend works: FP1, FP2, FP3, Sprint Qualifying, the Sprint, the Q1-Q2-Q3 qualifying knockout, the Grand Prix, and how many points each finish is worth.", "url": "https://pitwallf1.in/learn-f1/race-weekend-format/", "inLanguage": "en", "dateModified": "2026-11-05", "author": {"@type": "Organization", "name": "Pit Wall", "url": "https://pitwallf1.in/"}, "publisher": {"@type": "Organization", "name": "Pit Wall", "url": "https://pitwallf1.in/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How many points do you get for winning an F1 race?", "acceptedAnswer": {"@type": "Answer", "text": "25 points. The top ten score 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1."}}, {"@type": "Question", "name": "How many points is an F1 sprint worth?", "acceptedAnswer": {"@type": "Answer", "text": "The top eight in a Sprint score 8, 7, 6, 5, 4, 3, 2 and 1 points."}}, {"@type": "Question", "name": "How does F1 qualifying work?", "acceptedAnswer": {"@type": "Answer", "text": "It's a knockout in three parts. In Q1 (18 minutes) the slowest six of the 22 cars are eliminated, in Q2 (15 minutes) another six go, and the top ten fight for pole position in Q3 (12 minutes)."}}, {"@type": "Question", "name": "What is a sprint race in F1?", "acceptedAnswer": {"@type": "Answer", "text": "A short race of about 100 km on Saturday of a sprint weekend, roughly a third of a Grand Prix, with no compulsory pit stop. Its grid is set by Sprint Qualifying on Friday."}}, {"@type": "Question", "name": "How long is an F1 race?", "acceptedAnswer": {"@type": "Answer", "text": "About 305 km (Monaco is shorter), usually around 90 minutes, with a two-hour limit."}}, {"@type": "Question", "name": "Is there a point for the fastest lap?", "acceptedAnswer": {"@type": "Answer", "text": "Not any more. The bonus point for the fastest lap was dropped from 2025."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pitwallf1.in/"}, {"@type": "ListItem", "position": 2, "name": "Learn F1", "item": "https://pitwallf1.in/learn-f1/"}, {"@type": "ListItem", "position": 3, "name": "Race weekend & points", "item": "https://pitwallf1.in/learn-f1/race-weekend-format/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "F1 race weekend explained: practice, qualifying, sprint and the points system", "description": "How an F1 weekend works: FP1, FP2, FP3, Sprint Qualifying, the Sprint, the Q1-Q2-Q3 qualifying knockout, the Grand Prix, and how many points each finish is worth.", "url": "https://pitwallf1.in/learn-f1/race-weekend-format/", "inLanguage": "en", "dateModified": "2026-11-06", "author": {"@type": "Organization", "name": "Pit Wall F1", "url": "https://pitwallf1.in/"}, "publisher": {"@type": "Organization", "name": "Pit Wall F1", "url": "https://pitwallf1.in/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How many points do you get for winning an F1 race?", "acceptedAnswer": {"@type": "Answer", "text": "25 points. The top ten score 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1."}}, {"@type": "Question", "name": "How many points is an F1 sprint worth?", "acceptedAnswer": {"@type": "Answer", "text": "The top eight in a Sprint score 8, 7, 6, 5, 4, 3, 2 and 1 points."}}, {"@type": "Question", "name": "How does F1 qualifying work?", "acceptedAnswer": {"@type": "Answer", "text": "It's a knockout in three parts. In Q1 (18 minutes) the slowest six of the 22 cars are eliminated, in Q2 (15 minutes) another six go, and the top ten fight for pole position in Q3 (12 minutes)."}}, {"@type": "Question", "name": "What is a sprint race in F1?", "acceptedAnswer": {"@type": "Answer", "text": "A short race of about 100 km on Saturday of a sprint weekend, roughly a third of a Grand Prix, with no compulsory pit stop. Its grid is set by Sprint Qualifying on Friday."}}, {"@type": "Question", "name": "How long is an F1 race?", "acceptedAnswer": {"@type": "Answer", "text": "About 305 km (Monaco is shorter), usually around 90 minutes, with a two-hour limit."}}, {"@type": "Question", "name": "Is there a point for the fastest lap?", "acceptedAnswer": {"@type": "Answer", "text": "Not any more. The bonus point for the fastest lap was dropped from 2025."}}]}</script>
 </head>
 <body>
 <header class="top"><div class="w">
-<a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
+<a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>F1</b><small>The unofficial Formula 1 fan hub</small></span></a>
 <button type="button" class="theme-btn" aria-label="Switch between light and dark mode" title="Light / dark mode" onclick="var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('pw_theme',t)}catch(e){}"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
-<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-2026/">Standings</a><a href="/f1-results-2026/">Results</a><a href="/f1-calendar-2026/">Calendar</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
+<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-2026/">Standings</a><a href="/f1-results-2026/">Results</a><a href="/f1-stats-2026/">Stats</a><a href="/f1-calendar-2026/">Calendar</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
 </div></header>
 <main class="w">
 <div class="crumbs"><a href="/">Home</a> › <a href="/learn-f1/">Learn F1</a> › Race weekend &amp; points</div>
@@ -109,8 +112,8 @@ footer.site nav a{color:var(--fg);font-weight:500}
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-2026/">2026 results</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-2026/">2026 standings</a><a href="/f1-calendar-2026/">2026 calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="https://www.instagram.com/pitwall_f1_/" rel="noopener">Instagram</a></nav>
-<p>©2026 Pit Wall. Timing data from OpenF1.</p>
+<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-2026/">2026 results</a><a href="/f1-stats-2026/">2026 F1 stats</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-2026/">2026 standings</a><a href="/f1-calendar-2026/">2026 calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="https://www.instagram.com/pitwall_f1_/" rel="noopener">Instagram</a></nav>
+<p>©2026 Pit Wall F1. Timing data from OpenF1.</p>
 </div></footer>
 </body>
 </html>
