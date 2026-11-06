@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, timezone
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://pitwallf1.in"
 YEAR = 2026
-BRAND = "Pit Wall"
+BRAND = "Pit Wall F1"
 INSTAGRAM = "https://www.instagram.com/pitwall_f1_/"
 NATIONS = {"ITA": "Italy", "GBR": "United Kingdom", "NED": "Netherlands", "MON": "Monaco", "AUS": "Australia", "FRA": "France",
            "NZL": "New Zealand", "ARG": "Argentina", "GER": "Germany", "BRA": "Brazil", "ESP": "Spain", "THA": "Thailand",
@@ -91,7 +91,7 @@ h3{font-size:20px;font-weight:800;margin:24px 0 8px}
 .lead{font-size:18px;max-width:72ch}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:18px 0}
 .tile{background:var(--panel);padding:12px 14px}.tile span{display:block;font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
-.tile b{font:700 24px var(--fm)}
+.tile b{font:700 24px var(--fm)}.tile small{display:block;color:var(--muted);font-size:12px}
 .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th{font:700 11px var(--fd);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:left;padding:9px 10px;background:var(--panel2);white-space:nowrap}
@@ -155,8 +155,11 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 <meta name="twitter:image" content="{og_image(path, og)}">
 <meta name="theme-color" content="#0A0C11">
 {THEME_HEAD}
+<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>{CSS}</style>
@@ -165,9 +168,9 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 </head>
 <body>
 <header class="top"><div class="w">
-<a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>26</b><small>The unofficial Formula 1 fan hub</small></span></a>
+<a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>F1</b><small>The unofficial Formula 1 fan hub</small></span></a>
 {THEME_BTN}
-<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-results-{YEAR}/">Results</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
+<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-results-{YEAR}/">Results</a><a href="/f1-stats-{YEAR}/">Stats</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
 </div></header>
 <main class="w">
 <div class="crumbs">{crumb_html}</div>
@@ -175,7 +178,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} F1 stats</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
 <p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
 </div></footer>
 </body>
@@ -417,6 +420,7 @@ def main():
     # ---------- pages people search for every weekend ----------
     pages += build_next_race(A, RACES, done, total, gp_long, race_url, drv)
     pages += build_results(A, RACES, done, gp_long, race_url, drv, sess, sdata)
+    pages += build_stats(A, RACES, done, gp_long, race_url, drv, team_link, sess, sdata)
     pages += build_speed(A)
     # ---------- machine-readable data, llms.txt, robots.txt ----------
     write_api(A, D, C, RACES, wins, race_url, gp_long, dslug, tslug, done, total, champ_now)
@@ -854,6 +858,62 @@ def build_results(A, RACES, done, gp_long, race_url, drv, sess, sdata):
                  body, [(f"{YEAR} results", f"/f1-results-{YEAR}/")], {"@context": "https://schema.org", "@type": "ItemList", "name": f"F1 {YEAR} race results", "itemListElement": items}, og="results")]
 
 
+def build_stats(A, RACES, done, gp_long, race_url, drv, team_link, sess, sdata):
+    """Season stats leaderboard: wins, podiums, poles, fastest laps, sprint wins, retirements, points."""
+    D = A["DRIVERS"]; teams = {d["code"]: d["team"] for d in D}
+    S = {d["code"]: {"pts": d["pts"], "w": 0, "pod": 0, "pole": 0, "fl": 0, "spr": 0, "dnf": 0, "st": 0, "best": None} for d in D}
+    T = {}
+    def add(code, k):
+        if code not in S: return
+        S[code][k] += 1
+        tt = T.setdefault(teams[code], {"w": 0, "pod": 0, "pole": 0, "fl": 0}); tt[k] += 1
+    for r in RACES[:done]:
+        have = sess.get(r["rd"], {})
+        if have.get("Race"):
+            d = sdata(have["Race"]); dm = {x["n"]: x["c"] for x in d["drivers"]}
+            for row in d["result"]:
+                c = dm.get(row[1])
+                if c not in S: continue
+                ok = row[0] and not row[4]  # classified finisher
+                if row[4] != "DNS": S[c]["st"] += 1
+                if row[4] == "DNF": S[c]["dnf"] += 1
+                if ok and (S[c]["best"] is None or row[0] < S[c]["best"]): S[c]["best"] = row[0]
+                if ok and row[0] == 1: add(c, "w")
+                if ok and row[0] <= 3: add(c, "pod")
+        if have.get("Qualifying"):
+            d = sdata(have["Qualifying"]); dm = {x["n"]: x["c"] for x in d["drivers"]}
+            if d["result"]: add(dm.get(d["result"][0][1]), "pole")
+        if r.get("flBy"): add(r["flBy"], "fl")
+    for v in A["SPRINT_WIN"].values():
+        if v[0] in S: S[v[0]]["spr"] += 1
+    order = sorted(S, key=lambda c: (-S[c]["pts"], -S[c]["w"], -S[c]["pod"]))
+    lead = lambda k: max(order, key=lambda c: (S[c][k], S[c]["pts"]))
+    mw, mp, mpo, mfl = lead("w"), lead("pod"), lead("pole"), lead("fl")
+    winners = sorted({c for c in S if S[c]["w"]}, key=lambda c: -S[c]["w"])
+    rows = "".join(f'<tr><td class="pos">{i + 1}</td><td>{drv(c)}</td><td>{team_link(teams[c])}</td><td class="n">{S[c]["pts"]}</td><td class="n">{S[c]["w"]}</td><td class="n">{S[c]["pod"]}</td><td class="n">{S[c]["pole"]}</td><td class="n">{S[c]["fl"]}</td><td class="n">{S[c]["spr"]}</td><td class="n">{S[c]["best"] or "–"}</td><td class="n">{S[c]["dnf"]}</td></tr>' for i, c in enumerate(order))
+    trows = "".join(f'<tr><td>{team_link(t)}</td><td class="n">{pts}</td><td class="n">{T.get(t, {}).get("w", 0)}</td><td class="n">{T.get(t, {}).get("pod", 0)}</td><td class="n">{T.get(t, {}).get("pole", 0)}</td><td class="n">{T.get(t, {}).get("fl", 0)}</td></tr>' for t, pts in A["CONSTRUCTORS"])
+    nm = lambda c: f'{D[[x["code"] for x in D].index(c)]["first"]} {D[[x["code"] for x in D].index(c)]["last"]}'
+    last = RACES[done - 1]
+    body = f"""<h1>F1 stats {YEAR}</h1>
+<p class="sub">Every driver and team of the {YEAR} season by the numbers: wins, podiums, poles, fastest laps, sprint wins and retirements.</p>
+<p class="lead">After {done} of {A["TOTAL"]} rounds (latest: the {e(gp_long(last))}), {drv(mw)} leads the way with <b>{S[mw]["w"]} wins</b>. {len(winners)} different drivers have won a Grand Prix this year, and {drv(mpo)} has the most pole positions with {S[mpo]["pole"]}.</p>
+<div class="tiles"><div class="tile"><span>Most wins</span><b>{S[mw]["w"]}</b><small>{e(nm(mw))}</small></div><div class="tile"><span>Most podiums</span><b>{S[mp]["pod"]}</b><small>{e(nm(mp))}</small></div><div class="tile"><span>Most poles</span><b>{S[mpo]["pole"]}</b><small>{e(nm(mpo))}</small></div><div class="tile"><span>Most fastest laps</span><b>{S[mfl]["fl"]}</b><small>{e(nm(mfl))}</small></div><div class="tile"><span>Different winners</span><b>{len(winners)}</b><small>{done} races</small></div></div>
+<h2>Driver stats</h2>
+<div class="tbl"><table><thead><tr><th>#</th><th>Driver</th><th>Team</th><th>Pts</th><th>Wins</th><th>Podiums</th><th>Poles</th><th>Fastest laps</th><th>Sprint wins</th><th>Best finish</th><th>DNFs</th></tr></thead><tbody>{rows}</tbody></table></div>
+<h2>Team stats</h2>
+<div class="tbl"><table><thead><tr><th>Team</th><th>Pts</th><th>Wins</th><th>Podiums</th><th>Poles</th><th>Fastest laps</th></tr></thead><tbody>{trows}</tbody></table></div>
+<h2>More F1 numbers</h2>
+<p>How fast do they go? See <a href="/how-fast-is-an-f1-car/">top speeds at every track</a>. Want the race by race story? See every <a href="/f1-results-{YEAR}/">{YEAR} result</a>, the <a href="/formula-1-standings-{YEAR}/">championship standings</a>, or relive any race lap by lap in the <a href="/#replay">race replay</a>.</p>
+<p class="note">Stats are calculated from official timing data via OpenF1 and update automatically after every session. Fastest laps are the quickest race lap of each Grand Prix.</p>"""
+    faq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": f"Who has the most F1 wins in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{nm(mw)}, with {S[mw]['w']} wins after {done} rounds."}},
+        {"@type": "Question", "name": f"Who has the most pole positions in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{nm(mpo)}, with {S[mpo]['pole']} poles after {done} rounds."}},
+        {"@type": "Question", "name": f"How many different drivers have won an F1 race in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{len(winners)}: " + ", ".join(f"{nm(c)} ({S[c]['w']})" for c in winners) + "."}}]}
+    return [page(f"/f1-stats-{YEAR}/", f"F1 stats {YEAR}: wins, podiums, poles & fastest laps | {BRAND}",
+                 f"Formula 1 {YEAR} stats for every driver and team: wins, podiums, pole positions, fastest laps, sprint wins and DNFs after {done} rounds. {nm(mw)} leads with {S[mw]['w']} wins.",
+                 body, [(f"{YEAR} stats", f"/f1-stats-{YEAR}/")], faq, og="stats")]
+
+
 def build_speed(A):
     TI = A.get("TRACK_INFO") or {}
     rows = []
@@ -928,9 +988,9 @@ def write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url):
     nxt = next((r for r in RACES if r["rd"] == done + 1), None)
     last = RACES[done - 1]
     TI = A.get("TRACK_INFO") or {}
-    txt = f"""# Pit Wall
+    txt = f"""# Pit Wall F1
 
-> Pit Wall (pitwallf1.in) is an unofficial Formula 1 fan hub for the {YEAR} season: championship standings, every race result, lap-by-lap replays with team radio, an interactive 3D model of every circuit built from real pole-lap telemetry, the calendar with lap records, race travel planning, and F1 games. Data comes from OpenF1 and updates automatically after every session.
+> Pit Wall F1 (pitwallf1.in) is an unofficial Formula 1 fan hub for the {YEAR} season: championship standings, every race result, lap-by-lap replays with team radio, an interactive 3D model of every circuit built from real pole-lap telemetry, the calendar with lap records, race travel planning, and F1 games. Data comes from OpenF1 and updates automatically after every session.
 
 Current state (after round {done} of {total}, the {gp_long(last)}):
 - {"World champion" if champ_now else "Championship leader"}: {D[0]['first']} {D[0]['last']} ({D[0]['team']}), {D[0]['pts']} points; P2 {D[1]['first']} {D[1]['last']} {D[1]['pts']}; P3 {D[2]['first']} {D[2]['last']} {D[2]['pts']}.
@@ -946,6 +1006,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 - [World champions]({SITE}/formula-1-world-champions/): every champion since 1950
 - [Next F1 race]({SITE}/next-f1-race/): date, start time and full weekend schedule of the next Grand Prix
 - [{YEAR} results]({SITE}/f1-results-{YEAR}/): winner, podium, pole and sprint winner of every race so far
+- [{YEAR} F1 stats]({SITE}/f1-stats-{YEAR}/): wins, podiums, poles, fastest laps, sprint wins and DNFs for every driver and team
 - [How fast is an F1 car?]({SITE}/how-fast-is-an-f1-car/): top speed, average speed and slowest corner at every circuit, from pole-lap telemetry
 - [Learn F1]({SITE}/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test]({SITE}/f1-reaction-test/): the five-light start, playable in the browser
@@ -973,7 +1034,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 
 
 def write_robots():
-    txt = f"""# Pit Wall welcomes search engines and AI assistants.
+    txt = f"""# Pit Wall F1 welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
 

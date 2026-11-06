@@ -20,6 +20,7 @@ CARDS = {
     "learn-tech": ("2026 F1 tech explained", "Active aero · Overtake mode · ERS", "⚙️", "#2FD480"),
     "learn-people": ("Who's who in F1", "Drivers · Engineers · Pit crews · Marshals", "👥", "#00D7B6"),
     "next-race": ("Next F1 race", "Date, start time and weekend schedule", "⏱️", "#E10600"),
+    "stats": ("F1 2026 stats", "Wins · Podiums · Poles · Fastest laps", "📈", "#00D7B6"),
     "results": ("F1 2026 results", "Every winner, podium and pole", "🥇", "#E9C46A"),
     "speed": ("How fast is an F1 car?", "Top speeds at every 2026 track", "💨", "#3C8DFF"),
     "circuits": ("Every F1 circuit in 3D", "Maps, facts and pole-lap telemetry", "🗺️", "#2FD480"),
