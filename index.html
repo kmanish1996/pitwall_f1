@@ -776,7 +776,10 @@ footer a{color:var(--muted)}
 .rx-hook small{display:block;margin-top:6px;color:var(--muted);font-size:11.5px;line-height:1.4}
 .q-confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
 .dash-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.pw-share{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.dash-over .pw-share{justify-content:center;margin-top:10px}
+.gm-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}.rx-stage .gm-actions{margin-top:2px}
+.gm-actions .btn{min-width:132px}.dash-team-link{display:block;margin:10px auto 0;font-size:13px}
+.pw-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;flex-wrap:nowrap!important;z-index:5;display:flex;gap:6px;padding:8px;border-radius:20px;background:var(--panel);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap}
+.pw-share{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .pw-share button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);background:var(--panel-2);color:var(--fg);
   font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
 .pw-share button:hover{border-color:var(--fg)}.pw-share button.main{background:var(--red);border-color:var(--red);color:#fff}
@@ -1079,19 +1082,19 @@ nav.tabs a:first-child{padding-left:0}
 
 <header class="strip">
   <div class="strip-in">
-    <a class="brand" href="./" aria-label="Pit Wall F1 home"><i aria-hidden="true"></i><span class="brand-txt"><span class="brand-name">Pit Wall <b>F1</b></span><span class="brand-tag">The unofficial Formula 1 fan hub</span></span></a>
+    <a class="brand" href="/" aria-label="Pit Wall F1 home"><i aria-hidden="true"></i><span class="brand-txt"><span class="brand-name">Pit Wall <b>F1</b></span><span class="brand-tag">The unofficial Formula 1 fan hub</span></span></a>
     <button type="button" class="champ-btn" id="champBtn" aria-label="Formula 1 world champions since 1950"><svg class="troph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v1.5A4.5 4.5 0 0 1 16.9 12 5.5 5.5 0 0 1 13 15.4V18h3v3H8v-3h3v-2.6A5.5 5.5 0 0 1 7.1 12 4.5 4.5 0 0 1 3 7.5V6a1 1 0 0 1 1-1h3V3Zm10 4v3.2A2.5 2.5 0 0 0 19 7.6V7h-2ZM5 7v.6A2.5 2.5 0 0 0 7 10.2V7H5Z" fill="currentColor"/></svg><span>Champions</span></button>
-    <a href="#learn" class="learn-cta" id="learnCta"><i aria-hidden="true"></i><span class="full">Wanna learn about F1?</span><span class="short">Learn F1</span></a>
+    <a href="/learn" class="learn-cta" id="learnCta"><i aria-hidden="true"></i><span class="full">Wanna learn about F1?</span><span class="short">Learn F1</span></a>
     <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to light mode" title="Light / dark mode"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
     <nav class="tabs" aria-label="Sections">
-      <a href="#standings">Standings</a>
-      <a href="#race-centre">Race centre</a>
-      <a href="#replay">Season replay</a>
-      <a href="#calendar">Calendar</a>
-      <a href="#tracks">Tracks</a>
-      <a href="#title-fight">Title fight</a>
-      <a href="#travel">Race travel</a>
-      <a href="#games">Games</a>
+      <a href="/standings">Standings</a>
+      <a href="/race-centre">Race centre</a>
+      <a href="/replay">Season replay</a>
+      <a href="/calendar">Calendar</a>
+      <a href="/tracks">Tracks</a>
+      <a href="/title-fight">Title fight</a>
+      <a href="/travel">Race travel</a>
+      <a href="/games">Games</a>
     </nav>
   </div>
 </header>
@@ -1428,10 +1431,10 @@ nav.tabs a:first-child{padding-left:0}
         <div class="rx-big mono" id="rxTime" aria-live="polite"></div>
         <div class="rx-ladder" id="rxLadder" aria-hidden="true"><div class="track"></div></div>
         <div class="rx-msg" id="rxMsg">Can you beat Bottas's 0.201s? Tap here, or press Space, to start. When all five lights go out, tap as fast as you can.</div>
+        <div class="gm-actions" id="rxActions" hidden><button type="button" class="btn" id="rxShareBtn">Share result</button><button type="button" class="btn primary" id="rxRetry">Retry</button></div>
       </div>
       <div class="rx-side">
         <div class="rx-stat"><span class="label">Your best</span><b class="mono" id="rxBest">–</b></div>
-        <div class="rx-stat" id="rxShareBox" hidden><span class="label">Challenge your friends</span><div class="pw-share" id="rxShare" style="margin-top:8px"></div></div>
         <div class="rx-stat"><span class="label">Average (last 5)</span><b class="mono" id="rxAvg">–</b></div>
         <div class="rx-stat"><span class="label">Attempts</span><ol class="rx-hist mono" id="rxHist"></ol></div>
         <div class="rx-stat rx-hook"><span class="label">The time to beat</span><b class="mono" style="font-size:26px">0.201s</b>
@@ -1455,8 +1458,8 @@ nav.tabs a:first-child{padding-left:0}
           <h3 id="dashTitle">Qualifying</h3>
           <div id="dashSub"></div>
           <div class="dash-teams" id="dashTeams" role="radiogroup" aria-label="Pick your team"></div>
-          <div class="dash-btns"><button type="button" class="btn primary" id="dashGo">Leave the garage</button><button type="button" class="btn" id="dashTeamBtn" hidden>Change team</button></div>
-          <div class="pw-share" id="dashShare" hidden></div>
+          <div class="dash-btns gm-actions"><button type="button" class="btn" id="dashShareBtn" hidden>Share result</button><button type="button" class="btn primary" id="dashGo">Leave the garage</button></div>
+          <button type="button" class="linkish dash-team-link" id="dashTeamBtn" hidden>Change team</button>
           <p class="dash-keys" id="dashKeys">Steer: ← → or A D · Brake: ↓ or S · ERS: ↑ or W · Pause: P<br>On a phone: hold the left or right side to steer, with BRAKE and ⚡ buttons at the bottom.</p>
         </div>
         <button type="button" class="dash-pad brake" id="dashBrake" aria-label="Brake" hidden>BRAKE</button>
@@ -1511,7 +1514,7 @@ nav.tabs a:first-child{padding-left:0}
       <h3 class="ab-h">Pushing everything to the limit</h3>
       <div class="ab-limit" id="lnLimit"></div>
 
-      <div class="ab-more"><div><b>How does a race weekend work?</b><span>Practice, qualifying, sprints, the race and the points.</span></div><a href="#learn/weekend" class="btn primary" data-goto="weekend">Race weekend →</a></div>
+      <div class="ab-more"><div><b>How does a race weekend work?</b><span>Practice, qualifying, sprints, the race and the points.</span></div><a href="/learn/weekend" class="btn primary" data-goto="weekend">Race weekend →</a></div>
 
       <h3 class="ab-h">A brief history</h3>
       <ol class="ab-hist" id="lnHist"></ol>
@@ -1538,7 +1541,7 @@ nav.tabs a:first-child{padding-left:0}
       </ul></div><div class="ln-card"><ul class="ln-list">
         <li><b>Ties are broken by countback:</b> whoever has more wins is ahead; if that's level, more second places, and so on.</li>
         <li><b>A shortened race</b> (for example, stopped early by rain) can pay reduced points, depending on how much of it was completed.</li>
-        <li>Points decide both world championships: see the <a href="#learn/trophies" data-goto="trophies">Trophies</a> tab.</li>
+        <li>Points decide both world championships: see the <a href="/learn/trophies" data-goto="trophies">Trophies</a> tab.</li>
       </ul></div></div>
     </div>
 
@@ -2161,7 +2164,7 @@ async function openSessionResults(sk,from){
   $("#drBody").innerHTML=`<div class="sr-head"><span class="sr-kind">${esc(d.type)}</span><h3>${R.short?FLAG(GP_FLAG[R.short],30):""}<span>${esc(nm)}</span></h3>
     <span class="note">${R.circuit?esc(R.circuit)+" · ":""}${new Date(d.date).toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"})}${lead?` · ${isRace?"Winner":"Fastest"}: <b style="color:var(--fg)">${esc(lead.f)} ${esc(lead.l)}</b>`:""}</span></div>
     <div class="sr-scroll"><table class="sr-tab"><thead><tr><th>Pos</th><th>Driver</th>${head}<th>Laps</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <div class="sr-act"><a href="#race-centre" class="btn primary" data-replay="${sk}">Watch the replay</a><span class="note">Official classification from F1 timing via OpenF1.</span></div>`;
+    <div class="sr-act"><a href="/race-centre" class="btn primary" data-replay="${sk}">Watch the replay</a><span class="note">Official classification from F1 timing via OpenF1.</span></div>`;
 }
 document.addEventListener("click",e=>{const b=e.target.closest("#sessions [data-sess]");if(!b)return;openSessionResults(+b.dataset.sess,b)});
 document.addEventListener("click",e=>{if(e.target.closest("#drBody [data-replay]"))closeDriver()});
@@ -2255,7 +2258,7 @@ function renderCalendar(animate){
     else if(pendingResult){foot=`<div class="winner"><span class="note">Race finished. The result appears with the next data update.</span></div>`}
     else{const days=Math.ceil((r.race-now)/864e5);foot=`<div class="winner"><span class="togo">${days<=1?"<b>Race day</b>":`<b>${days}</b> days to lights out`} · ${fmtDay.format(r.race)} ${fmtTime.format(r.race)}</span></div>`}
     const sl=sessionsFor(r.rd);
-    if(sl.length)foot+=`<div class="replay-btns">${sl.map(x=>`<a href="#race-centre" class="replay-btn${x.type==="Race"||x.type==="Sprint"?"":" sm"}" data-replay="${x.sk}">${x.type==="Race"?"Race replay":x.type==="Sprint"?"Sprint replay":esc(SESSION_CODE[x.type]||x.type)}</a>`).join("")}</div>`;
+    if(sl.length)foot+=`<div class="replay-btns">${sl.map(x=>`<a href="/race-centre" class="replay-btn${x.type==="Race"||x.type==="Sprint"?"":" sm"}" data-replay="${x.sk}">${x.type==="Race"?"Race replay":x.type==="Sprint"?"Sprint replay":esc(SESSION_CODE[x.type]||x.type)}</a>`).join("")}</div>`;
     const rpx=(sl.find(x=>x.type==="Race")||sl[sl.length-1]||{}).sk;if(rpx){c.dataset.replay=rpx;c.tabIndex=0;c.setAttribute("role","link");c.setAttribute("aria-label",`${r.name}: open the replay`);c.classList.add("has-replay")}
     c.innerHTML=`<span class="rn">${String(r.rd).padStart(2,"0")}</span>
       <h3>${FLAG(GP_FLAG[r.short],26)}<span>${esc(r.name)}</span></h3><div class="cir">${esc(r.circuit)} · ${esc(r.place)}</div>
@@ -2562,13 +2565,13 @@ function roundForSession(s){
 }
 async function rcLoadIndex(){
   if(RCX.idx)return RCX.idx;
-  const res=await fetch("data/index.json");RCX.idx=await res.json();
+  const res=await fetch("/data/index.json");RCX.idx=await res.json();
   RCX.idx.forEach(s=>{s.round=roundForSession(s)});
   RCX.idx=RCX.idx.filter(s=>s.round).sort((a,b)=>new Date(b.date)-new Date(a.date));
   return RCX.idx;
 }
 async function rcLoad(sk){
-  if(!RCX.cache[sk]){const r=await fetch(`data/${sk}.json`);if(!r.ok)throw new Error("load");RCX.cache[sk]=rcPrep(await r.json())}
+  if(!RCX.cache[sk]){const r=await fetch(`/data/${sk}.json`);if(!r.ok)throw new Error("load");RCX.cache[sk]=rcPrep(await r.json())}
   return RCX.cache[sk];
 }
 function rcPrep(d){
@@ -2912,7 +2915,7 @@ $("#rcEnd").onclick=()=>{if(RCX.d){RCX.t=RCX.d.timed?RCX.d.tMax-1:RCX.d.tFinish+
 $("#rcFeedTabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;RCX.feed=b.dataset.f;$("#rcFeedTabs").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));rcFeeds(true)});
 $("#rcRadioAuto").onchange=e=>{RCX.radioAuto=e.target.checked};
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("article[data-replay]")){e.preventDefault();e.target.click()}});
-document.addEventListener("click",e=>{const b=e.target.closest("[data-replay]");if(!b)return;e.preventDefault();RCX.pending=+b.dataset.replay;if(location.hash==="#race-centre")rcInit();else location.hash="race-centre"});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-replay]");if(!b)return;e.preventDefault();RCX.pending=+b.dataset.replay;if(location.pathname==="/race-centre")rcInit();else go("/race-centre")});
 
 /* ================= SITE SETTINGS — edit these before you go live ================= */
 const SITE={
@@ -2931,9 +2934,8 @@ const SITE={
 /* free, cookie-free visitor counts (GoatCounter) once SITE.goatcounter is set; app sections are counted as /#section */
 if(/[?&]embed=dash\b/.test(location.search))document.documentElement.classList.add("embed");
 if(SITE.goatcounter&&!document.documentElement.classList.contains("embed")){SITE.analytics="GoatCounter";
-  window.goatcounter={path:()=>location.pathname+location.hash};
-  const g=document.createElement("script");g.async=true;g.src="https://gc.zgo.at/count.js";g.dataset.goatcounter=`https://${SITE.goatcounter}.goatcounter.com/count`;document.head.appendChild(g);
-  addEventListener("hashchange",()=>{try{window.goatcounter.count&&window.goatcounter.count({path:location.pathname+location.hash})}catch(e){}})}
+  window.goatcounter={path:()=>location.pathname};
+  const g=document.createElement("script");g.async=true;g.src="https://gc.zgo.at/count.js";g.dataset.goatcounter=`https://${SITE.goatcounter}.goatcounter.com/count`;document.head.appendChild(g);}
 /* ============================================================================ */
 const ph=v=>/^\[.*\]$/.test(String(v))?`<mark class="ph" title="Placeholder: edit SITE settings">${esc(v)}</mark>`:esc(v);
 const IG_ICON=`<svg class="ig-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>`;
@@ -3036,7 +3038,7 @@ LEGAL.about=()=>`
 <li>Exchange rates: <a href="https://www.x-rates.com" target="_blank" rel="noopener">X-Rates</a></li>
 </ul>
 <h2>Get in touch</h2>
-<p>Spotted a wrong result, have an idea or just want to talk racing? <a href="#contact">Contact us</a>${SITE.instagram?` or find us on Instagram at <a href="https://www.instagram.com/${encodeURIComponent(SITE.instagram)}/" target="_blank" rel="noopener">@${esc(SITE.instagram)}</a>`:""}.</p>`;
+<p>Spotted a wrong result, have an idea or just want to talk racing? <a href="/contact">Contact us</a>${SITE.instagram?` or find us on Instagram at <a href="https://www.instagram.com/${encodeURIComponent(SITE.instagram)}/" target="_blank" rel="noopener">@${esc(SITE.instagram)}</a>`:""}.</p>`;
 
 LEGAL.contact=()=>`
 <h1>Contact us</h1>
@@ -3074,7 +3076,7 @@ function renderLegal(r){
   $("#p-legal").classList.toggle("no-toc",hs.length<=2);
   toc.innerHTML=hs.length>2?`<div class="label">On this page</div>`+hs.map(h=>`<a href="#" data-to="${h.id}">${esc(h.textContent)}</a>`).join(""):"";
   toc.querySelectorAll("a").forEach(a=>a.onclick=e=>{e.preventDefault();document.getElementById(a.dataset.to).scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
-  document.querySelectorAll(".lg-links a").forEach(a=>{if(a.getAttribute("href")==="#"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  document.querySelectorAll(".lg-links a").forEach(a=>{if(a.getAttribute("href")==="/"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   if(r==="contact"){
     $("#ctCopy").onclick=()=>{const t=SITE.email;const done=()=>$("#ctCopied").textContent="Copied.";
       try{navigator.clipboard.writeText(t).then(done,()=>{selectText($("#ctMail"));$("#ctCopied").textContent="Selected. Press Ctrl+C or ⌘C to copy."})}catch(e){selectText($("#ctMail"))}};
@@ -3090,24 +3092,30 @@ function renderFooter(){
   $("#siteFoot").innerHTML=`
     <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
     ${SITE.instagram?`<a class="ig" href="https://www.instagram.com/${encodeURIComponent(SITE.instagram)}/" target="_blank" rel="noopener">${IG_ICON}<span>Follow <b>@${esc(SITE.instagram)}</b> on Instagram</span></a>`:""}
-    <nav class="lg-links" aria-label="Explore">${[["/next-f1-race/","Next F1 race"],["/formula-1-standings-2026/","2026 standings"],["/f1-results-2026/","2026 results"],["/how-fast-is-an-f1-car/","How fast is an F1 car?"],["/f1-calendar-2026/","2026 calendar"],["/drivers/","Drivers"],["/teams/","Teams"],["/formula-1-world-champions/","World champions"],["/circuits/","F1 circuits"],["/f1-reaction-test/","F1 reaction test"],["/f1-qualifying-game/","Qualifying game"],["/learn-f1/","Learn F1"]].map(([h,t])=>`<a href="${h}">${t}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
-    <nav class="lg-links" aria-label="Legal">${Object.entries(LEGAL_ROUTES).map(([k,v])=>`<a href="#${k}">${v}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
+    <nav class="lg-links" aria-label="Legal">${Object.entries(LEGAL_ROUTES).map(([k,v])=>`<a href="/${k}">${v}</a>`).join('<span aria-hidden="true">|</span>')}</nav>
     <p>©${new Date().getFullYear()} ${esc(SITE.name)}. All rights reserved.</p>`;
 }
 
 /* ================= GAMES ================= */
 const GM_STORE={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 let gmReady=false,gmTab="rx";
+const GM_PATH={rx:"reaction-test",race:"qualifying"};
 function gmInit(){
+  const sub=location.pathname.split("/")[2],fromUrl=sub===GM_PATH.rx?"rx":sub===GM_PATH.race?"race":null;
   if(!gmReady){gmReady=true;rxSetup();dashSetup();
     document.querySelectorAll(".gm-tabs [role=tab]").forEach(b=>b.addEventListener("click",()=>gmShow(b.id==="gmTabRace"?"race":"rx")));
-    const want=(GM_STORE.get("pw_gm_tab")==="race")?"race":"rx";gmShow(want)}
+    gmShow(fromUrl||((GM_STORE.get("pw_gm_tab")==="race")?"race":"rx"))}
+  else if(fromUrl&&fromUrl!==gmTab)gmShow(fromUrl);
+  else gmUrl();
   if(gmTab==="race")dashResize();
 }
+/* each game has its own address: /games/reaction-test and /games/qualifying */
+function gmUrl(){if(document.documentElement.classList.contains("embed")||!/^\/games(\/|$)/.test(location.pathname))return;
+  const want="/games/"+GM_PATH[gmTab];if(location.pathname!==want)history.replaceState(null,"",want+location.search)}
 function gmShow(t){
   gmTab=t;GM_STORE.set("pw_gm_tab",t);
   $("#gmTabRx").setAttribute("aria-selected",t==="rx");$("#gmTabRace").setAttribute("aria-selected",t==="race");
-  $("#gmRx").hidden=t!=="rx";$("#gmRace").hidden=t!=="race";
+  $("#gmRx").hidden=t!=="rx";$("#gmRace").hidden=t!=="race";gmUrl();
   if(t==="race"){rxCancel();dashResize()}else dashPause();
 }
 function gmLeave(){if(!gmReady)return;rxCancel();dashPause()}
@@ -3118,7 +3126,9 @@ const RX={state:"idle",timers:[],t0:0,hist:[],best:null};
 function rxSetup(){
   const b=parseFloat(GM_STORE.get("pw_rx_best"));RX.best=isFinite(b)?b:null;rxStats();
   const st=$("#rxStage");
-  st.addEventListener("pointerdown",e=>{if(e.button>0)return;e.preventDefault();rxPress()});
+  st.addEventListener("pointerdown",e=>{if(e.button>0)return;if(e.target.closest(".gm-actions"))return;e.preventDefault();rxPress()});
+  $("#rxRetry").addEventListener("click",e=>{e.stopPropagation();rxActions(false);rxStart()});
+  $("#rxShareBtn").addEventListener("click",e=>{e.stopPropagation();pwShare(e.currentTarget,rxShareText(RX.last),"https://pitwallf1.in/f1-reaction-test/")});
   document.addEventListener("keydown",e=>{
     if(!gmVisible()||gmTab!=="rx"||e.repeat)return;
     if(e.key!==" "&&e.key!=="Enter")return;
@@ -3127,25 +3137,27 @@ function rxSetup(){
   });
 }
 function rxCols(n){document.querySelectorAll("#rxStage .rx-col").forEach((c,i)=>c.classList.toggle("on",i<n))}
-function rxCancel(){RX.timers.forEach(clearTimeout);RX.timers=[];if(RX.state==="arming"||RX.state==="waiting"||RX.state==="go"){RX.state="idle";rxCols(0);rxMsg("Tap here, or press Space, to start.")}}
+function rxCancel(){rxActions(false);RX.timers.forEach(clearTimeout);RX.timers=[];if(RX.state==="arming"||RX.state==="waiting"||RX.state==="go"){RX.state="idle";rxCols(0);rxMsg("Tap here, or press Space, to start.")}}
 function rxMsg(h){$("#rxMsg").innerHTML=h}
+/* Share + Retry under the result; Retry only after a jump start */
+function rxActions(show,share){const a=$("#rxActions");if(!a)return;a.hidden=!show;$("#rxShareBtn").hidden=!share;const m=a.querySelector(".pw-menu");if(m)m.remove()}
 function rxBig(t,cls){const b=$("#rxTime");b.textContent=t;b.className="rx-big mono"+(cls?" "+cls:"")}
 function rxPress(){
   const now=performance.now();
   if(RX.state==="idle"||RX.state==="done"){rxStart();return}
   if(RX.state==="arming"||RX.state==="waiting"){
     RX.timers.forEach(clearTimeout);RX.timers=[];RX.state="done";rxCols(0);
-    rxBig("JUMP START","bad");rxMsg("You went before the lights went out. That's a <b>drive-through penalty</b>. Tap to try again.");
+    rxBig("JUMP START","bad");rxMsg("You went before the lights went out. That's a <b>drive-through penalty</b>.");rxActions(true,false);
     RX.hist.unshift({js:true});RX.hist=RX.hist.slice(0,5);rxStats();return}
   if(RX.state==="go"){
     const ms=Math.max(0,now-RX.t0);RX.state="done";
-    if(ms<100){rxBig((ms/1000).toFixed(3),"bad");rxMsg("Under 0.1 s is a guess, not a reaction, so it doesn't count. Tap to go again.");
+    if(ms<100){rxBig((ms/1000).toFixed(3),"bad");rxMsg("Under 0.1 s is a guess, not a reaction, so it doesn't count.");rxActions(true,false);
       RX.hist.unshift({js:true});RX.hist=RX.hist.slice(0,5);rxStats();return}
     const pb=RX.best===null||ms<RX.best;
     if(pb){RX.best=ms;GM_STORE.set("pw_rx_best",ms.toFixed(1))}
     RX.hist.unshift({ms,pb});RX.hist=RX.hist.slice(0,5);
     rxBig((ms/1000).toFixed(3)+"s",pb?"pb":ms<250?"good":"");
-    rxMsg((pb?"<b>New personal best!</b> ":"")+rxVerdict(ms)+" Tap to go again.");rxStats();
+    RX.last=ms;rxMsg((pb?"<b>New personal best!</b> ":"")+rxVerdict(ms));rxActions(true,true);rxStats();
   }
 }
 function rxVerdict(ms){
@@ -3162,35 +3174,36 @@ function rxLadder(){
   el.innerHTML='<div class="track"></div>'+mk(201,"bot","BOTTAS<br>0.201")+mk(250,"","HUMAN<br>0.250")+(RX.best!=null?mk(RX.best,"you","YOU "+(RX.best/1000).toFixed(3)):"");
 }
 function rxStart(){
+  rxActions(false);
   RX.state="arming";rxBig("");rxCols(0);rxMsg("Wait for it…");
   for(let i=1;i<=5;i++)RX.timers.push(setTimeout(()=>{rxCols(i);if(i===5){RX.state="waiting";
     RX.timers.push(setTimeout(()=>requestAnimationFrame(()=>{if(RX.state!=="waiting")return;rxCols(0);RX.t0=performance.now();RX.state="go";rxMsg("<b>GO!</b>")}),200+Math.random()*2800))}},i*1000));
 }
 function rxStats(){
   rxLadder();
-  const sb=$("#rxShareBox");if(sb){sb.hidden=RX.best==null;if(RX.best!=null)pwShareMount($("#rxShare"),rxShareText,"https://pitwallf1.in/f1-reaction-test/")}
   $("#rxBest").textContent=RX.best===null?"–":(RX.best/1000).toFixed(3)+"s";
   const ok=RX.hist.filter(h=>!h.js);$("#rxAvg").textContent=ok.length?(ok.reduce((a,h)=>a+h.ms,0)/ok.length/1000).toFixed(3)+"s":"–";
   $("#rxHist").innerHTML=RX.hist.length?RX.hist.map(h=>h.js?'<li class="js">Jump start</li>':`<li${h.pb?' class="pb"':""}>${(h.ms/1000).toFixed(3)}s${h.pb?" PB":""}</li>`).join(""):'<li style="list-style:none;margin-left:-22px;color:var(--muted)">No attempts yet</li>';
 }
 
-/* ---------- share a game result: the phone's share sheet, or WhatsApp / X / copy ---------- */
-function pwShareMount(el,getText,url){
-  if(!el||el.dataset.ready)return;el.dataset.ready="1";
-  const msg=()=>getText()+" 🏁",full=()=>msg()+" "+url;
-  if(navigator.share){
-    el.innerHTML='<button type="button" class="main">Share my result</button>';
-    el.querySelector("button").onclick=()=>navigator.share({title:"Pit Wall F1",text:msg(),url}).catch(()=>{});
-    return}
-  el.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
-  el.onclick=e=>{const k=(e.target.closest("button")||{}).dataset;if(!k||!k.k)return;
-    if(k.k==="wa")open("https://wa.me/?text="+encodeURIComponent(full()),"_blank","noopener");
-    else if(k.k==="x")open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(url),"_blank","noopener");
-    else{const ok=el.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(full()):Promise.reject()).then(()=>{ok.hidden=false;setTimeout(()=>ok.hidden=true,1800)}).catch(()=>{prompt("Copy this:",full())})}};
+/* ---------- share a game result: the phone's share sheet, or a WhatsApp / X / Copy menu ---------- */
+function pwShare(btn,text,url){
+  const msg=text+" 🏁",full=msg+" "+url;
+  if(navigator.share){navigator.share({title:"Pit Wall F1",text:msg,url}).catch(()=>{});return}
+  const box=btn.parentElement,old=box.querySelector(".pw-menu");if(old){old.remove();return}
+  const m=document.createElement("div");m.className="pw-menu pw-share";
+  m.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
+  m.addEventListener("pointerdown",e=>e.stopPropagation());
+  m.onclick=e=>{const k=(e.target.closest("button")||{}).dataset;if(!k||!k.k)return;e.stopPropagation();
+    if(k.k==="wa")open("https://wa.me/?text="+encodeURIComponent(full),"_blank","noopener");
+    else if(k.k==="x")open("https://x.com/intent/post?text="+encodeURIComponent(msg)+"&url="+encodeURIComponent(url),"_blank","noopener");
+    else{const ok=m.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(full):Promise.reject()).then(()=>{ok.hidden=false;setTimeout(()=>m.remove(),1400)}).catch(()=>{prompt("Copy this:",full)});return}
+    m.remove()};
+  box.appendChild(m);
 }
-const rxShareText=()=>{const t=(RX.best/1000).toFixed(3);return RX.best<=201?`I beat Bottas! My F1 start reaction is ${t}s, quicker than his famous 0.201s. Can you beat me?`:`My F1 start reaction is ${t}s. Bottas did 0.201s. Can you beat me?`};
-function dashShare(show){const el=$("#dashShare");if(!el)return;el.hidden=!show||D.best==null;
-  pwShareMount(el,()=>{const p=qPosition(D.best);return p===1?`I took POLE in Pit Wall Dash with a ${qFmt(D.best)}, beating the whole 2026 grid. Can you beat me?`:`I qualified P${p} on the 2026 F1 grid in Pit Wall Dash with a ${qFmt(D.best)}. Can you beat me?`},"https://pitwallf1.in/f1-qualifying-game/")}
+const rxShareText=ms=>{const t=(ms/1000).toFixed(3);return ms<=201?`I beat Bottas! My F1 start reaction: ${t}s, quicker than his famous 0.201s. Can you beat me?`:`My F1 start reaction: ${t}s. Bottas did 0.201s. Can you beat me?`};
+function dashShare(show){const b=$("#dashShareBtn");if(b)b.hidden=!show;const m=document.querySelector("#dashOver .pw-menu");if(m)m.remove()}
+function dashShareText(){const t=D.lastSb,p=qPosition(t);return p===1?`I took POLE in Pit Wall Dash with a ${qFmt(t)}, beating the whole 2026 F1 grid. Can you beat me?`:`I qualified P${p} on the 2026 F1 grid in Pit Wall Dash with a ${qFmt(t)}. Can you beat me?`}
 
 /* ---------- Pit Wall Dash: three-lap qualifying against the grid ---------- */
 /* qualifying physics: shared by the player, the reference lap and the ghost.
@@ -3292,6 +3305,7 @@ function dashSetup(){
   tw.addEventListener("click",e=>{const b=e.target.closest("[data-team]");if(!b)return;D.team=b.dataset.team;GM_STORE.set("pw_dash_team",D.team);
     tw.querySelectorAll("[data-team]").forEach(x=>x.setAttribute("aria-checked",x===b));qRenderSheet();dashDraw()});
   $("#dashGo").addEventListener("click",()=>{if(D.state==="paused")dashResume();else dashStart()});
+  $("#dashShareBtn").addEventListener("click",e=>pwShare(e.currentTarget,dashShareText(),"https://pitwallf1.in/f1-qualifying-game/"));
   $("#dashTeamBtn").addEventListener("click",dashIntro);
   const live=()=>D.state==="out"||D.state==="lap";
   addEventListener("keydown",e=>{
@@ -3325,7 +3339,7 @@ function dashIntro(){
   $("#dashTitle").textContent="Qualifying";
   $("#dashSub").innerHTML=`<p>Three flying laps around Pit Wall Park. Your best lap counts, and putting all four wheels off the track deletes the lap. The car follows the track: you steer across it, and if you arrive too fast you slide wide. Brake when the line turns red, and use ERS on the green straights.</p>
     <p class="q-target">${D.best==null?`Pole to beat: <b>${tg.code} ${qFmt(tg.t)}</b>`:p===1?`You're on pole with <b>${qFmt(D.best)}</b>. Can you go faster?`:`You're P${p}. Next to beat: <b>${tg.code} ${qFmt(tg.t)}</b>`}</p>`;
-  $("#dashTeams").hidden=false;$("#dashKeys").hidden=false;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent=D.best==null?"Leave the garage":"Go again";dashShare(true);
+  $("#dashTeams").hidden=false;$("#dashKeys").hidden=false;$("#dashTeamBtn").hidden=true;$("#dashGo").textContent=D.best==null?"Leave the garage":"Go again";dashShare(false);
 }
 function dashResize(){
   if(!D.cv)return;const wrap=$("#dashWrap"),host=wrap.parentElement;
@@ -3418,7 +3432,7 @@ function dashOver(){
     if(p===1)qConfetti();
   }
   qRenderSheet();
-  $("#dashTeams").hidden=true;$("#dashKeys").hidden=true;$("#dashTeamBtn").hidden=false;$("#dashGo").textContent="Go again";dashShare(sb!=null);$("#dashOver").hidden=false;
+  $("#dashTeams").hidden=true;$("#dashKeys").hidden=true;$("#dashTeamBtn").hidden=false;$("#dashGo").textContent="Retry";D.lastSb=sb;dashShare(sb!=null);$("#dashOver").hidden=false;
 }
 /* pole position: a burst of purple, team colours and chequered flags over the game */
 function qConfetti(){
@@ -3631,7 +3645,7 @@ function tkSpeedCol(v){ /* red slow → amber → yellow → green → blue fast
   if(v<=st[0][0])return st[0][1];for(let i=1;i<st.length;i++)if(v<=st[i][0]){const f=(v-st[i-1][0])/(st[i][0]-st[i-1][0]);return st[i-1][1].map((c,k)=>Math.round(c+(st[i][1][k]-c)*f))}
   return st[st.length-1][1];
 }
-function tkSlugFromHash(){const m=(location.hash||"").match(/^#tracks\/([\w-]+)/);return m&&TRACK_INFO[m[1]]?m[1]:null}
+function tkSlugFromHash(){const m=location.pathname.match(/^\/tracks\/([\w-]+)/);return m&&TRACK_INFO[m[1]]?m[1]:null}
 function tkDefaultSlug(){const next=RACES.find(r=>r.rd===COMPLETED+1),hit=next&&Object.keys(TRACK_INFO).find(k=>TRACK_INFO[k].rd===next.rd);return hit||"albert-park"}
 function tkInit(){
   if(TK.ready){const want=tkSlugFromHash();if(want&&want!==TK.slug)tkLoad(want);else{tkResize();tkLoop()}return}
@@ -3655,9 +3669,9 @@ function tkInit(){
 function tkLoad(slug,first){
   TK.slug=slug;TK.loadId=(TK.loadId||0)+1;const id=TK.loadId;
   document.querySelectorAll("#tkPick [data-track]").forEach(b=>{const on=b.dataset.track===slug;b.classList.toggle("on",on);b.setAttribute("aria-selected",on);if(on)b.scrollIntoView({block:"nearest",inline:"center",behavior:first||reduce?"auto":"smooth"})});
-  if(!first||tkSlugFromHash())history.replaceState(null,"","#tracks/"+slug);
+  if(!first||tkSlugFromHash())history.replaceState(null,"","/tracks/"+slug);
   $("#tkLoading").hidden=false;$("#tkLoading").textContent="Building the circuit…";
-  fetch(`data/tracks/${slug}.json`).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+  fetch(`/data/tracks/${slug}.json`).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
     if(id!==TK.loadId)return;
     TK.data=d;TK.t=0;tkPrep(d);tkFacts();
     /* pick a height exaggeration that makes the hills readable without turning them into mountains */
@@ -3672,7 +3686,7 @@ function tkLoadThree(){
   const add=src=>new Promise((ok,bad)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=()=>bad(new Error("load "+src));document.head.appendChild(s)});
   const gl=(()=>{try{const c=document.createElement("canvas");return !!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){return false}})();
   if(!gl)return Promise.reject(new Error("no webgl"));
-  return add("assets/vendor/three-r147.min.js").then(()=>add("assets/vendor/three-r147-OrbitControls.js"));
+  return add("/assets/vendor/three-r147.min.js").then(()=>add("/assets/vendor/three-r147-OrbitControls.js"));
 }
 function tkPrep(d){
   const P=d.pts;d.n=P.length;d.T=P.map(p=>p[3]);
@@ -4684,17 +4698,17 @@ function lwLoop(){cancelAnimationFrame(LW.raf);let last=performance.now();const 
 /* ---------- Learn F1: page logic ---------- */
 const LN={ready:false,tab:"about",tyre:"soft"};
 function lnInit(){
-  const m=(location.hash||"").match(/^#learn\/(about|weekend|trophies|track|tyres|wheel|tech|people)/);
+  const m=location.pathname.match(/^\/learn\/(about|weekend|trophies|track|tyres|wheel|tech|people)/);
   if(!LN.ready){
     LN.ready=true;
     $("#lnTerms").innerHTML=LN_TERMS.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><h3>${t.name}</h3><div class="ln-short">${t.short}</div><p>${t.body}</p></div></article>`).join("");
     $("#lnTechGrid").innerHTML=LN_TECH.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}${t.interactive==="aero"?'<div class="ln-ctl"><button type="button" data-aero="corner" aria-pressed="true">Corner mode</button><button type="button" data-aero="straight" aria-pressed="false">Straight mode</button></div>':""}${t.interactive==="diff"?'<div class="ln-ctl"><label>Open<input type="range" min="0" max="100" value="0" id="lnDiff" aria-label="Differential: open to locked"></label>Locked</div>':""}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
     lnAboutRender();lnWeekendRender();lnTrophiesRender();
-    document.addEventListener("click",e=>{const a=e.target.closest("[data-goto]");if(!a)return;e.preventDefault();lnTab(a.dataset.goto);history.replaceState(null,"","#learn/"+a.dataset.goto);document.querySelector(".ln-tabs").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
+    document.addEventListener("click",e=>{const a=e.target.closest("[data-goto]");if(!a)return;e.preventDefault();lnTab(a.dataset.goto);history.replaceState(null,"","/learn/"+a.dataset.goto);document.querySelector(".ln-tabs").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
     $("#lnPeopleGrid").innerHTML=LN_PEOPLE.map(t=>`<article class="ln-term" id="ln-${t.id}"><div class="ln-pic">${t.svg()}</div><div class="ln-body"><div class="ln-kick">${t.kick}</div><h3>${t.name}</h3><p>${t.body}</p></div></article>`).join("");
     $("#lnTyrePick").innerHTML=LN_TYRES.map(t=>`<button type="button" data-tyre="${t.id}" style="--c:${t.col}"><i></i>${t.name}</button>`).join("");
     $("#lnTyrePick").addEventListener("click",e=>{const b=e.target.closest("[data-tyre]");if(b)lnTyre(b.dataset.tyre)});
-    document.querySelectorAll(".ln-tabs [data-ln]").forEach(b=>b.addEventListener("click",()=>{lnTab(b.dataset.ln);history.replaceState(null,"","#learn/"+b.dataset.ln)}));
+    document.querySelectorAll(".ln-tabs [data-ln]").forEach(b=>b.addEventListener("click",()=>{lnTab(b.dataset.ln);history.replaceState(null,"","/learn/"+b.dataset.ln)}));
     /* active aero: auto-cycles until the reader takes over */
     const aero=document.querySelector(".ln-aero");let aeroAuto=true,aeroMode="corner";
     const setAero=m=>{aeroMode=m;aero.classList.toggle("straight",m==="straight");aero.querySelector(".ln-mode-lbl").textContent=m==="straight"?"STRAIGHT MODE":"CORNER MODE";document.querySelectorAll("[data-aero]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.aero===m))};
@@ -4732,7 +4746,7 @@ function lnLeave(){/* the wheel's render loop stops itself when the panel is hid
 /* ================= NAV TABS: scroll hints ================= */
 function navFades(){const n=document.querySelector("nav.tabs");if(!n)return;const max=n.scrollWidth-n.clientWidth;
   n.classList.toggle("nav-fl",n.scrollLeft>4);n.classList.toggle("nav-fr",max>4&&n.scrollLeft<max-4)}
-function navCenter(r){const n=document.querySelector("nav.tabs"),a=n&&n.querySelector(`a[href="#${r}"]`);
+function navCenter(r){const n=document.querySelector("nav.tabs"),a=n&&n.querySelector(`a[href="/${r}"]`);
   if(a&&n.scrollWidth>n.clientWidth){n.scrollTo({left:Math.max(0,a.offsetLeft-n.offsetLeft-(n.clientWidth-a.offsetWidth)/2),behavior:"auto"})}setTimeout(navFades,50)}
 (function(){const n=document.querySelector("nav.tabs");if(n){n.addEventListener("scroll",navFades,{passive:true});addEventListener("resize",navFades);navFades()}})();
 
@@ -4755,7 +4769,7 @@ function themeApply(t,save){
 const ROUTES=["standings","race-centre","replay","calendar","tracks","title-fight","travel","games","learn"];
 let replayDrawn=false;
 function route(){
-  const h=(location.hash||"").slice(1);
+  const h=location.pathname.split("/").filter(Boolean).join("/");
   const isLegal=Object.prototype.hasOwnProperty.call(LEGAL_ROUTES,h);
   $(".hero").hidden=isLegal;$("#p-legal").hidden=!isLegal;
   if(isLegal){ROUTES.forEach(x=>{$("#p-"+x).hidden=true});document.querySelectorAll("nav.tabs a").forEach(a=>a.removeAttribute("aria-current"));renderLegal(h);gmLeave();if(typeof rcPause==="function"&&RCX.playing)rcPause();scrollTo(0,0);return}
@@ -4763,7 +4777,7 @@ function route(){
   ROUTES.forEach(x=>{$("#p-"+x).hidden=x!==r});
   {const cta=$("#learnCta");if(cta){if(r==="learn")cta.setAttribute("aria-current","page");else cta.removeAttribute("aria-current")}}
   navCenter(r);
-  document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.getAttribute("href")==="#"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.getAttribute("href")==="/"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   if(r==="standings")renderTower();
   if(r==="replay"){if(!replayDrawn){replayDrawn=true;rd=0;drawReplay();setTimeout(()=>{if(!playing)play()},500)}drawLine()}
   if(r==="calendar")renderCalendar(true);
@@ -4774,13 +4788,29 @@ function route(){
   if(r==="learn")lnInit();
   if(r==="race-centre")rcInit();else if(typeof rcPause==="function"&&RCX.playing){rcPause()}
 }
-addEventListener("hashchange",()=>{route();const p=document.querySelector("section.panel:not([hidden])");if(p&&location.hash)p.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
+/* clean URLs: /calendar, /tracks/monza, /games/reaction-test … are the app's sections (Netlify serves index.html for them) */
+const APP_PATH=new RegExp("^/(?:(?:"+[...ROUTES,...Object.keys(LEGAL_ROUTES)].join("|")+")(?:/[\\w-]*)?)?/?$");
+function go(path,opt){
+  opt=opt||{};if(path===location.pathname+location.search)return;
+  history[opt.replace?"replaceState":"pushState"](null,"",path);route();
+  try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path:location.pathname})}catch(e){}
+  if(opt.scroll!==false){const p=document.querySelector("section.panel:not([hidden])");if(p)p.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}
+}
+document.addEventListener("click",e=>{
+  if(e.defaultPrevented||e.button>0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+  const a=e.target.closest&&e.target.closest("a[href^='/']");if(!a||a.target||a.hasAttribute("download"))return;
+  const u=new URL(a.href,location.href);if(u.origin!==location.origin||!APP_PATH.test(u.pathname))return;
+  e.preventDefault();go(u.pathname+u.search,{scroll:u.pathname!=="/"});
+});
+addEventListener("popstate",()=>route());
 
 /* ================= BOOT ================= */
 /* ?embed=dash shows only Pit Wall Dash (used inside /f1-qualifying-game/) */
-if(document.documentElement.classList.contains("embed")){GM_STORE.set("pw_gm_tab","race");if(location.hash!=="#games")history.replaceState(null,"",location.pathname+location.search+"#games")}
+if(document.documentElement.classList.contains("embed"))GM_STORE.set("pw_gm_tab","race");
+/* old #section links (shared before clean URLs) still work: #tracks/monza becomes /tracks/monza */
+{const m=(location.hash||"").match(/^#([\w-]+(?:\/[\w-]+)?)$/);if(m&&APP_PATH.test("/"+m[1])&&!document.documentElement.classList.contains("embed"))history.replaceState(null,"","/"+m[1]+location.search)}
 renderFooter();renderPulse();renderPicks();
-try{const q=new URLSearchParams(location.search).get("replay");if(q&&/^\d+$/.test(q)){RCX.pending=+q;if(location.hash!=="#race-centre")history.replaceState(null,"",location.pathname+"#race-centre")}}catch(e){}
+try{const q=new URLSearchParams(location.search).get("replay");if(q&&/^\d+$/.test(q)){RCX.pending=+q;history.replaceState(null,"","/race-centre")}}catch(e){}
 rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-calendar").hidden)renderCalendar(false);renderSessions(new Date())}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());
 route();tickCountdown();setInterval(tickCountdown,1000);
 if(!reduce)setTimeout(()=>runLights(false),400);

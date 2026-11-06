@@ -88,42 +88,50 @@ footer.site nav a{color:var(--fg);font-weight:500}
 <div id="rxg" style="display:flex;gap:clamp(8px,2vw,14px);background:#05070a;border:1px solid #1d2230;border-radius:8px;padding:12px" aria-hidden="true"></div>
 <div id="rxt" style="font:700 clamp(40px,9vw,68px)/1 var(--fm);min-height:1em" aria-live="polite"></div>
 <div id="rxm" style="color:var(--muted);text-align:center;max-width:44ch">Can you beat Bottas's 0.201s? Tap here, or press Space, to start. When all five lights go out, tap as fast as you can.</div>
+<div id="rxa" class="gm-actions" hidden><button type="button" class="gbtn" id="rxsb">Share result</button><button type="button" class="gbtn main" id="rxr">Retry</button></div>
 </div>
+<style>.gm-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}.gm-actions[hidden]{display:none}.gbtn{min-width:132px;height:40px;padding:0 16px;border-radius:3px;border:1px solid var(--line);background:var(--panel2,#1A1F2A);color:var(--fg);font:800 13px var(--fd);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.gbtn.main{background:var(--red);border-color:var(--red);color:#fff}
+.pw-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;flex-wrap:nowrap!important;z-index:5;display:flex;gap:6px;padding:8px;border-radius:20px;background:var(--panel);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap}.pw-menu button{height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:700 12px var(--fd);text-transform:uppercase;letter-spacing:.06em;cursor:pointer}.pw-menu button.main{background:var(--red);border-color:var(--red);color:#fff}.pw-menu .ok{font-size:12px;color:#2FD480;align-self:center}</style>
 <div class="tiles"><div class="tile"><span>Your best</span><b id="rxb">–</b></div><div class="tile"><span>The time to beat</span><b>0.201s</b></div><div class="tile"><span>Average human</span><b>~0.25s</b></div></div>
-<style>.pw-share{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-6px 0 18px}.pw-share button{height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:700 13px var(--fd);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.pw-share button.main{background:var(--red);border-color:var(--red);color:#fff}.pw-share .ok{font-size:12.5px;color:#2FD480}</style><div id="rxs" class="pw-share" hidden></div>
+
 <h2>How the F1 start works</h2>
 <p>At the start of a Grand Prix, five pairs of red lights come on one after another, a second apart. After all five are lit there's a short, random pause, then they all go out together. That's the signal to go. React too early and it's a jump start; the stewards hand out a penalty.</p>
 <h2>The famous 0.201s</h2>
 <p>At the 2017 Austrian Grand Prix, Valtteri Bottas got away so fast that rivals thought he had jumped the start. The FIA looked at the data, found he had reacted in 0.201 seconds, and let his win stand. His time was measured from lights out to the car moving; yours here is from lights out to your tap.</p>
 <h2>More to play</h2>
-<p>Try <a href="/f1-qualifying-game/">Pit Wall Dash</a>, a three-lap qualifying game against the 2026 grid, or open the <a href="/#games">games page</a> for your full history.</p>
+<p>Try <a href="/f1-qualifying-game/">Pit Wall Dash</a>, a three-lap qualifying game against the 2026 grid, or open the <a href="/games">games page</a> for your full history.</p>
 <script>
 (function(){var st="idle",T=[],t0=0,best=null;try{best=parseFloat(localStorage.getItem("pw_rx_best"))||null}catch(e){}
 var g=document.getElementById("rxg"),tt=document.getElementById("rxt"),m=document.getElementById("rxm"),b=document.getElementById("rxb"),box=document.getElementById("rx");
 for(var i=0;i<5;i++){var c=document.createElement("div");c.style.cssText="display:grid;gap:8px;background:#0c0f15;border-radius:6px;padding:7px";c.innerHTML='<i style="display:block;width:clamp(30px,8vw,52px);aspect-ratio:1;border-radius:50%;background:#2a0a0a"></i><i style="display:block;width:clamp(30px,8vw,52px);aspect-ratio:1;border-radius:50%;background:#2a0a0a"></i>';g.appendChild(c)}
 function lit(n){[].forEach.call(g.children,function(c,i){[].forEach.call(c.children,function(l){l.style.background=i<n?"radial-gradient(circle at 40% 35%,#ff6a5e,#e10600 55%,#8a0300)":"#2a0a0a";l.style.boxShadow=i<n?"0 0 20px 3px rgba(225,6,0,.45)":"none"})})}
-var sh=document.getElementById("rxs"),U="https://pitwallf1.in/f1-reaction-test/";
-function msg(){var t=(best/1000).toFixed(3);return(best<=201?"I beat Bottas! My F1 start reaction is "+t+"s, quicker than his famous 0.201s. Can you beat me?":"My F1 start reaction is "+t+"s. Bottas did 0.201s. Can you beat me?")+" \ud83c\udfc1"}
-if(navigator.share){sh.innerHTML='<button type="button" class="main">Share my result</button>';sh.firstChild.onclick=function(){navigator.share({title:"Pit Wall F1",text:msg(),url:U}).catch(function(){})}}
-else{sh.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
- sh.onclick=function(e){var k=e.target.getAttribute("data-k");if(!k)return;if(k==="wa")window.open("https://wa.me/?text="+encodeURIComponent(msg()+" "+U),"_blank","noopener");else if(k==="x")window.open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(U),"_blank","noopener");
- else{var ok=sh.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(msg()+" "+U):Promise.reject()).then(function(){ok.hidden=false;setTimeout(function(){ok.hidden=true},1800)}).catch(function(){prompt("Copy this:",msg()+" "+U)})}}}
-function show(){b.textContent=best?(best/1000).toFixed(3)+"s":"–";sh.hidden=!best}show();
-function start(){st="arm";tt.textContent="";tt.style.color="";lit(0);m.textContent="Wait for it…";for(var i=1;i<=5;i++)(function(i){T.push(setTimeout(function(){lit(i);if(i===5){st="wait";T.push(setTimeout(function(){requestAnimationFrame(function(){if(st!=="wait")return;lit(0);t0=performance.now();st="go";m.textContent="GO!"})},200+Math.random()*2800))}},i*1000))})(i)}
+var A=document.getElementById("rxa"),SB=document.getElementById("rxsb"),U="https://pitwallf1.in/f1-reaction-test/",last=null;
+function msg(){var t=(last/1000).toFixed(3);return(last<=201?"I beat Bottas! My F1 start reaction: "+t+"s, quicker than his famous 0.201s. Can you beat me?":"My F1 start reaction: "+t+"s. Bottas did 0.201s. Can you beat me?")+" \ud83c\udfc1"}
+function acts(show,share){A.hidden=!show;SB.hidden=!share;var m=A.querySelector(".pw-menu");if(m)m.remove()}
+A.addEventListener("pointerdown",function(e){e.stopPropagation()});
+document.getElementById("rxr").onclick=function(e){e.stopPropagation();start()};
+SB.onclick=function(e){e.stopPropagation();if(navigator.share){navigator.share({title:"Pit Wall F1",text:msg(),url:U}).catch(function(){});return}
+ var old=A.querySelector(".pw-menu");if(old){old.remove();return}var m=document.createElement("div");m.className="pw-menu";
+ m.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
+ m.onclick=function(ev){var k=ev.target.getAttribute("data-k");if(!k)return;ev.stopPropagation();if(k==="wa")window.open("https://wa.me/?text="+encodeURIComponent(msg()+" "+U),"_blank","noopener");else if(k==="x")window.open("https://x.com/intent/post?text="+encodeURIComponent(msg())+"&url="+encodeURIComponent(U),"_blank","noopener");
+  else{var ok=m.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(msg()+" "+U):Promise.reject()).then(function(){ok.hidden=false;setTimeout(function(){m.remove()},1400)}).catch(function(){prompt("Copy this:",msg()+" "+U)});return}m.remove()};
+ A.appendChild(m)};
+function show(){b.textContent=best?(best/1000).toFixed(3)+"s":"–"}show();
+function start(){acts(false);st="arm";tt.textContent="";tt.style.color="";lit(0);m.textContent="Wait for it…";for(var i=1;i<=5;i++)(function(i){T.push(setTimeout(function(){lit(i);if(i===5){st="wait";T.push(setTimeout(function(){requestAnimationFrame(function(){if(st!=="wait")return;lit(0);t0=performance.now();st="go";m.textContent="GO!"})},200+Math.random()*2800))}},i*1000))})(i)}
 function press(){var now=performance.now();
  if(st==="idle"||st==="done")return start();
- if(st==="arm"||st==="wait"){T.forEach(clearTimeout);T=[];st="done";lit(0);tt.textContent="JUMP START";tt.style.color="#E10600";m.textContent="You went before the lights went out. Tap to try again.";return}
- if(st==="go"){var ms=now-t0;st="done";if(ms<100){tt.textContent=(ms/1000).toFixed(3);tt.style.color="#E10600";m.textContent="Under 0.1s is a guess, not a reaction. Tap to go again.";return}
+ if(st==="arm"||st==="wait"){T.forEach(clearTimeout);T=[];st="done";lit(0);tt.textContent="JUMP START";tt.style.color="#E10600";m.textContent="You went before the lights went out. That's a drive-through penalty.";acts(true,false);return}
+ if(st==="go"){var ms=now-t0;st="done";if(ms<100){tt.textContent=(ms/1000).toFixed(3);tt.style.color="#E10600";m.textContent="Under 0.1s is a guess, not a reaction, so it doesn't count.";acts(true,false);return}
   var pb=!best||ms<best;if(pb){best=ms;try{localStorage.setItem("pw_rx_best",ms.toFixed(1))}catch(e){}}show();
   tt.textContent=(ms/1000).toFixed(3)+"s";tt.style.color=pb?"#B54BE8":ms<250?"#2FD480":"#F1F3F7";
-  var gap=(ms-201)/1000;m.textContent=(pb?"New personal best! ":"")+(ms<=201?"You beat Bottas by "+(-gap).toFixed(3)+"s! ":gap.toFixed(3)+"s off Bottas's 0.201s. ")+"Tap to go again."}}
+  var gap=(ms-201)/1000;m.textContent=(pb?"New personal best! ":"")+(ms<=201?"You beat Bottas by "+(-gap).toFixed(3)+"s! ":gap.toFixed(3)+"s off Bottas's 0.201s. ").trim();last=ms;acts(true,true)}}
 box.addEventListener("pointerdown",function(e){if(e.button>0)return;e.preventDefault();press()});
 box.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();if(!e.repeat)press()}});})();
 </script>
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-2026/">2026 results</a><a href="/f1-stats-2026/">2026 F1 stats</a><a href="/f1-2026-season-review/">2026 season review</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-2026/">2026 standings</a><a href="/f1-calendar-2026/">2026 calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="https://www.instagram.com/pitwall_f1_/" rel="noopener">Instagram</a></nav>
+<nav aria-label="Legal"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms</a><a href="/contact">Contact us</a><a href="/about">About us</a></nav>
 <p>©2026 Pit Wall F1. Timing data from OpenF1.</p>
 </div></footer>
 </body>
