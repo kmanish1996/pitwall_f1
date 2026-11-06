@@ -1,6 +1,8 @@
 # Pit Wall F1 welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
+# app/ holds the copies behind the clean URLs (/race-centre, /calendar …); crawl those URLs instead
+Disallow: /app/
 
 # AI search and assistant crawlers are welcome too
 User-agent: GPTBot
@@ -19,5 +21,6 @@ User-agent: Amazonbot
 User-agent: meta-externalagent
 User-agent: CCBot
 Allow: /
+Disallow: /app/
 
 Sitemap: https://pitwallf1.in/sitemap.xml
