@@ -1739,16 +1739,32 @@ const CHAMPIONS=[[1950, "Nino Farina", "it", "Alfa Romeo"], [1951, "Juan Manuel 
 const LONG_NAMES={19:"Mexico City Grand Prix",20:"São Paulo Grand Prix",21:"Las Vegas Grand Prix",22:"Qatar Grand Prix",23:"Abu Dhabi Grand Prix"};
 const COMPLETED=19, TOTAL=23;
 
-// Weekend sessions. Mexico has the full timetable; later rounds list the race only.
+// Weekend sessions from OpenF1, written by scripts/update_schedule.py
 const SESSIONS=[
  {rd:19,k:"FP1",n:"Practice 1",t:"2026-10-30T18:30Z",m:60},
  {rd:19,k:"FP2",n:"Practice 2",t:"2026-10-30T22:00Z",m:60},
  {rd:19,k:"FP3",n:"Practice 3",t:"2026-10-31T17:30Z",m:60},
  {rd:19,k:"Q",n:"Qualifying",t:"2026-10-31T21:00Z",m:60},
  {rd:19,k:"GP",n:"Grand Prix",t:"2026-11-01T20:00Z",m:120},
+ {rd:20,k:"FP1",n:"Practice 1",t:"2026-11-06T15:30Z",m:60},
+ {rd:20,k:"FP2",n:"Practice 2",t:"2026-11-06T19:00Z",m:60},
+ {rd:20,k:"FP3",n:"Practice 3",t:"2026-11-07T14:30Z",m:60},
+ {rd:20,k:"Q",n:"Qualifying",t:"2026-11-07T18:00Z",m:60},
  {rd:20,k:"GP",n:"Grand Prix",t:"2026-11-08T17:00Z",m:120},
+ {rd:21,k:"FP1",n:"Practice 1",t:"2026-11-20T00:30Z",m:60},
+ {rd:21,k:"FP2",n:"Practice 2",t:"2026-11-20T04:00Z",m:60},
+ {rd:21,k:"FP3",n:"Practice 3",t:"2026-11-21T00:30Z",m:60},
+ {rd:21,k:"Q",n:"Qualifying",t:"2026-11-21T04:00Z",m:60},
  {rd:21,k:"GP",n:"Grand Prix",t:"2026-11-22T04:00Z",m:120},
+ {rd:22,k:"FP1",n:"Practice 1",t:"2026-11-27T13:30Z",m:60},
+ {rd:22,k:"FP2",n:"Practice 2",t:"2026-11-27T17:00Z",m:60},
+ {rd:22,k:"FP3",n:"Practice 3",t:"2026-11-28T14:30Z",m:60},
+ {rd:22,k:"Q",n:"Qualifying",t:"2026-11-28T18:00Z",m:60},
  {rd:22,k:"GP",n:"Grand Prix",t:"2026-11-29T16:00Z",m:120},
+ {rd:23,k:"FP1",n:"Practice 1",t:"2026-12-04T09:30Z",m:60},
+ {rd:23,k:"FP2",n:"Practice 2",t:"2026-12-04T13:00Z",m:60},
+ {rd:23,k:"FP3",n:"Practice 3",t:"2026-12-05T10:30Z",m:60},
+ {rd:23,k:"Q",n:"Qualifying",t:"2026-12-05T14:00Z",m:60},
  {rd:23,k:"GP",n:"Grand Prix",t:"2026-12-06T13:00Z",m:120}
 ].map(s=>({...s,start:new Date(s.t),end:new Date(new Date(s.t).getTime()+s.m*60000)}));
 
@@ -1845,7 +1861,7 @@ function renderSessions(now){
   const have=sessionsFor(rd.rd);
   list.forEach(s=>{
     const done=now>=s.end, live=now>=s.start&&now<s.end, isNext=st.next===s&&!st.live;
-    const res=done&&have.find(x=>x.type===s.n);
+    const res=done&&have.find(x=>x.type===(s.k==="GP"?"Race":s.n));
     const row=el(res?"button":"div",{className:"sess"+(done?" is-done":"")+(isNext||live?" is-next":"")+(res?" has-res":"")});
     if(res){row.type="button";row.dataset.sess=res.sk;row.setAttribute("aria-label",`${s.n}: show results`)}
     row.innerHTML=`<span class="k">${s.k}</span><span>${s.n}</span><span class="when mono">${fmtDay.format(s.start)} · ${fmtTime.format(s.start)}</span>`+

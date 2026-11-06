@@ -34,17 +34,22 @@ jobs:
       - name: Fetch finished sessions from OpenF1
         run: python3 scripts/update_sessions.py
 
+      - name: Refresh the weekend timetables from OpenF1
+        run: python3 scripts/update_schedule.py
+
       - name: Update standings, winners and search pages if there is new data
         run: |
           if [ -n "$(git status --porcelain data)" ]; then
             python3 scripts/update_standings.py
             python3 scripts/build_pages.py
+          elif [ -n "$(git status --porcelain index.html)" ]; then
+            python3 scripts/build_pages.py
           fi
 
       - name: Commit new replay data and pages
         run: |
-          if [ -z "$(git status --porcelain data)" ]; then
-            echo "No new sessions."
+          if [ -z "$(git status --porcelain data index.html)" ]; then
+            echo "No new sessions or timetable changes."
             exit 0
           fi
           git config user.name "pitwall-bot"
