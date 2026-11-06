@@ -72,6 +72,8 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .label{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--muted)}
+html.embed :is(header.strip,.hero,footer,.gm-hero,.pw-h1,#gmRx){display:none!important}
+html.embed body{padding:0}html.embed main.wrap{padding:8px 0 0;margin:0 auto}html.embed #p-games{padding:0;margin:0}
 .pw-h1{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;margin:0;text-wrap:balance;line-height:1}
 
@@ -2043,7 +2045,7 @@ document.addEventListener("click",e=>{
 document.addEventListener("click",e=>{const b=e.target.closest("[data-celebrate]");if(!b)return;const r=b.getBoundingClientRect();celebrate(e.clientX||r.left+r.width/2,e.clientY||r.top+r.height/2)});
 function clinchSentence(){
   const left=TOTAL-COMPLETED;const L=DRIVERS[0];const rivals=contenders();
-  if(!rivals.length){const cr=clinchRound();return `<b>${esc(L.first)} ${esc(L.last)}</b> is the ${YEAR_NOW} world champion${cr?`, sealed at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}`:""}. At 20, he is the youngest champion in Formula 1 history. <button type="button" class="linkish" data-champions>See every champion since 1950 ›</button>`}
+  if(!rivals.length){const cr=clinchRound();return `<b>${esc(L.first)} ${esc(L.last)}</b> is the ${YEAR_NOW} world champion${cr?`, sealed at the ${esc((LONG_NAMES[cr]||RACES[cr-1].name).replace(/ GP$/," Grand Prix"))}`:""}. At 20, he is the youngest champion in Formula 1 history. <a class="linkish" href="/f1-${YEAR_NOW}-season-review/">How he won it ›</a> · <button type="button" class="linkish" data-champions>Every champion since 1950 ›</button>`}
   // for each rival winning in Mexico, find the worst finish that still clinches for the leader
   const parts=rivals.map(r=>{
     for(let p=11;p>=1;p--){ // 11 = no points
@@ -2927,7 +2929,8 @@ const SITE={
   radioPlayer:false                         // true = play team radio in the page, streamed from F1's servers; false = each clip opens on F1's site
 };
 /* free, cookie-free visitor counts (GoatCounter) once SITE.goatcounter is set; app sections are counted as /#section */
-if(SITE.goatcounter){SITE.analytics="GoatCounter";
+if(/[?&]embed=dash\b/.test(location.search))document.documentElement.classList.add("embed");
+if(SITE.goatcounter&&!document.documentElement.classList.contains("embed")){SITE.analytics="GoatCounter";
   window.goatcounter={path:()=>location.pathname+location.hash};
   const g=document.createElement("script");g.async=true;g.src="https://gc.zgo.at/count.js";g.dataset.goatcounter=`https://${SITE.goatcounter}.goatcounter.com/count`;document.head.appendChild(g);
   addEventListener("hashchange",()=>{try{window.goatcounter.count&&window.goatcounter.count({path:location.pathname+location.hash})}catch(e){}})}
@@ -4756,7 +4759,7 @@ function route(){
   const isLegal=Object.prototype.hasOwnProperty.call(LEGAL_ROUTES,h);
   $(".hero").hidden=isLegal;$("#p-legal").hidden=!isLegal;
   if(isLegal){ROUTES.forEach(x=>{$("#p-"+x).hidden=true});document.querySelectorAll("nav.tabs a").forEach(a=>a.removeAttribute("aria-current"));renderLegal(h);gmLeave();if(typeof rcPause==="function"&&RCX.playing)rcPause();scrollTo(0,0);return}
-  const hb=h.split("/")[0],r=ROUTES.includes(hb)?hb:"standings";
+  const hb=h.split("/")[0],r=document.documentElement.classList.contains("embed")?"games":ROUTES.includes(hb)?hb:"standings";
   ROUTES.forEach(x=>{$("#p-"+x).hidden=x!==r});
   {const cta=$("#learnCta");if(cta){if(r==="learn")cta.setAttribute("aria-current","page");else cta.removeAttribute("aria-current")}}
   navCenter(r);
@@ -4774,6 +4777,8 @@ function route(){
 addEventListener("hashchange",()=>{route();const p=document.querySelector("section.panel:not([hidden])");if(p&&location.hash)p.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
 
 /* ================= BOOT ================= */
+/* ?embed=dash shows only Pit Wall Dash (used inside /f1-qualifying-game/) */
+if(document.documentElement.classList.contains("embed")){GM_STORE.set("pw_gm_tab","race");if(location.hash!=="#games")history.replaceState(null,"",location.pathname+location.search+"#games")}
 renderFooter();renderPulse();renderPicks();
 try{const q=new URLSearchParams(location.search).get("replay");if(q&&/^\d+$/.test(q)){RCX.pending=+q;if(location.hash!=="#race-centre")history.replaceState(null,"",location.pathname+"#race-centre")}}catch(e){}
 rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-calendar").hidden)renderCalendar(false);renderSessions(new Date())}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());

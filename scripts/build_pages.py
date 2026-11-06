@@ -13,6 +13,9 @@ Needs Node.js to read the constants from index.html.
 import html, json, math, os, re, subprocess, unicodedata
 from datetime import datetime, timedelta, timezone
 
+import replay_pages as RP
+import make_page_og as OG
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://pitwallf1.in"
 YEAR = 2026
@@ -197,7 +200,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 </main>
 <footer class="site"><div class="w">
 <p>This website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
-<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} F1 stats</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
+<nav aria-label="Site"><a href="/next-f1-race/">Next F1 race</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} F1 stats</a><a href="/f1-{YEAR}-season-review/">{YEAR} season review</a><a href="/how-fast-is-an-f1-car/">How fast is an F1 car?</a><a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a><a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">World champions</a><a href="/circuits/">F1 circuits</a><a href="/learn-f1/">Learn F1</a><a href="/f1-reaction-test/">F1 reaction test</a><a href="/f1-qualifying-game/">Qualifying game</a><a href="/#privacy">Privacy Policy</a><a href="/#terms">Terms</a><a href="/#contact">Contact us</a><a href="/#about">About us</a><a href="{INSTAGRAM}" rel="noopener">Instagram</a></nav>
 <p>©{YEAR} {BRAND}. Timing data from OpenF1.</p>
 </div></footer>
 </body>
@@ -334,12 +337,29 @@ def main():
                 secs.append(block if tag == "h2" else f"<details><summary>{e(kind)} results</summary>{result_table(have[kind], kind)}</details>")
         rec = f'<div class="rec">Lap record: <b>{e(L[0])}</b>, {e(L[1])} ({e(L[2])}, {L[3]})</div>' if L else ""
         csl = next((k for k, v in (A.get("TRACK_INFO") or {}).items() if v["rd"] == rd), None)
+        wk = [x for x in A.get("SESSIONS", []) if x["rd"] == rd]
+        if wk and not r.get("win"):
+            trs = "".join(f'<tr><td>{e(x["n"])}</td><td>{datetime.fromisoformat(x["t"].replace("Z", "+00:00")).strftime("%A %d %B")}</td><td class="n">{datetime.fromisoformat(x["t"].replace("Z", "+00:00")).strftime("%H:%M")}</td><td class="n" data-local="{x["t"]}"></td></tr>' for x in wk)
+            rec += f"""<h2>Weekend schedule</h2>
+<div class="tbl"><table><thead><tr><th>Session</th><th>Day (UTC)</th><th class="n">UTC</th><th class="n">Your time</th></tr></thead><tbody>{trs}</tbody></table></div>
+<script>document.querySelectorAll("[data-local]").forEach(function(el){{var d=new Date(el.getAttribute("data-local"));el.textContent=d.toLocaleString([],{{weekday:"short",hour:"2-digit",minute:"2-digit"}})}})</script>"""
+        tj = os.path.join(ROOT, "data", "tracks", f"{csl}.json") if csl else None
+        if tj and os.path.exists(tj):
+            TJ = json.load(open(tj)); st = TJ["stats"]; src = TJ["source"]; I = A["TRACK_INFO"][csl]
+            slow = min(TJ["corners"], key=lambda c: c["v"]) if TJ.get("corners") else None
+            laps_n = 78 if rd == 6 else math.ceil(305 / I["length"])
+            rec += f"""<h2>The track in numbers</h2>
+<div class="tiles"><div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Corners</span><b>{I["turns"]}</b></div><div class="tile"><span>Race laps</span><b>{laps_n}</b></div><div class="tile"><span>Top speed</span><b>{st["vmax"]} km/h</b></div><div class="tile"><span>Full throttle</span><b>{st["fullThrottle"]}%</b></div></div>
+<p>On the {src["year"]} pole lap, {e(src["driverName"])} ({e(src["team"])}) went round in {fmt_lap(TJ["lapTime"])}: a top speed of {st["vmax"]} km/h, flat out for {st["fullThrottle"]}% of the lap, {st["gearChanges"]} gear changes{f', and the slowest corner taken at {slow["v"]} km/h in {slow["gear"]}{"st" if slow["gear"] == 1 else "nd" if slow["gear"] == 2 else "rd" if slow["gear"] == 3 else "th"} gear' if slow else ''}. The lap climbs and falls {st["elev"]:.0f} metres from its lowest to its highest point.</p>"""
         if csl: rec += f'<p class="note">About the track: <a href="/circuits/{csl}/">{e(r["circuit"])} map, facts and pole lap telemetry</a>, or <a href="/#tracks/{csl}">explore it in 3D</a>.</p>'
+        rp_links = " ".join(f'<a class="btn" href="{race_url(rd)}{"replay" if k == "Race" else "sprint-replay"}/">{"Race" if k == "Race" else "Sprint"} story &amp; lap chart →</a>' for k in ("Race", "Sprint") if have.get(k))
+        if rp_links: rp_links = f'<p style="margin:14px 0">{rp_links}</p>'
         prev = f'<a href="{race_url(RACES[i-1]["rd"])}">← {e(gp_long(RACES[i-1]))}</a>' if i else "<span></span>"
         nxt = f'<a href="{race_url(RACES[i+1]["rd"])}">{e(gp_long(RACES[i+1]))} →</a>' if i + 1 < len(RACES) else "<span></span>"
         body = f"""<h1>{e(name)} {YEAR}</h1>
 <p class="sub">Round {rd} of {total} · {e(r["circuit"])}, {e(r["place"])} · {e(r["dates"])} {YEAR}{" · Sprint weekend" if r["sprint"] else ""}</p>
 <p class="lead">{lead}</p>{rec}
+{rp_links}
 {''.join(secs) or '<p class="note">Results appear here about 30 to 45 minutes after each session ends.</p>'}
 <div class="pager">{prev}<a href="/f1-calendar-{YEAR}/">Full calendar</a>{nxt}</div>"""
         desc = (f'{name} {YEAR} results: {by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]} won at {r["circuit"]}. Race, qualifying and practice results, lap record and full replays.'
@@ -350,8 +370,99 @@ def main():
               "url": SITE + race_url(rd), **event_extras(A, start, 120, desc, og_image(race_url(rd), None))}
         if r.get("win") and r["win"] in by_code:
             ld["winner"] = {"@type": "Person", "name": f'{by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]}'}
+        pod = []
+        if have.get("Race"):
+            dd = sdata(have["Race"]); dm = {x["n"]: x for x in dd["drivers"]}
+            pod = [[dm[x[1]]["c"], dm[x[1]]["col"]] for x in dd["result"][:3] if x[1] in dm]
+        short_name = name.replace(" Grand Prix", " GP")
+        rspec = {"kicker": f"Round {rd} · {r['dates']} {YEAR}", "title": [short_name, f"{YEAR} results" if pod else "Race preview"], "sub": r["circuit"], "track": csl,
+                 "accent": pod[0][1] if pod else "#E10600"}
+        if pod: rspec["podium"] = pod
+        elif tj and os.path.exists(tj): rspec["stats"] = [["Race day", datetime.fromisoformat(start.replace("Z", "+00:00")).strftime("%d %b")], ["Laps", laps_n], ["Top speed", f'{st["vmax"]}']]
+        rog = OG.ensure(f"race-{rslug[rd]}", rspec)
         pages.append(page(race_url(rd), f"{name} {YEAR}: results, qualifying and lap record | {BRAND}", desc, body,
-                          [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/"), (name, race_url(rd))], ld))
+                          [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/"), (name, race_url(rd))], ld, og=rog))
+        for kind in ("Race", "Sprint"):
+            if not have.get(kind): continue
+            sk = have[kind]; d = sdata(sk)
+            if not d.get("laps") or len(d.get("result", [])) < 3: continue
+            S = RP.race_stats(d)
+            fb = RP.fastest(d)
+            fl = (fmt_lap(fb[0]), fb[1]) if fb else None
+            if kind == "Race" and r.get("fl") and r.get("flBy"):
+                fl = (fmt_lap(r["fl"]), next((x["n"] for x in d["drivers"] if x["c"] == r["flBy"]), None))
+            paras = RP.story(d, S, kind, name, YEAR, fl, None, drv)
+            word = "race" if kind == "Race" else "sprint"
+            path = f"{race_url(rd)}{'replay' if kind == 'Race' else 'sprint-replay'}/"
+            plain = re.sub("<[^>]+>", "", paras[0])
+            rbody = f"""<h1>{e(name)} {YEAR}: {word} replay &amp; lap-by-lap story</h1>
+<p class="sub">Round {rd} of {total} · {e(r["circuit"])}, {e(r["place"])} · {e(r["dates"])} {YEAR} · {S["total"]} laps</p>
+<p class="lead">{paras[0]}</p>
+<div class="rp-cta"><a class="btn primary" href="/?replay={sk}#race-centre">▶ Watch the full {word} replay</a><span class="note">Timing tower, track map, race control messages and team radio, lap by lap.</span></div>
+<h2>How the {word} unfolded</h2><div class="story">{"".join(f"<p>{x}</p>" for x in paras[1:])}</div>
+<h2>Lap by lap</h2>{RP.position_chart(d, S, f"Position of every driver on every lap of the {YEAR} {name} {word}")}
+<h2>Tyre strategy</h2>{RP.tyre_chart(d, S)}
+<h2>Final classification</h2>{result_table(sk, kind)}
+<div class="pager"><a href="{race_url(rd)}">← All {e(name)} results</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} stats</a></div>"""
+            rld = {"@context": "https://schema.org", "@type": "Article", "headline": f"{name} {YEAR} {word} replay and lap-by-lap story",
+                   "description": plain, "url": SITE + path, "inLanguage": "en", "datePublished": d["date"][:10],
+                   "about": {"@type": "SportsEvent", "name": f"{YEAR} {name}", "startDate": d["date"], "url": SITE + race_url(rd)},
+                   "author": {"@type": "Organization", "name": BRAND, "url": SITE + "/"}, "publisher": {"@type": "Organization", "name": BRAND, "url": SITE + "/"}}
+            nlead = S["changes"]; nsc = sum(1 for k, _, _ in S["neutral"] if k == "SC")
+            dmr = {x["n"]: x for x in d["drivers"]}
+            rpod = [[dmr[x[1]]["c"], dmr[x[1]]["col"]] for x in d["result"][:3] if x[1] in dmr]
+            pog = OG.ensure(f"{word}-replay-{rslug[rd]}", {"kicker": f"{word} replay · round {rd}", "title": [name.replace(" Grand Prix", " GP"), "Lap by lap"],
+                                                           "sub": f'{S["total"]} laps · {nlead} lead change{"s" if nlead != 1 else ""} · {nsc} safety car{"s" if nsc != 1 else ""}' + (f' · {len(S["reds"])} red flag' if S["reds"] else ""),
+                                                           "podium": rpod, "track": csl, "accent": rpod[0][1] if rpod else "#E10600"})
+            pages.append(page(path, f"{name} {YEAR} {word} replay: lap-by-lap positions, pit stops & tyres | {BRAND}",
+                              f"{plain} Lap-by-lap position chart, tyre strategy and full {word} replay with team radio.",
+                              rbody, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/"), (name, race_url(rd)), (f"{word.title()} replay", path)], rld, extra_head=RP.CSS, og=pog))
+
+    # ---------- season numbers shared by driver and team pages ----------
+    def season(code):
+        """Per-round finish, grid and points for one driver, plus the numbers that sum them up."""
+        out = []
+        for r in RACES[:done]:
+            f = finish(r["rd"], code); q = finish(r["rd"], code, "Qualifying")
+            pts = A["PER_RACE"].get(code, [0] * done)[r["rd"] - 1] if code in A["PER_RACE"] else 0
+            out.append((r, f, q, pts or 0))
+        fins = [(f, r) for r, f, q, _ in out if isinstance(f, int)]
+        qs = [q for _, _, q, _ in out if isinstance(q, int)]
+        best = min(fins, key=lambda x: (x[0], x[1]["rd"])) if fins else None
+        worst = max(fins, key=lambda x: (x[0], -x[1]["rd"])) if fins else None
+        return dict(rows=out, best=best, worst=worst, podiums=sum(1 for f, _ in fins if f <= 3),
+                    in_points=sum(1 for _, _, _, p in out if p > 0), dnfs=sum(1 for _, f, _, _ in out if f in ("DNF", "DNS", "DSQ")),
+                    avg_fin=sum(f for f, _ in fins) / len(fins) if fins else None, avg_q=sum(qs) / len(qs) if qs else None,
+                    poles=sum(1 for q in qs if q == 1))
+
+    def h2h(a, b):
+        """Qualifying and race head-to-head between two drivers (races where both have a result)."""
+        q = [0, 0]; rc = [0, 0]
+        for r in RACES[:done]:
+            qa, qb = finish(r["rd"], a, "Qualifying"), finish(r["rd"], b, "Qualifying")
+            if isinstance(qa, int) and isinstance(qb, int): q[0 if qa < qb else 1] += 1
+            fa, fb = finish(r["rd"], a), finish(r["rd"], b)
+            if isinstance(fa, int) or isinstance(fb, int):
+                if not isinstance(fb, int) or (isinstance(fa, int) and fa < fb): rc[0] += 1
+                else: rc[1] += 1
+        return q, rc
+
+    def points_chart(series, label):
+        """Bar chart of points per round. series = [(colour, [points per round])], stacked."""
+        n = done; W, H, L, B, T = 900, 190, 34, 22, 10
+        tot = [sum(sv[i] for _, sv in series) for i in range(n)]; mx = max(tot + [1])
+        bw = (W - L - 6) / n
+        bars, ticks = [], []
+        for i in range(n):
+            y0 = H - B
+            for col, sv in series:
+                h = sv[i] / mx * (H - B - T)
+                if h > 0:
+                    bars.append(f'<rect x="{L + i * bw + 2:.1f}" y="{y0 - h:.1f}" width="{bw - 4:.1f}" height="{h:.1f}" fill="{col}" rx="2"><title>Round {i + 1}: {sv[i]} pts</title></rect>')
+                    y0 -= h
+            ticks.append(f'<text x="{L + i * bw + bw / 2:.1f}" y="{H - 6}" font-size="10" text-anchor="middle" fill="currentColor" opacity=".55">{RACES[i]["short"]}</text>')
+        gl = "".join(f'<line x1="{L}" x2="{W}" y1="{H - B - v / mx * (H - B - T):.1f}" y2="{H - B - v / mx * (H - B - T):.1f}" stroke="currentColor" opacity=".1"/><text x="{L - 6}" y="{H - B - v / mx * (H - B - T) + 4:.1f}" font-size="10" text-anchor="end" fill="currentColor" opacity=".55">{v}</text>' for v in range(0, mx + 1, 10 if mx > 30 else 5))
+        return f'<figure class="chart"><svg viewBox="0 0 {W} {H}" role="img" aria-label="{e(label)}" style="width:100%;height:auto;color:var(--fg)">{gl}{"".join(bars)}{"".join(ticks)}</svg><figcaption>{e(label)}, sprint points included.</figcaption></figure>'
 
     # ---------- drivers ----------
     for pos, d in enumerate(D, 1):
@@ -367,10 +478,31 @@ def main():
                 + (f', {wins[code]} Grand Prix win{"s" if wins[code] > 1 else ""}' if wins.get(code) else "")
                 + (f' and {swins[code]} sprint win{"s" if swins[code] > 1 else ""}' if swins.get(code) else "") + ".")
         if tm: lead += f' Teammate {drv(tm["code"])} has {tm["pts"]} points.'
+        SS = season(code)
+        facts = []
+        if SS["best"]: facts.append(f'Best result: <b>P{SS["best"][0]}</b> at the <a href="{race_url(SS["best"][1]["rd"])}">{e(gp_long(SS["best"][1]))}</a>')
+        if SS["worst"] and SS["worst"] != SS["best"]: facts.append(f'Lowest classified finish: P{SS["worst"][0]} at the {e(gp_long(SS["worst"][1]))}')
+        facts.append(f'{SS["podiums"]} podium{"s" if SS["podiums"] != 1 else ""}, {SS["in_points"]} points finish{"es" if SS["in_points"] != 1 else ""} and {SS["dnfs"]} retirement{"s" if SS["dnfs"] != 1 else ""} in {done} rounds')
+        if SS["avg_q"]: facts.append(f'Average grid slot P{SS["avg_q"]:.1f}' + (f', average finish P{SS["avg_fin"]:.1f}' if SS["avg_fin"] else "") + (f', {SS["poles"]} pole position{"s" if SS["poles"] != 1 else ""}' if SS["poles"] else ""))
+        h2h_html = ""
+        if tm:
+            (qa, qb), (ra, rb) = h2h(code, tm["code"])
+            who_q = e(d["last"]) if qa > qb else e(tm["last"]) if qb > qa else "Neither driver"
+            h2h_html = f"""<h2>Teammate battle: {e(d["last"])} vs {e(tm["last"])}</h2>
+<div class="tbl"><table><thead><tr><th></th><th class="n">{e(d["code"])}</th><th class="n">{e(tm["code"])}</th></tr></thead><tbody>
+<tr><td>Qualified ahead</td><td class="n">{qa}</td><td class="n">{qb}</td></tr><tr><td>Finished ahead</td><td class="n">{ra}</td><td class="n">{rb}</td></tr><tr><td>Points</td><td class="n">{d["pts"]}</td><td class="n">{tm["pts"]}</td></tr></tbody></table></div>
+<p class="note" style="margin-top:8px">{who_q} {"leads" if qa != qb else "leads"} the qualifying battle {max(qa, qb)}–{min(qa, qb)} after {done} rounds.{"" if qa != qb else ""}</p>""" if qa != qb else f"""<h2>Teammate battle: {e(d["last"])} vs {e(tm["last"])}</h2>
+<div class="tbl"><table><thead><tr><th></th><th class="n">{e(d["code"])}</th><th class="n">{e(tm["code"])}</th></tr></thead><tbody>
+<tr><td>Qualified ahead</td><td class="n">{qa}</td><td class="n">{qb}</td></tr><tr><td>Finished ahead</td><td class="n">{ra}</td><td class="n">{rb}</td></tr><tr><td>Points</td><td class="n">{d["pts"]}</td><td class="n">{tm["pts"]}</td></tr></tbody></table></div>
+<p class="note" style="margin-top:8px">The qualifying battle is level at {qa}–{qb} after {done} rounds.</p>"""
         body = f"""<h1>{e(full)}</h1>
 <p class="sub">#{d["no"]} · {team_link(d["team"])} · {e(NATIONS.get(d["nat"], d["nat"]))}</p>
 <p class="lead">{lead}</p>
 <div class="tiles"><div class="tile"><span>Championship</span><b>P{pos}</b></div><div class="tile"><span>Points</span><b>{d["pts"]}</b></div><div class="tile"><span>GP wins</span><b>{wins.get(code, 0)}</b></div><div class="tile"><span>Sprint wins</span><b>{swins.get(code, 0)}</b></div><div class="tile"><span>Gap to leader</span><b>{"—" if pos == 1 else "+" + str(leader["pts"] - d["pts"])}</b></div></div>
+<h2>{YEAR} season in numbers</h2>
+<ul>{"".join(f"<li>{x}.</li>" for x in facts)}</ul>
+{points_chart([(tc(d["team"]), [x[3] for x in SS["rows"]])], f"{full}: points scored at each round of {YEAR}")}
+{h2h_html}
 <h2>{YEAR} season, race by race</h2>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th class="n">Qualified</th><th class="n">Finished</th><th class="n">Points</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
 <p class="note" style="margin-top:10px">Points include sprint points. <a href="/formula-1-standings-{YEAR}/">See the full {YEAR} standings</a>.</p>"""
@@ -378,7 +510,10 @@ def main():
               "jobTitle": "Racing driver", "memberOf": {"@type": "SportsTeam", "name": d["team"], "sport": "Formula 1"}, "url": f"{SITE}/drivers/{dslug[code]}/"}
         pages.append(page(f"/drivers/{dslug[code]}/", f"{full} {YEAR}: F1 points, results and standings | {BRAND}",
                           f"{full} in the {YEAR} Formula 1 season: P{pos} with {d['pts']} points for {d['team']}. Race-by-race qualifying and finishing positions.",
-                          body, [("Drivers", "/drivers/"), (full, f"/drivers/{dslug[code]}/")], ld))
+                          body, [("Drivers", "/drivers/"), (full, f"/drivers/{dslug[code]}/")], ld, extra_head=RP.CSS,
+                          og=OG.ensure(f"driver-{dslug[code]}", {"kicker": f"Driver · {YEAR} season", "title": [d["first"], d["last"]], "sub": f'{d["team"]} · #{d["no"]}',
+                                                                  "number": d["no"], "accent": tc(d["team"]),
+                                                                  "stats": [["Champ.", f"P{pos}"], ["Points", d["pts"]], ["Wins", wins.get(code, 0)], ["Podiums", SS["podiums"]]]})))
     rows = "".join(f'<tr style="--team:{tc(d["team"])}"><td class="pos">{i+1}</td><td><span class="sw"></span>{drv(d["code"])}</td><td class="n">{d["no"]}</td><td>{team_link(d["team"])}</td><td>{e(NATIONS.get(d["nat"], d["nat"]))}</td><td class="n">{d["pts"]}</td></tr>' for i, d in enumerate(D))
     pages.append(page("/drivers/", f"F1 drivers {YEAR}: every driver, number and team | {BRAND}",
                       f"All {len(D)} Formula 1 drivers in {YEAR}, with car numbers, teams, nationalities and championship points.",
@@ -394,22 +529,108 @@ def main():
             rows.append(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td>{e(fs)}</td></tr>')
         tw = sum(wins.get(x["code"], 0) for x in ds)
         lead = f'{e(t)} are P{pos} in the {YEAR} Formula 1 constructors\' championship with {p} points' + (f' and {tw} Grand Prix win{"s" if tw > 1 else ""}' if tw else "") + f'. Drivers: {" and ".join(drv(x["code"]) + f" ({x['pts']} pts)" for x in ds)}.'
+        tss = {x["code"]: season(x["code"]) for x in ds}
+        tpod = sum(v["podiums"] for v in tss.values()); tdnf = sum(v["dnfs"] for v in tss.values())
+        bests = [(v["best"][0], v["best"][1], c) for c, v in tss.items() if v["best"]]
+        tb = min(bests, key=lambda x: (x[0], x[1]["rd"])) if bests else None
+        tfacts = [f'{tpod} podium{"s" if tpod != 1 else ""} and {tdnf} retirement{"s" if tdnf != 1 else ""} across both cars in {done} rounds']
+        if tb: tfacts.append(f'Best result: P{tb[0]} for {drv(tb[2])} at the <a href="{race_url(tb[1]["rd"])}">{e(gp_long(tb[1]))}</a>')
+        tbattle = ""
+        if len(ds) == 2:
+            (qa, qb), (ra, rb) = h2h(ds[0]["code"], ds[1]["code"])
+            tbattle = f"""<h2>Teammate battle</h2><div class="tbl"><table><thead><tr><th></th><th class="n">{e(ds[0]["code"])}</th><th class="n">{e(ds[1]["code"])}</th></tr></thead><tbody>
+<tr><td>Qualified ahead</td><td class="n">{qa}</td><td class="n">{qb}</td></tr><tr><td>Finished ahead</td><td class="n">{ra}</td><td class="n">{rb}</td></tr><tr><td>Points</td><td class="n">{ds[0]["pts"]}</td><td class="n">{ds[1]["pts"]}</td></tr></tbody></table></div>"""
+        shade = lambda c, k: c if k == 0 else c + "99"
+        tchart = points_chart([(shade(tc(t), i), [x[3] for x in tss[x_["code"]]["rows"]]) for i, x_ in enumerate(ds)], f"{t}: points per round, " + " (solid) and ".join(x["last"] for x in ds) + " (light)")
         body = f"""<h1>{e(t)}</h1>
 <p class="sub">Formula 1 team · {YEAR} season</p>
 <p class="lead">{lead}</p>
-<div class="tiles"><div class="tile"><span>Constructors'</span><b>P{pos}</b></div><div class="tile"><span>Points</span><b>{p}</b></div><div class="tile"><span>GP wins</span><b>{tw}</b></div></div>
+<div class="tiles"><div class="tile"><span>Constructors'</span><b>P{pos}</b></div><div class="tile"><span>Points</span><b>{p}</b></div><div class="tile"><span>GP wins</span><b>{tw}</b></div><div class="tile"><span>Podiums</span><b>{tpod}</b></div></div>
+<ul>{"".join(f"<li>{x}.</li>" for x in tfacts)}</ul>
+{tchart}
+{tbattle}
 <h2>Finishing positions by race</h2>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Finishes</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>"""
         ld = {"@context": "https://schema.org", "@type": "SportsTeam", "name": t, "sport": "Formula 1",
               "athlete": [{"@type": "Person", "name": f'{x["first"]} {x["last"]}'} for x in ds], "url": f"{SITE}/teams/{tslug[t]}/"}
         pages.append(page(f"/teams/{tslug[t]}/", f"{t} F1 {YEAR}: points, drivers and results | {BRAND}",
                           f"{t} in the {YEAR} Formula 1 season: P{pos} in the constructors' championship with {p} points. Drivers, wins and race-by-race results.",
-                          body, [("Teams", "/teams/"), (t, f"/teams/{tslug[t]}/")], ld))
+                          body, [("Teams", "/teams/"), (t, f"/teams/{tslug[t]}/")], ld, extra_head=RP.CSS,
+                          og=OG.ensure(f"team-{tslug[t]}", {"kicker": f"F1 team · {YEAR} season", "title": [t.replace(" F1 Team", "")], "sub": " & ".join(f'{x["first"]} {x["last"]}' for x in ds),
+                                                            "accent": tc(t), "stats": [["Constructors'", f"P{pos}"], ["Points", p], ["Wins", tw], ["Podiums", tpod]]})))
     rows = "".join(f'<tr style="--team:{tc(t)}"><td class="pos">{i+1}</td><td><span class="sw"></span>{team_link(t)}</td><td>{", ".join(drv(d["code"]) for d in D if d["team"] == t)}</td><td class="n">{p}</td></tr>' for i, (t, p) in enumerate(C))
     pages.append(page("/teams/", f"F1 teams {YEAR}: every team and its drivers | {BRAND}",
                       f"All {len(C)} Formula 1 teams in {YEAR}, with their drivers and constructors' championship points.",
                       f'<h1>F1 teams {YEAR}</h1><p class="sub">Every team on the {YEAR} grid, in constructors\' championship order.</p><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th class="n">Points</th></tr></thead><tbody>{rows}</tbody></table></div>',
                       [("Teams", "/teams/")]))
+
+    # ---------- season recap: how the title was won ----------
+    CHL2 = (A.get("CHAMPIONS") or [[0, ""]])[-1]
+    if CHL2[0] == YEAR and done:
+        champ = next((x for x in D if f'{x["first"]} {x["last"]}' == CHL2[1]), None)
+        if champ:
+            cc = champ["code"]; PR = A["PER_RACE"]
+            cum = {k: [sum(v[:i + 1]) for i in range(done)] for k, v in PR.items()}
+            # the round the title was sealed: lead bigger than the points still available
+            avail = lambda i: sum(25 + (8 if x["sprint"] else 0) for x in RACES[i + 1:])
+            sealed = next((i for i in range(done) if cum[cc][i] - max(v[i] for k, v in cum.items() if k != cc) > avail(i)), done - 1)
+            led_from = next((i for i in range(done) if all(cum[cc][j] == max(v[j] for v in cum.values()) for j in range(i, done))), None)
+            led_rounds = sum(1 for i in range(done) if cum[cc][i] == max(v[i] for v in cum.values()))
+            CS = season(cc)
+            streak = best_streak = 0
+            for r in RACES[:done]:
+                streak = streak + 1 if r.get("win") == cc else 0; best_streak = max(best_streak, streak)
+            rival = max((k for k in cum if k != cc), key=lambda k: cum[k][done - 1])
+            gap = cum[cc][done - 1] - cum[rival][done - 1]
+            sr = RACES[sealed]
+            top5 = sorted(cum, key=lambda k: -cum[k][done - 1])[:5]
+            # cumulative points chart
+            Wc, Hc, Lc, Rc, Tc, Bc = 900, 340, 44, 74, 14, 26
+            mx = max(cum[k][done - 1] for k in top5)
+            X = lambda i: Lc + i / max(1, done - 1) * (Wc - Lc - Rc); Y = lambda v: Hc - Bc - v / mx * (Hc - Bc - Tc)
+            # end labels, nudged apart so close finishes stay readable
+            ly = {}
+            for k in sorted(top5, key=lambda k: -cum[k][done - 1]):
+                yv = Y(cum[k][done - 1]) + 4
+                if ly and yv < max(ly.values()) + 15: yv = max(ly.values()) + 15
+                ly[k] = yv
+            lines = "".join(f'<polyline points="{" ".join(f"{X(i):.1f},{Y(v):.1f}" for i, v in enumerate(cum[k]))}" fill="none" stroke="{tc(by_code[k]["team"])}" stroke-width="{4 if k == cc else 2.5}" stroke-dasharray="{"" if k == cc or tc(by_code[k]["team"]) not in [tc(by_code[j]["team"]) for j in top5[:top5.index(k)]] else "6 4"}"><title>{e(by_code[k]["first"])} {e(by_code[k]["last"])}</title></polyline>'
+                            f'<text x="{X(done - 1) + 6:.1f}" y="{ly[k]:.1f}" font-size="12" font-weight="700" fill="{tc(by_code[k]["team"])}">{k} {cum[k][done - 1]}</text>' for k in reversed(top5))
+            grid_l = "".join(f'<line x1="{Lc}" x2="{Wc - Rc}" y1="{Y(v):.1f}" y2="{Y(v):.1f}" stroke="currentColor" opacity=".1"/><text x="{Lc - 6}" y="{Y(v) + 4:.1f}" font-size="10" text-anchor="end" fill="currentColor" opacity=".55">{v}</text>' for v in range(0, mx + 1, 50))
+            ticks = "".join(f'<text x="{X(i):.1f}" y="{Hc - 6}" font-size="10" text-anchor="middle" fill="currentColor" opacity=".55">{RACES[i]["short"]}</text>' for i in range(done))
+            seal_line = f'<line x1="{X(sealed):.1f}" x2="{X(sealed):.1f}" y1="{Tc}" y2="{Hc - Bc}" stroke="#E9C46A" stroke-width="2" stroke-dasharray="4 3"/><text x="{X(sealed) - 8:.1f}" y="{Hc - Bc - 10}" font-size="12" text-anchor="end" fill="#E9C46A">Title sealed: {e(RACES[sealed]["short"])}</text>'
+            chart = f'<figure class="chart"><svg viewBox="0 0 {Wc} {Hc}" role="img" aria-label="Championship points after each round, top five drivers" style="width:100%;height:auto;color:var(--fg)">{grid_l}{ticks}{seal_line}{lines}</svg><figcaption>Championship points after every round for the top five drivers, sprint points included.</figcaption></figure>'
+            wins_list = [r for r in RACES[:done] if r.get("win") == cc]
+            rows = "".join(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td class="n">{q if q is not None else "–"}</td><td class="n">{f if f is not None else "–"}</td><td class="n">{pt}</td><td class="n">{cum[cc][r["rd"] - 1]}</td><td>{f'<a href="{race_url(r["rd"])}replay/">Replay story</a>' if sess.get(r["rd"], {}).get("Race") else ""}</td></tr>' for r, f, q, pt in CS["rows"])
+            full_c = f'{champ["first"]} {champ["last"]}'
+            first_win = wins_list[0] if wins_list else None
+            body = f"""<h1>How {e(full_c)} won the {YEAR} F1 title</h1>
+<p class="sub">The {YEAR} Formula 1 season, told through the numbers · updated after round {done}</p>
+<p class="lead">{drv(cc)} is the {YEAR} Formula 1 World Champion. He sealed the title at the <a href="{race_url(sr["rd"])}">{e(gp_long(sr))}</a> (round {sr["rd"]}), when his lead became bigger than the {avail(sealed)} points still available, and he did it with {total - sr["rd"]} rounds to spare. At 20, he is the youngest world champion in Formula 1 history.</p>
+<div class="tiles"><div class="tile"><span>Points</span><b>{champ["pts"]}</b></div><div class="tile"><span>Wins</span><b>{len(wins_list)}</b></div><div class="tile"><span>Podiums</span><b>{CS["podiums"]}</b></div><div class="tile"><span>Poles</span><b>{CS["poles"]}</b></div><div class="tile"><span>Lead over P2</span><b>+{gap}</b></div></div>
+<h2>The title race, round by round</h2>
+{chart}
+<h2>How he did it</h2>
+<ul>
+<li><b>Winning often.</b> {len(wins_list)} Grand Prix win{"s" if len(wins_list) != 1 else ""} from {done} rounds{f", starting at the {e(gp_long(first_win))}" if first_win else ""}{f", including {best_streak} in a row" if best_streak > 1 else ""}.</li>
+<li><b>Scoring {"every" if CS["in_points"] == done else "nearly every" if CS["in_points"] >= done - 2 else "regularly"}{" weekend" if CS["in_points"] >= done - 2 else ""}.</b> {CS["in_points"]} points finishes and {CS["podiums"]} podiums in {done} rounds, with {CS["dnfs"]} retirement{"s" if CS["dnfs"] != 1 else ""}.</li>
+<li><b>Starting at the front.</b> An average grid slot of P{CS["avg_q"]:.1f} and {CS["poles"]} pole position{"s" if CS["poles"] != 1 else ""}.</li>
+<li><b>Leading the table.</b> Top of the championship after {led_rounds} of {done} rounds{f", and every round since the {e(gp_long(RACES[led_from]))}" if led_from is not None else ""}.</li>
+<li><b>The nearest challenger:</b> {drv(rival)}, {gap} points behind after round {done}.</li>
+</ul>
+<h2>{e(champ["last"])}'s season, race by race</h2>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th class="n">Qualified</th><th class="n">Finished</th><th class="n">Points</th><th class="n">Total</th><th></th></tr></thead><tbody>{rows}</tbody></table></div>
+<p class="note" style="margin-top:10px">Numbers come from official timing data via OpenF1 and update after every session. See the <a href="/f1-stats-{YEAR}/">{YEAR} F1 stats</a>, the <a href="/formula-1-standings-{YEAR}/">standings</a> and <a href="/formula-1-world-champions/">every world champion since 1950</a>.</p>"""
+            faq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+                {"@type": "Question", "name": f"Who won the {YEAR} F1 World Championship?", "acceptedAnswer": {"@type": "Answer", "text": f"{full_c} ({champ['team']}) won the {YEAR} Formula 1 World Drivers' Championship."}},
+                {"@type": "Question", "name": f"When did {full_c} clinch the {YEAR} title?", "acceptedAnswer": {"@type": "Answer", "text": f"At the {gp_long(sr)}, round {sr['rd']} of {total}, with {total - sr['rd']} rounds to spare."}},
+                {"@type": "Question", "name": f"How many races did {full_c} win in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{len(wins_list)} after {done} rounds."}}]}
+            path = f"/f1-{YEAR}-season-review/"
+            pages.append(page(path, f"How {full_c} won the {YEAR} F1 title: season review | {BRAND}",
+                              f"How {full_c} won the {YEAR} Formula 1 World Championship: sealed at the {gp_long(sr)} with {total - sr['rd']} rounds to spare. {len(wins_list)} wins, {CS['podiums']} podiums, {CS['poles']} poles and the points race, round by round.",
+                              body, [(f"{YEAR} season review", path)], faq, extra_head=RP.CSS,
+                              og=OG.ensure(f"season-review-{YEAR}", {"kicker": f"{YEAR} season review", "title": [f"How {champ['last']}", "won the title"], "sub": f"Sealed at the {gp_long(sr)} · round {sr['rd']} of {total}",
+                                                                   "number": champ["no"], "accent": tc(champ["team"]), "stats": [["Points", champ["pts"]], ["Wins", len(wins_list)], ["Podiums", CS["podiums"]], ["Poles", CS["poles"]]]})))
 
     # ---------- world champions ----------
     CH = A.get("CHAMPIONS") or []
@@ -457,6 +678,7 @@ def main():
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
         f"  <url><loc>{SITE}{u}</loc><lastmod>{lm(u)}</lastmod></url>\n" for u in urls) + "</urlset>\n"
     open(smp, "w").write(sm)
+    OG.finish()
     print(f"Built {len(pages)} pages and sitemap.xml ({sum(1 for u in urls if lm(u) == today)} updated today)")
 
 
@@ -544,7 +766,9 @@ def build_circuits(A, RACES, race_url, gp_long, drv, by_code, total, done):
                   "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}
         title = f"{I['full']}: F1 track guide & lap record | {BRAND}"
         desc = f"{I['full']}, {I['city']}: {I['length']:.3f} km, {I['turns']} corners, {laps} laps. Lap record {L[0] if L else '—'}, {src['year']} pole {lt} by {src['driverName']}. Explore the track in 3D."
-        out.append(page(url, title, desc, body, [("Circuits", "/circuits/"), (I["name"], url)], place, ld_list=[faq_ld]))
+        og = OG.ensure(f"circuit-{sl}", {"kicker": f"F1 circuit · round {I['rd']}", "title": [I["name"]], "sub": I["city"] + (f" · lap record {L[0]}" if L else ""), "track": sl, "accent": "#2FD480",
+                                          "stats": [["Length", f"{I['length']:.2f} km"], ["Corners", I["turns"]], ["Top speed", f"{st['vmax']}"]]})
+        out.append(page(url, title, desc, body, [("Circuits", "/circuits/"), (I["name"], url)], place, ld_list=[faq_ld], og=og))
         rows.append(f'<tr><td class="pos">{I["rd"]}</td><td><a href="{url}">{e(I["full"])}</a></td><td>{e(I["city"])}</td><td class="n">{I["length"]:.3f} km</td><td class="n">{I["turns"]}</td><td class="n">{L[0] if L else "—"}</td><td class="n">{I["firstGP"]}</td></tr>')
     if rows:
         body = f"""<h1>F1 circuits {YEAR}</h1>
@@ -601,7 +825,8 @@ box.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.pr
 QG_PAGE = """<h1>F1 qualifying game</h1>
 <p class="sub">Pit Wall Dash: three flying laps, 22 drivers to beat.</p>
 <p class="lead">Take your team's car out for qualifying at Pit Wall Park. Your best of three laps goes on the timing sheet against the whole 2026 grid. A ghost car of the driver just ahead shows you where you're losing time, with live delta and purple, green and yellow sectors like the real timing screens.</p>
-<p><a class="btn" href="/#games">Play Pit Wall Dash</a></p>
+<div class="qg-frame"><iframe src="/?embed=dash" title="Pit Wall Dash: F1 qualifying game" allow="fullscreen" style="display:block;width:100%;height:clamp(600px,92svh,880px);border:0;border-radius:4px;background:#0A0C11"></iframe></div>
+<p class="note" style="margin-top:8px">Tap the game first so it picks up your keys. Best on a laptop with arrow keys, and works on phones too. Your best lap is saved on this device.</p>
 <h2>How to play</h2>
 <ul><li><b>Steer</b> with ← → or A and D. On a phone, hold the left or right side of the screen.</li>
 <li><b>Brake</b> with ↓ or S, or the BRAKE button. The car follows the track; arrive at a corner too fast and it slides wide.</li>
@@ -624,7 +849,7 @@ def build_games():
                     "Free browser F1 qualifying game: three flying laps, a ghost car to chase, sector times and the 2026 grid to beat. Play on phone or desktop.",
                     QG_PAGE, [("F1 qualifying game", "/f1-qualifying-game/")],
                     {"@context": "https://schema.org", "@type": "VideoGame", "name": "Pit Wall Dash", "genre": "Racing", "gamePlatform": "Web browser",
-                     "applicationCategory": "GameApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": f"{SITE}/#games"}))
+                     "applicationCategory": "GameApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": f"{SITE}/f1-qualifying-game/"}))
     return out
 
 
@@ -1035,6 +1260,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 - [World champions]({SITE}/formula-1-world-champions/): every champion since 1950
 - [Next F1 race]({SITE}/next-f1-race/): date, start time and full weekend schedule of the next Grand Prix
 - [{YEAR} results]({SITE}/f1-results-{YEAR}/): winner, podium, pole and sprint winner of every race so far
+- [{YEAR} season review]({SITE}/f1-{YEAR}-season-review/): how the {YEAR} title was won, with the points race round by round
 - [{YEAR} F1 stats]({SITE}/f1-stats-{YEAR}/): wins, podiums, poles, fastest laps, sprint wins and DNFs for every driver and team
 - [How fast is an F1 car?]({SITE}/how-fast-is-an-f1-car/): top speed, average speed and slowest corner at every circuit, from pole-lap telemetry
 - [Learn F1]({SITE}/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)

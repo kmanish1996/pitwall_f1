@@ -31,6 +31,9 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install Pillow (draws each page's share image)
+        run: pip install --quiet pillow
+
       - name: Fetch finished sessions from OpenF1
         run: python3 scripts/update_sessions.py
 
