@@ -2,7 +2,7 @@
  "source": "https://pitwallf1.in",
  "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
  "season": 2026,
- "afterRound": 19,
+ "afterRound": 20,
  "rounds": 23,
  "races": [
   {
@@ -260,9 +260,9 @@
    "dates": "6–8 Nov",
    "raceStart": "2026-11-08T17:00:00.000Z",
    "sprint": false,
-   "winner": null,
-   "winnerTeam": null,
-   "raceTime": null,
+   "winner": "NOR",
+   "winnerTeam": "McLaren",
+   "raceTime": "1:35:23.504",
    "url": "https://pitwallf1.in/races/sao-paulo-grand-prix-2026/"
   },
   {

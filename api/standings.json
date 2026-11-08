@@ -2,7 +2,7 @@
  "source": "https://pitwallf1.in",
  "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
  "season": 2026,
- "afterRound": 19,
+ "afterRound": 20,
  "rounds": 23,
  "champion": "Kimi Antonelli",
  "drivers": [
@@ -12,7 +12,7 @@
    "name": "Kimi Antonelli",
    "number": 12,
    "team": "Mercedes",
-   "points": 380,
+   "points": 390,
    "wins": 9,
    "url": "https://pitwallf1.in/drivers/kimi-antonelli/"
   },
@@ -22,29 +22,29 @@
    "name": "Max Verstappen",
    "number": 3,
    "team": "Red Bull Racing",
-   "points": 261,
+   "points": 279,
    "wins": 3,
    "url": "https://pitwallf1.in/drivers/max-verstappen/"
   },
   {
    "position": 3,
-   "code": "HAM",
-   "name": "Lewis Hamilton",
-   "number": 44,
-   "team": "Ferrari",
-   "points": 259,
-   "wins": 1,
-   "url": "https://pitwallf1.in/drivers/lewis-hamilton/"
-  },
-  {
-   "position": 4,
    "code": "RUS",
    "name": "George Russell",
    "number": 63,
    "team": "Mercedes",
-   "points": 250,
+   "points": 262,
    "wins": 3,
    "url": "https://pitwallf1.in/drivers/george-russell/"
+  },
+  {
+   "position": 4,
+   "code": "HAM",
+   "name": "Lewis Hamilton",
+   "number": 44,
+   "team": "Ferrari",
+   "points": 261,
+   "wins": 1,
+   "url": "https://pitwallf1.in/drivers/lewis-hamilton/"
   },
   {
    "position": 5,
@@ -52,7 +52,7 @@
    "name": "Charles Leclerc",
    "number": 16,
    "team": "Ferrari",
-   "points": 245,
+   "points": 249,
    "wins": 1,
    "url": "https://pitwallf1.in/drivers/charles-leclerc/"
   },
@@ -62,8 +62,8 @@
    "name": "Lando Norris",
    "number": 1,
    "team": "McLaren",
-   "points": 221,
-   "wins": 2,
+   "points": 246,
+   "wins": 3,
    "url": "https://pitwallf1.in/drivers/lando-norris/"
   },
   {
@@ -72,7 +72,7 @@
    "name": "Oscar Piastri",
    "number": 81,
    "team": "McLaren",
-   "points": 150,
+   "points": 158,
    "wins": 0,
    "url": "https://pitwallf1.in/drivers/oscar-piastri/"
   },
@@ -82,7 +82,7 @@
    "name": "Isack Hadjar",
    "number": 6,
    "team": "Red Bull Racing",
-   "points": 105,
+   "points": 120,
    "wins": 0,
    "url": "https://pitwallf1.in/drivers/isack-hadjar/"
   },
@@ -92,7 +92,7 @@
    "name": "Liam Lawson",
    "number": 30,
    "team": "Racing Bulls",
-   "points": 79,
+   "points": 85,
    "wins": 0,
    "url": "https://pitwallf1.in/drivers/liam-lawson/"
   },
@@ -142,7 +142,7 @@
    "name": "Nico Hülkenberg",
    "number": 27,
    "team": "Audi",
-   "points": 13,
+   "points": 14,
    "wins": 0,
    "url": "https://pitwallf1.in/drivers/nico-hulkenberg/"
   },
@@ -241,31 +241,31 @@
   {
    "position": 1,
    "team": "Mercedes",
-   "points": 630,
+   "points": 652,
    "url": "https://pitwallf1.in/teams/mercedes/"
   },
   {
    "position": 2,
    "team": "Ferrari",
-   "points": 504,
+   "points": 510,
    "url": "https://pitwallf1.in/teams/ferrari/"
   },
   {
    "position": 3,
    "team": "McLaren",
-   "points": 371,
+   "points": 404,
    "url": "https://pitwallf1.in/teams/mclaren/"
   },
   {
    "position": 4,
    "team": "Red Bull Racing",
-   "points": 366,
+   "points": 399,
    "url": "https://pitwallf1.in/teams/red-bull-racing/"
   },
   {
    "position": 5,
    "team": "Racing Bulls",
-   "points": 118,
+   "points": 124,
    "url": "https://pitwallf1.in/teams/racing-bulls/"
   },
   {
@@ -283,7 +283,7 @@
   {
    "position": 8,
    "team": "Audi",
-   "points": 23,
+   "points": 24,
    "url": "https://pitwallf1.in/teams/audi/"
   },
   {

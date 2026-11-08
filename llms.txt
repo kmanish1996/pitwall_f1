@@ -2,11 +2,11 @@
 
 > Pit Wall F1 (pitwallf1.in) is an unofficial Formula 1 fan hub for the 2026 season: championship standings, every race result, lap-by-lap replays with team radio, an interactive 3D model of every circuit built from real pole-lap telemetry, the calendar with lap records, race travel planning, and F1 games. Data comes from OpenF1 and updates automatically after every session.
 
-Current state (after round 19 of 23, the Mexico City Grand Prix):
-- World champion: Kimi Antonelli (Mercedes), 380 points; P2 Max Verstappen 261; P3 Lewis Hamilton 259.
-- Constructors: Mercedes 630, Ferrari 504, McLaren 371.
-- Last race: Mexico City Grand Prix, won by Max Verstappen.
-- Next race: São Paulo Grand Prix at Autódromo José Carlos Pace, 6–8 Nov (race start 2026-11-08T17:00:00.000Z).
+Current state (after round 20 of 23, the São Paulo Grand Prix):
+- World champion: Kimi Antonelli (Mercedes), 390 points; P2 Max Verstappen 279; P3 George Russell 262.
+- Constructors: Mercedes 652, Ferrari 510, McLaren 404.
+- Last race: São Paulo Grand Prix, won by Lando Norris.
+- Next race: Las Vegas Grand Prix at Las Vegas Strip Circuit, 19–21 Nov (race start 2026-11-22T04:00:00.000Z).
 
 ## Pages
 - [2026 standings](https://pitwallf1.in/formula-1-standings-2026/): drivers' and constructors' championship tables
@@ -22,7 +22,7 @@ Current state (after round 19 of 23, the Mexico City Grand Prix):
 - [Learn F1](https://pitwallf1.in/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test](https://pitwallf1.in/f1-reaction-test/): the five-light start, playable in the browser
 - [F1 qualifying game](https://pitwallf1.in/f1-qualifying-game/): three-lap qualifying against the 2026 grid
-- Race pages: https://pitwallf1.in/races/<grand-prix>-2026/ (for example https://pitwallf1.in/races/mexico-city-grand-prix-2026/)
+- Race pages: https://pitwallf1.in/races/<grand-prix>-2026/ (for example https://pitwallf1.in/races/sao-paulo-grand-prix-2026/)
 - Race stories: https://pitwallf1.in/races/<grand-prix>-2026/replay/ and /sprint-replay/: the race in words, a lap-by-lap position chart and tyre strategy
 
 ## Interactive app (JavaScript)

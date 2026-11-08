@@ -1657,20 +1657,20 @@ const TEAMS={
 };
 // code, first, last, number, nationality, team, points
 const DRIVERS=[
- ["ANT","Kimi","Antonelli",12,"ITA","Mercedes",380],
- ["VER","Max","Verstappen",3,"NED","Red Bull Racing",261],
- ["HAM","Lewis","Hamilton",44,"GBR","Ferrari",259],
- ["RUS","George","Russell",63,"GBR","Mercedes",250],
- ["LEC","Charles","Leclerc",16,"MON","Ferrari",245],
- ["NOR","Lando","Norris",1,"GBR","McLaren",221],
- ["PIA","Oscar","Piastri",81,"AUS","McLaren",150],
- ["HAD","Isack","Hadjar",6,"FRA","Red Bull Racing",105],
- ["LAW","Liam","Lawson",30,"NZL","Racing Bulls",79],
+ ["ANT","Kimi","Antonelli",12,"ITA","Mercedes",390],
+ ["VER","Max","Verstappen",3,"NED","Red Bull Racing",279],
+ ["RUS","George","Russell",63,"GBR","Mercedes",262],
+ ["HAM","Lewis","Hamilton",44,"GBR","Ferrari",261],
+ ["LEC","Charles","Leclerc",16,"MON","Ferrari",249],
+ ["NOR","Lando","Norris",1,"GBR","McLaren",246],
+ ["PIA","Oscar","Piastri",81,"AUS","McLaren",158],
+ ["HAD","Isack","Hadjar",6,"FRA","Red Bull Racing",120],
+ ["LAW","Liam","Lawson",30,"NZL","Racing Bulls",85],
  ["GAS","Pierre","Gasly",10,"FRA","Alpine",43],
  ["LIN","Arvid","Lindblad",41,"GBR","Racing Bulls",38],
  ["COL","Franco","Colapinto",43,"ARG","Alpine",31],
  ["BEA","Oliver","Bearman",87,"GBR","Haas F1 Team",23],
- ["HUL","Nico","Hülkenberg",27,"GER","Audi",13],
+ ["HUL","Nico","Hülkenberg",27,"GER","Audi",14],
  ["BOR","Gabriel","Bortoleto",5,"BRA","Audi",10],
  ["OCO","Esteban","Ocon",31,"FRA","Haas F1 Team",7],
  ["ALO","Fernando","Alonso",14,"ESP","Aston Martin",7],
@@ -1682,33 +1682,33 @@ const DRIVERS=[
  ["PER","Sergio","Pérez",11,"MEX","Cadillac",0]
 ].map(d=>({code:d[0],first:d[1],last:d[2],no:d[3],nat:d[4],team:d[5],pts:d[6]}));
 
-const CONSTRUCTORS=[["Mercedes", 630], ["Ferrari", 504], ["McLaren", 371], ["Red Bull Racing", 366], ["Racing Bulls", 118], ["Alpine", 74], ["Haas F1 Team", 30], ["Audi", 23], ["Williams", 12], ["Aston Martin", 7], ["Cadillac", 0]];
+const CONSTRUCTORS=[["Mercedes", 652], ["Ferrari", 510], ["McLaren", 404], ["Red Bull Racing", 399], ["Racing Bulls", 124], ["Alpine", 74], ["Haas F1 Team", 30], ["Audi", 24], ["Williams", 12], ["Aston Martin", 7], ["Cadillac", 0]];
 
 // points per round (sprint points included) for the current top 10
 const PER_RACE={
- ANT:[18, 29, 25, 28, 31, 25, 0, 15, 8, 25, 15, 23, 25, 25, 10, 18, 20, 25, 15],
- VER:[8, 0, 4, 14, 17, 0, 12, 18, 3, 15, 18, 3, 15, 18, 18, 25, 33, 15, 25],
- HAM:[12, 21, 8, 10, 21, 18, 25, 10, 22, 12, 10, 14, 8, 0, 8, 15, 15, 12, 18],
- RUS:[25, 26, 12, 17, 8, 0, 18, 25, 23, 0, 6, 23, 18, 10, 25, 0, 2, 4, 8],
- LEC:[15, 19, 15, 10, 16, 0, 0, 4, 29, 18, 12, 17, 0, 12, 12, 12, 24, 18, 12],
- NOR:[10, 5, 10, 26, 7, 0, 15, 6, 18, 6, 25, 31, 12, 15, 0, 2, 13, 10, 10],
- PIA:[0, 3, 18, 22, 5, 12, 10, 12, 2, 10, 0, 12, 10, 4, 0, 8, 10, 6, 6],
- HAD:[0, 4, 0, 0, 10, 15, 8, 8, 10, 8, 8, 0, 0, 0, 15, 10, 1, 8, 0],
- LAW:[0, 8, 2, 0, 6, 10, 4, 2, 9, 0, 4, 6, 0, 8, 0, 6, 10, 2, 2],
- GAS:[1, 8, 6, 1, 4, 6, 6, 0, 1, 0, 0, 2, 6, 0, 0, 0, 0, 1, 1],
- LIN:[4, 0, 0, 0, 1, 8, 2, 1, 6, 2, 1, 0, 4, 2, 6, 1, 0, 0, 0],
- COL:[0, 1, 0, 6, 8, 0, 1, 0, 2, 1, 0, 0, 2, 6, 0, 0, 0, 0, 4],
- BEA:[6, 11, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0],
- HUL:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 6, 0, 0],
- BOR:[2, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- OCO:[0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
- ALO:[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0],
- SAI:[0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
- ALB:[0, 0, 0, 1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- TSU:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
- STR:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- BOT:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- PER:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ ANT:[18, 29, 25, 28, 31, 25, 0, 15, 8, 25, 15, 23, 25, 25, 10, 18, 20, 25, 15, 10],
+ VER:[8, 0, 4, 14, 17, 0, 12, 18, 3, 15, 18, 3, 15, 18, 18, 25, 33, 15, 25, 18],
+ RUS:[25, 26, 12, 17, 8, 0, 18, 25, 23, 0, 6, 23, 18, 10, 25, 0, 2, 4, 8, 12],
+ HAM:[12, 21, 8, 10, 21, 18, 25, 10, 22, 12, 10, 14, 8, 0, 8, 15, 15, 12, 18, 2],
+ LEC:[15, 19, 15, 10, 16, 0, 0, 4, 29, 18, 12, 17, 0, 12, 12, 12, 24, 18, 12, 4],
+ NOR:[10, 5, 10, 26, 7, 0, 15, 6, 18, 6, 25, 31, 12, 15, 0, 2, 13, 10, 10, 25],
+ PIA:[0, 3, 18, 22, 5, 12, 10, 12, 2, 10, 0, 12, 10, 4, 0, 8, 10, 6, 6, 8],
+ HAD:[0, 4, 0, 0, 10, 15, 8, 8, 10, 8, 8, 0, 0, 0, 15, 10, 1, 8, 0, 15],
+ LAW:[0, 8, 2, 0, 6, 10, 4, 2, 9, 0, 4, 6, 0, 8, 0, 6, 10, 2, 2, 6],
+ GAS:[1, 8, 6, 1, 4, 6, 6, 0, 1, 0, 0, 2, 6, 0, 0, 0, 0, 1, 1, 0],
+ LIN:[4, 0, 0, 0, 1, 8, 2, 1, 6, 2, 1, 0, 4, 2, 6, 1, 0, 0, 0, 0],
+ COL:[0, 1, 0, 6, 8, 0, 1, 0, 2, 1, 0, 0, 2, 6, 0, 0, 0, 0, 4, 0],
+ BEA:[6, 11, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0],
+ HUL:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 1, 0, 0, 6, 0, 0, 1],
+ BOR:[2, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ OCO:[0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0],
+ ALO:[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 0],
+ SAI:[0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+ ALB:[0, 0, 0, 1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ TSU:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+ STR:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ BOT:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ PER:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 };
 
 // round, name, short, circuit, place, dates label, sprint, raceUTC, winner code, winner team, race time
@@ -1750,7 +1750,7 @@ function sessionsFor(rd){
   const r=REPLAY[rd]||{};return [r.s&&{sk:r.s,type:"Sprint"},r.r&&{sk:r.r,type:"Race"}].filter(Boolean);
 }
 // race results calculated from session data by scripts/update_standings.py: {round:[winner, team, race time, fastest lap (s), fastest lap by]}
-const RACE_RESULTS={"1": ["RUS", "Mercedes", "1:23:06.801", 82.091, "VER"], "2": ["ANT", "Mercedes", "1:33:15.607", 95.275, "ANT"], "3": ["ANT", "Mercedes", "1:28:03.403", 92.432, "ANT"], "4": ["ANT", "Mercedes", "1:33:19.273", 91.869, "NOR"], "5": ["ANT", "Mercedes", "1:28:15.758", 74.21, "ANT"], "6": ["ANT", "Mercedes", "2:23:31.243", 73.481, "ANT"], "7": ["HAM", "Ferrari", "1:32:28.105", 80.122, "HAM"], "8": ["RUS", "Mercedes", "1:26:37.979", 70.374, "ANT"], "9": ["LEC", "Ferrari", "1:27:11.335", 91.777, "ANT"], "10": ["ANT", "Mercedes", "1:24:42.479", 108.89, "NOR"], "11": ["NOR", "McLaren", "1:39:56.180", 82.0, "LEC"], "12": ["NOR", "McLaren", "2:04:44.859", 74.23, "LEC"], "13": ["ANT", "Mercedes", "1:51:15.281", 83.504, "ANT"], "14": ["ANT", "Mercedes", "1:34:23.754", 95.587, "RUS"], "15": ["RUS", "Mercedes", "1:38:02.143", 104.916, "RUS"], "16": ["VER", "Red Bull Racing", "1:47:14.808", 98.22, "VER"], "17": ["VER", "Red Bull Racing", "1:42:00.785", 95.202, "LEC"], "18": ["ANT", "Mercedes", "1:35:16.650", 97.976, "LEC"], "19": ["VER", "Red Bull Racing", "2:20:28.772", 79.268, "HAM"]};
+const RACE_RESULTS={"1": ["RUS", "Mercedes", "1:23:06.801", 82.091, "VER"], "2": ["ANT", "Mercedes", "1:33:15.607", 95.275, "ANT"], "3": ["ANT", "Mercedes", "1:28:03.403", 92.432, "ANT"], "4": ["ANT", "Mercedes", "1:33:19.273", 91.869, "NOR"], "5": ["ANT", "Mercedes", "1:28:15.758", 74.21, "ANT"], "6": ["ANT", "Mercedes", "2:23:31.243", 73.481, "ANT"], "7": ["HAM", "Ferrari", "1:32:28.105", 80.122, "HAM"], "8": ["RUS", "Mercedes", "1:26:37.979", 70.374, "ANT"], "9": ["LEC", "Ferrari", "1:27:11.335", 91.777, "ANT"], "10": ["ANT", "Mercedes", "1:24:42.479", 108.89, "NOR"], "11": ["NOR", "McLaren", "1:39:56.180", 82.0, "LEC"], "12": ["NOR", "McLaren", "2:04:44.859", 74.23, "LEC"], "13": ["ANT", "Mercedes", "1:51:15.281", 83.504, "ANT"], "14": ["ANT", "Mercedes", "1:34:23.754", 95.587, "RUS"], "15": ["RUS", "Mercedes", "1:38:02.143", 104.916, "RUS"], "16": ["VER", "Red Bull Racing", "1:47:14.808", 98.22, "VER"], "17": ["VER", "Red Bull Racing", "1:42:00.785", 95.202, "LEC"], "18": ["ANT", "Mercedes", "1:35:16.650", 97.976, "LEC"], "19": ["VER", "Red Bull Racing", "2:20:28.772", 79.268, "HAM"], "20": ["NOR", "McLaren", "1:35:23.504", 72.689, "ANT"]};
 RACES.forEach(r=>{const x=RACE_RESULTS[r.rd];if(!x)return;r.win=x[0];r.winTeam=x[1];r.time=x[2];r.fl=x[3];r.flBy=x[4];
   const L=LAP_RECORD[r.rd],d=DRIVERS.find(z=>z.code===x[4]);
   if(x[3]&&d&&(!L||x[3]<lapSecs(L[0])-1e-6))LAP_RECORD[r.rd]=[fmtLapRec(x[3]),`${d.first} ${d.last}`,TEAMS[d.team]?TEAMS[d.team].short:d.team,2026,(TEAMS[d.team]||{c:"#888"}).c]});
@@ -1759,7 +1759,7 @@ function fmtLapRec(v){const m=Math.floor(v/60);return `${m}:${(v-m*60).toFixed(3
 // World Drivers' Champions, 1950 onwards: [year, driver, flag code, team]
 const CHAMPIONS=[[1950, "Nino Farina", "it", "Alfa Romeo"], [1951, "Juan Manuel Fangio", "ar", "Alfa Romeo"], [1952, "Alberto Ascari", "it", "Ferrari"], [1953, "Alberto Ascari", "it", "Ferrari"], [1954, "Juan Manuel Fangio", "ar", "Maserati / Mercedes"], [1955, "Juan Manuel Fangio", "ar", "Mercedes"], [1956, "Juan Manuel Fangio", "ar", "Ferrari"], [1957, "Juan Manuel Fangio", "ar", "Maserati"], [1958, "Mike Hawthorn", "gb", "Ferrari"], [1959, "Jack Brabham", "au", "Cooper"], [1960, "Jack Brabham", "au", "Cooper"], [1961, "Phil Hill", "us", "Ferrari"], [1962, "Graham Hill", "gb", "BRM"], [1963, "Jim Clark", "gb", "Lotus"], [1964, "John Surtees", "gb", "Ferrari"], [1965, "Jim Clark", "gb", "Lotus"], [1966, "Jack Brabham", "au", "Brabham"], [1967, "Denny Hulme", "nz", "Brabham"], [1968, "Graham Hill", "gb", "Lotus"], [1969, "Jackie Stewart", "gb", "Matra"], [1970, "Jochen Rindt", "at", "Lotus"], [1971, "Jackie Stewart", "gb", "Tyrrell"], [1972, "Emerson Fittipaldi", "br", "Lotus"], [1973, "Jackie Stewart", "gb", "Tyrrell"], [1974, "Emerson Fittipaldi", "br", "McLaren"], [1975, "Niki Lauda", "at", "Ferrari"], [1976, "James Hunt", "gb", "McLaren"], [1977, "Niki Lauda", "at", "Ferrari"], [1978, "Mario Andretti", "us", "Lotus"], [1979, "Jody Scheckter", "za", "Ferrari"], [1980, "Alan Jones", "au", "Williams"], [1981, "Nelson Piquet", "br", "Brabham"], [1982, "Keke Rosberg", "fi", "Williams"], [1983, "Nelson Piquet", "br", "Brabham"], [1984, "Niki Lauda", "at", "McLaren"], [1985, "Alain Prost", "fr", "McLaren"], [1986, "Alain Prost", "fr", "McLaren"], [1987, "Nelson Piquet", "br", "Williams"], [1988, "Ayrton Senna", "br", "McLaren"], [1989, "Alain Prost", "fr", "McLaren"], [1990, "Ayrton Senna", "br", "McLaren"], [1991, "Ayrton Senna", "br", "McLaren"], [1992, "Nigel Mansell", "gb", "Williams"], [1993, "Alain Prost", "fr", "Williams"], [1994, "Michael Schumacher", "de", "Benetton"], [1995, "Michael Schumacher", "de", "Benetton"], [1996, "Damon Hill", "gb", "Williams"], [1997, "Jacques Villeneuve", "ca", "Williams"], [1998, "Mika Häkkinen", "fi", "McLaren"], [1999, "Mika Häkkinen", "fi", "McLaren"], [2000, "Michael Schumacher", "de", "Ferrari"], [2001, "Michael Schumacher", "de", "Ferrari"], [2002, "Michael Schumacher", "de", "Ferrari"], [2003, "Michael Schumacher", "de", "Ferrari"], [2004, "Michael Schumacher", "de", "Ferrari"], [2005, "Fernando Alonso", "es", "Renault"], [2006, "Fernando Alonso", "es", "Renault"], [2007, "Kimi Räikkönen", "fi", "Ferrari"], [2008, "Lewis Hamilton", "gb", "McLaren"], [2009, "Jenson Button", "gb", "Brawn"], [2010, "Sebastian Vettel", "de", "Red Bull"], [2011, "Sebastian Vettel", "de", "Red Bull"], [2012, "Sebastian Vettel", "de", "Red Bull"], [2013, "Sebastian Vettel", "de", "Red Bull"], [2014, "Lewis Hamilton", "gb", "Mercedes"], [2015, "Lewis Hamilton", "gb", "Mercedes"], [2016, "Nico Rosberg", "de", "Mercedes"], [2017, "Lewis Hamilton", "gb", "Mercedes"], [2018, "Lewis Hamilton", "gb", "Mercedes"], [2019, "Lewis Hamilton", "gb", "Mercedes"], [2020, "Lewis Hamilton", "gb", "Mercedes"], [2021, "Max Verstappen", "nl", "Red Bull"], [2022, "Max Verstappen", "nl", "Red Bull"], [2023, "Max Verstappen", "nl", "Red Bull"], [2024, "Max Verstappen", "nl", "Red Bull"], [2025, "Lando Norris", "gb", "McLaren"], [2026, "Kimi Antonelli", "it", "Mercedes"]];
 const LONG_NAMES={19:"Mexico City Grand Prix",20:"São Paulo Grand Prix",21:"Las Vegas Grand Prix",22:"Qatar Grand Prix",23:"Abu Dhabi Grand Prix"};
-const COMPLETED=19, TOTAL=23;
+const COMPLETED=20, TOTAL=23;
 
 // Weekend sessions from OpenF1, written by scripts/update_schedule.py
 const SESSIONS=[
