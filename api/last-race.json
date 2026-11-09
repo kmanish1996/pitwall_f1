@@ -1,0 +1,47 @@
+{
+ "round": 20,
+ "total": 23,
+ "name": "São Paulo Grand Prix",
+ "short": "São Paulo GP",
+ "circuit": "Autódromo José Carlos Pace",
+ "place": "São Paulo",
+ "date": "2026-11-08T17:00:00+00:00",
+ "laps": 71,
+ "podium": [
+  {
+   "pos": 1,
+   "code": "NOR",
+   "name": "Lando Norris",
+   "team": "McLaren",
+   "col": "#F47600",
+   "gap": null
+  },
+  {
+   "pos": 2,
+   "code": "VER",
+   "name": "Max Verstappen",
+   "team": "Red Bull Racing",
+   "col": "#4781D7",
+   "gap": "+14.602s"
+  },
+  {
+   "pos": 3,
+   "code": "HAD",
+   "name": "Isack Hadjar",
+   "team": "Red Bull Racing",
+   "col": "#4781D7",
+   "gap": "+24.485s"
+  }
+ ],
+ "pole": "NOR",
+ "fastestLap": {
+  "code": "ANT",
+  "time": "1:12.689"
+ },
+ "time": "1:35:23.504",
+ "links": {
+  "story": "/races/sao-paulo-grand-prix-2026/replay/",
+  "replay": "/race-centre?replay=11412",
+  "results": "/races/sao-paulo-grand-prix-2026/"
+ }
+}
