@@ -182,6 +182,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<script src="/assets/diwali.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>{CSS}</style>
@@ -664,6 +665,25 @@ def main():
     pages += build_speed(A)
     # ---------- machine-readable data, llms.txt, robots.txt ----------
     write_api(A, D, C, RACES, wins, race_url, gp_long, dslug, tslug, done, total, champ_now)
+    # ---------- /api/last-race.json: the homepage's "Last race" card ----------
+    lr = RACES[done - 1] if done else None
+    if lr and sess.get(lr["rd"], {}).get("Race"):
+        hv = sess[lr["rd"]]; dd = sdata(hv["Race"]); dm = {x["n"]: x for x in dd["drivers"]}
+        def who(n):
+            x = dm.get(n, {}); b = by_code.get(x.get("c"), {})
+            return {"code": x.get("c"), "name": f'{b.get("first", "")} {b.get("last", "")}'.strip() or x.get("c"), "team": b.get("team"), "col": x.get("col")}
+        pod = []
+        for row in dd["result"][:3]:
+            g = row[3]
+            pod.append({"pos": row[0], **who(row[1]), "gap": None if row[0] == 1 else (f"+{g:.3f}s" if isinstance(g, (int, float)) else str(g))})
+        pole = None
+        if hv.get("Qualifying"):
+            qd = sdata(hv["Qualifying"]); qm = {x["n"]: x["c"] for x in qd["drivers"]}
+            if qd["result"]: pole = qm.get(qd["result"][0][1])
+        write_json("api/last-race.json", {"round": lr["rd"], "total": total, "name": gp_long(lr), "short": lr["name"], "circuit": lr["circuit"], "place": lr["place"],
+            "date": dd["date"], "laps": max((x[2] for x in dd["result"] if isinstance(x[2], int)), default=None), "podium": pod, "pole": pole,
+            "fastestLap": {"code": lr.get("flBy"), "time": fmt_lap(lr["fl"])} if lr.get("fl") else None, "time": lr.get("time"),
+            "links": {"story": f"{race_url(lr['rd'])}replay/", "replay": f"/race-centre?replay={hv['Race']}", "results": race_url(lr["rd"])}})
     write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url)
     write_robots()
     app_urls = write_app_shells()

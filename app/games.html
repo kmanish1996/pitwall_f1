@@ -31,6 +31,7 @@
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<script src="/assets/diwali.js" defer></script>
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Site summary for AI assistants">
 <link rel="alternate" type="application/json" href="/api/index.json" title="Pit Wall F1 open data">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Pit Wall F1", "alternateName": ["PitWall F1", "Pit Wall", "pitwallf1", "pitwallf1.in"], "url": "https://pitwallf1.in/", "description": "Lights out! Pit Wall F1 is the free, unofficial F1 fan hub: live 2026 standings, results and race stats, the next race in your time zone, lap-by-lap replays with team radio, every circuit in 3D, F1 explained for new fans, and F1 games.", "inLanguage": "en"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Pit Wall F1", "alternateName": "pitwallf1.in", "url": "https://pitwallf1.in/", "logo": "https://pitwallf1.in/assets/icon-512.png", "sameAs": ["https://www.instagram.com/pitwall_f1_/"], "founder": {"@type": "Person", "name": "Kanathil Manish Nair"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Pit Wall F1", "url": "https://pitwallf1.in/", "applicationCategory": "SportsApplication", "operatingSystem": "Any", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "featureList": ["Formula 1 2026 drivers' and constructors' standings", "Lap-by-lap race replays with team radio", "3D model of every F1 circuit", "F1 calendar with lap records", "Title fight calculator", "Race travel planner", "F1 reaction test", "F1 qualifying game"]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "Pit Wall F1 sections", "itemListElement": [{"@type": "SiteNavigationElement", "position": 1, "name": "Next F1 race", "url": "https://pitwallf1.in/next-f1-race/"}, {"@type": "SiteNavigationElement", "position": 2, "name": "Race centre: every race replayed", "url": "https://pitwallf1.in/race-centre"}, {"@type": "SiteNavigationElement", "position": 3, "name": "Season replay", "url": "https://pitwallf1.in/replay"}, {"@type": "SiteNavigationElement", "position": 4, "name": "Title fight", "url": "https://pitwallf1.in/title-fight"}, {"@type": "SiteNavigationElement", "position": 5, "name": "Race travel planner", "url": "https://pitwallf1.in/travel"}, {"@type": "SiteNavigationElement", "position": 6, "name": "2026 standings", "url": "https://pitwallf1.in/formula-1-standings-2026/"}, {"@type": "SiteNavigationElement", "position": 7, "name": "2026 results", "url": "https://pitwallf1.in/f1-results-2026/"}, {"@type": "SiteNavigationElement", "position": 8, "name": "2026 F1 stats", "url": "https://pitwallf1.in/f1-stats-2026/"}, {"@type": "SiteNavigationElement", "position": 9, "name": "2026 calendar", "url": "https://pitwallf1.in/f1-calendar-2026/"}, {"@type": "SiteNavigationElement", "position": 10, "name": "How fast is an F1 car?", "url": "https://pitwallf1.in/how-fast-is-an-f1-car/"}, {"@type": "SiteNavigationElement", "position": 11, "name": "F1 circuits", "url": "https://pitwallf1.in/circuits/"}, {"@type": "SiteNavigationElement", "position": 12, "name": "Drivers", "url": "https://pitwallf1.in/drivers/"}, {"@type": "SiteNavigationElement", "position": 13, "name": "Teams", "url": "https://pitwallf1.in/teams/"}, {"@type": "SiteNavigationElement", "position": 14, "name": "World champions", "url": "https://pitwallf1.in/formula-1-world-champions/"}, {"@type": "SiteNavigationElement", "position": 15, "name": "F1 reaction test", "url": "https://pitwallf1.in/f1-reaction-test/"}, {"@type": "SiteNavigationElement", "position": 16, "name": "F1 qualifying game", "url": "https://pitwallf1.in/f1-qualifying-game/"}, {"@type": "SiteNavigationElement", "position": 17, "name": "Learn F1", "url": "https://pitwallf1.in/learn-f1/"}]}</script>
@@ -184,6 +185,18 @@ button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;curso
 .tzline{position:relative;z-index:1;margin-top:8px;font-size:12px;color:var(--muted)}
 
 .pulse-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:16px;align-content:start;min-width:0}
+.hero-side{display:flex;flex-direction:column;gap:16px;min-width:0}.hero-side .pulse-card{flex:1}
+/* last race: the result stays one tap away after the hero moves on to the next weekend */
+.last-race{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px 18px;display:grid;gap:12px;min-width:0}
+.lr-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lr-head h2{margin:2px 0 0;font-size:24px;line-height:1}.lr-head .label{color:var(--muted)}
+.lr-pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lr-p{background:var(--panel-2);border-radius:4px;padding:9px 10px 8px;border-top:3px solid var(--c,var(--line));min-width:0}
+.lr-p .pos{font:700 11px var(--f-mono);color:var(--muted);letter-spacing:.06em}.lr-p b{display:block;font:800 italic 22px var(--f-display);line-height:1.1;margin-top:2px}
+.lr-p small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr-meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.lr-meta b{color:var(--fg);font-weight:600}
+.lr-links{display:flex;gap:8px;flex-wrap:wrap}.lr-links a{font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  padding:8px 12px;border-radius:3px;border:1px solid var(--line);color:var(--fg)}.lr-links a:hover{border-color:var(--fg)}.lr-links a.pri{background:var(--red);border-color:var(--red);color:#fff}
 .leader{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center}
 .leader .num{font-family:var(--f-display);font-weight:900;font-style:italic;font-size:64px;line-height:.85;color:var(--team,#fff)}
 .leader h2{font-size:30px;font-weight:800}
@@ -1133,7 +1146,10 @@ nav.tabs a:first-child{padding-left:0}
       <div class="tzline" id="tzline"></div>
     </div>
 
-    <aside class="pulse-card" id="pulse"></aside>
+    <div class="hero-side">
+      <aside class="pulse-card" id="pulse"></aside>
+      <section class="last-race" id="lastRace" aria-labelledby="lrTitle" hidden></section>
+    </div>
   </div>
 
   <!-- STANDINGS -->
@@ -1763,6 +1779,11 @@ const COMPLETED=20, TOTAL=23;
 
 // Weekend sessions from OpenF1, written by scripts/update_schedule.py
 const SESSIONS=[
+ {rd:19,k:"FP1",n:"Practice 1",t:"2026-10-30T18:30Z",m:60},
+ {rd:19,k:"FP2",n:"Practice 2",t:"2026-10-30T22:00Z",m:60},
+ {rd:19,k:"FP3",n:"Practice 3",t:"2026-10-31T17:30Z",m:60},
+ {rd:19,k:"Q",n:"Qualifying",t:"2026-10-31T21:00Z",m:60},
+ {rd:19,k:"GP",n:"Grand Prix",t:"2026-11-01T20:00Z",m:120},
  {rd:20,k:"FP1",n:"Practice 1",t:"2026-11-06T15:30Z",m:60},
  {rd:20,k:"FP2",n:"Practice 2",t:"2026-11-06T19:00Z",m:60},
  {rd:20,k:"FP3",n:"Practice 3",t:"2026-11-07T14:30Z",m:60},
@@ -4807,7 +4828,22 @@ document.addEventListener("click",e=>{
 });
 addEventListener("popstate",()=>route());
 
+/* ---------- Last race card (data: /api/last-race.json, rewritten by the build after every race) ---------- */
+function renderLastRace(){
+  const box=$("#lastRace");if(!box)return;
+  fetch("/api/last-race.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(L=>{
+    if(!L||!L.podium||!L.podium.length)return;
+    const d=new Date(L.date),day=d.toLocaleDateString([],{day:"numeric",month:"short"});
+    box.innerHTML=`<div class="lr-head"><div><div class="label">Last race · Round ${L.round} · ${esc(day)}</div><h2 id="lrTitle">${esc(L.name)}</h2></div></div>
+      <div class="lr-pod">${L.podium.map(p=>`<div class="lr-p" style="--c:${esc(p.col||"#888")}"><span class="pos">P${p.pos}</span><b>${esc(p.code)}</b><small>${p.pos===1?(L.time?esc(L.time):esc(p.team||"")):esc(p.gap||"")}</small></div>`).join("")}</div>
+      <div class="lr-meta">${L.pole?`<span>Pole <b>${esc(L.pole)}</b></span>`:""}${L.fastestLap?`<span>Fastest lap <b>${esc(L.fastestLap.code)}</b> ${esc(L.fastestLap.time)}</span>`:""}${L.laps?`<span>${L.laps} laps</span>`:""}</div>
+      <div class="lr-links"><a class="pri" href="${esc(L.links.story)}">Race story</a><a href="${esc(L.links.replay)}" data-replay="${(L.links.replay.match(/replay=(\d+)/)||[])[1]||""}">Watch replay</a><a href="${esc(L.links.results)}">Full results</a></div>`;
+    box.hidden=false;
+  }).catch(()=>{});
+}
+
 /* ================= BOOT ================= */
+renderLastRace();
 /* ?embed=dash shows only Pit Wall Dash (used inside /f1-qualifying-game/) */
 if(document.documentElement.classList.contains("embed"))GM_STORE.set("pw_gm_tab","race");
 /* old #section links (shared before clean URLs) still work: #tracks/monza becomes /tracks/monza */
