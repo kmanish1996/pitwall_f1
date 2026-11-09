@@ -686,7 +686,7 @@ def main():
             "links": {"story": f"{race_url(lr['rd'])}replay/", "replay": f"/race-centre?replay={hv['Race']}", "results": race_url(lr["rd"])}})
     write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url)
     write_robots()
-    app_urls = write_app_shells()
+    app_urls = write_app_shells(A)
 
     # ---------- sitemap: lastmod only moves when a page actually changes ----------
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -1267,7 +1267,53 @@ def write_api(A, D, C, RACES, wins, race_url, gp_long, dslug, tslug, done, total
         "docs": f"{SITE}/llms.txt"})
 
 
-def write_app_shells():
+def section_content(A, key, src):
+    """Written, crawlable text for app sections whose page is otherwise all JavaScript (travel, title fight).
+    Worked out from the same data the app uses, so it stays correct after every race."""
+    RACES, done, total = A["RACES"], A["COMPLETED"], A["TOTAL"]
+    css = ('<style>.sec-about{margin:28px 0 8px;padding:20px 22px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}'
+           '.sec-about h2{margin:0 0 8px;font-size:26px}.sec-about h3{margin:18px 0 6px;font-size:18px}.sec-about p,.sec-about li{color:var(--muted);line-height:1.55;max-width:80ch}'
+           '.sec-about b{color:var(--fg)}.sec-about table{border-collapse:collapse;width:100%;max-width:640px;font-size:14px}.sec-about td,.sec-about th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}'
+           '.sec-about td.n,.sec-about th.n{text-align:right;font-family:var(--f-mono)}</style>')
+    if key == "travel":
+        m = re.search(r"const VENUES=(\[.*?\n\]);", src, re.S)
+        if not m: return ""
+        V = json.loads(subprocess.run(["node", "-e", "process.stdout.write(JSON.stringify(eval(require('fs').readFileSync(0,'utf8'))))"],
+                                      input=m.group(1), capture_output=True, text=True, check=True).stdout)
+        ga = sorted((v for v in V if v.get("ga")), key=lambda v: v["ga"])
+        main = sorted(V, key=lambda v: -v["main"])
+        med = sorted(v["main"] for v in V)[len(V) // 2]
+        row = lambda v, k: f'<tr><td>{e(v["gp"])}</td><td>{e(v["city"])}</td><td class="n">${v[k]:,}</td></tr>'
+        return css + f"""<section class="sec-about" aria-labelledby="secAboutT"><h2 id="secAboutT">What an F1 race weekend costs in {YEAR}</h2>
+<p>Three-day tickets for {YEAR} Grands Prix range from <b>${ga[0]["ga"]} for general admission at the {e(ga[0]["gp"])}</b> to <b>${main[0]["main"]:,} for a main grandstand seat at the {e(main[0]["gp"])}</b>. A typical main grandstand ticket costs about ${med:,}. {len(V) - len(ga)} races sell no general admission at all, so a grandstand seat is the only way in.</p>
+<h3>Cheapest races to go to (3-day general admission)</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">From</th></tr></thead><tbody>{"".join(row(v, "ga") for v in ga[:5])}</tbody></table>
+<h3>Most expensive main grandstands</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">3 days</th></tr></thead><tbody>{"".join(row(v, "main") for v in main[:5])}</tbody></table>
+<h3>Planning tips</h3><ul><li><b>Book early:</b> the cheapest general admission tickets usually sell out first.</li><li><b>Hotels matter more than tickets</b> at expensive cities: the planner above adds hotels, food and flights for your home city.</li><li><b>Go for Friday too:</b> practice day is quieter, and you can explore the circuit on foot.</li></ul>
+<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May {YEAR}). See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a>.</p></section>"""
+    if key == "title-fight":
+        D, C = A["DRIVERS"], A["CONSTRUCTORS"]
+        left = RACES[done:]
+        dl = sum(25 + (8 if r["sprint"] else 0) for r in left); tl = sum(43 + (15 if r["sprint"] else 0) for r in left)
+        champ = D[0]; ch = (A.get("CHAMPIONS") or [[0, ""]])[-1]
+        champ_txt = (f'<b>{e(ch[1])} is the {YEAR} world champion.</b> ' if ch[0] == YEAR else "")
+        p2 = D[1:4]
+        fight = ", ".join(f'{e(d["first"])} {e(d["last"])} {d["pts"]}' for d in p2)
+        c_lead = C[0][1] - C[1][1]
+        c_txt = (f'{e(C[0][0])} have sealed the constructors\' title with {C[0][1]} points, {c_lead} ahead of {e(C[1][0])} with only {tl} left to win.' if c_lead > tl
+                 else f'{e(C[0][0])} lead the constructors\' table by {c_lead} points with {tl} still available.')
+        c2 = C[1][1] - C[2][1]
+        c2_txt = (f'{e(C[1][0])} are safe in second.' if c2 > tl else f'{e(C[1][0])} hold second by {c2} points from {e(C[2][0])}, so second place is still open.')
+        return css + f"""<section class="sec-about" aria-labelledby="secAboutT"><h2 id="secAboutT">The {YEAR} title maths</h2>
+<p>{champ_txt}After {done} of {total} rounds, {e(champ["first"])} {e(champ["last"])} has {champ["pts"]} points. There are <b>{dl} points left for a driver</b> ({len(left)} Grand{"s" if len(left) != 1 else ""} Prix{" and sprints" if any(r["sprint"] for r in left) else ""}) and <b>{tl} for a team</b>.</p>
+<h3>Still to fight for</h3><ul><li><b>Second in the drivers' championship:</b> {fight}. {p2[0]["pts"] - p2[2]["pts"]} points cover the three of them.</li><li><b>Constructors:</b> {c_txt} {c2_txt}</li></ul>
+<h3>How the maths works</h3><ul><li>A Grand Prix pays 25, 18, 15, 12, 10, 8, 6, 4, 2 and 1 point to the top ten. A sprint pays 8 down to 1 for the top eight. There is no bonus point for the fastest lap.</li>
+<li>A title is decided once the leader's advantage is bigger than the points still available to everyone else. On equal points, the driver with more wins is ahead.</li>
+<li>A team can score at most 43 points at a Grand Prix (a 1-2) and 15 at a sprint.</li></ul>
+<p>Follow it on the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, the <a href="/f1-stats-{YEAR}/">season stats</a> and the story of <a href="/f1-{YEAR}-season-review/">how the title was won</a>.</p></section>"""
+    return ""
+
+
+def write_app_shells(APP):
     """Give each app section its own <head>: /race-centre, /calendar, /games/qualifying, /learn/tyres …
 
     The app (index.html) routes on the path. For every section in its ROUTE_META, a copy of the app is written
@@ -1300,6 +1346,10 @@ def write_app_shells():
         for name, val in (("twitter:title", title), ("twitter:description", desc), ("twitter:image", og)):
             h = re.sub(rf'<meta name="{name}" content="[^"]*">', f'<meta name="{name}" content="{e(val)}">', h, count=1)
         h = re.sub(r'<h1 class="pw-h1">.*?</h1>', f'<h1 class="pw-h1">{e(M["h"])}</h1>', h, count=1)
+        extra = section_content(APP, key, src)
+        if extra:  # written section at the foot of that panel, so this page is clearly more than the homepage
+            i = h.find(f'<section class="panel" id="p-{key}"'); j = h.find("\n  </section>", i)
+            if i > 0 and j > i: h = h[:j] + "\n" + extra + h[j:]
         fname = key.replace("/", "-") + ".html"; keep.add(fname)
         out = os.path.join(ROOT, "app", fname)
         old = open(out, encoding="utf-8").read() if os.path.exists(out) else None
