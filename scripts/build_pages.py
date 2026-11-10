@@ -365,7 +365,7 @@ def main():
 <div class="pager">{prev}<a href="/f1-calendar-{YEAR}/">Full calendar</a>{nxt}</div>"""
         desc = (f'{name} {YEAR} results: {by_code[r["win"]]["first"]} {by_code[r["win"]]["last"]} won at {r["circuit"]}. Race, qualifying and practice results, lap record and full replays.'
                 if r.get("win") and r["win"] in by_code else f'{name} {YEAR} at {r["circuit"]}, {r["dates"]}: schedule, results from every session, lap record and full replays.')
-        ld = {"@context": "https://schema.org", "@type": "SportsEvent", "name": f"{YEAR} {name}", "sport": "Formula 1",
+        ld = {"@context": "https://schema.org", "@type": "SportsEvent", "@id": SITE + race_url(rd) + "#event", "name": f"{YEAR} {name}", "sport": "Formula 1",
               "startDate": start, "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
               "location": {"@type": "Place", "name": r["circuit"], "address": {"@type": "PostalAddress", "addressLocality": r["place"], "addressCountry": COUNTRY.get(r["short"], "")}},
               "url": SITE + race_url(rd), **event_extras(A, start, 120, desc, og_image(race_url(rd), None))}
@@ -407,7 +407,7 @@ def main():
 <div class="pager"><a href="{race_url(rd)}">← All {e(name)} results</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} stats</a></div>"""
             rld = {"@context": "https://schema.org", "@type": "Article", "headline": f"{name} {YEAR} {word} replay and lap-by-lap story",
                    "description": plain, "url": SITE + path, "inLanguage": "en", "datePublished": d["date"][:10],
-                   "about": {"@type": "SportsEvent", "name": f"{YEAR} {name}", "startDate": d["date"], "url": SITE + race_url(rd)},
+                   "about": {"@id": SITE + race_url(rd) + "#event"},  # the full event (with location) lives on the race page
                    "author": {"@type": "Organization", "name": BRAND, "url": SITE + "/"}, "publisher": {"@type": "Organization", "name": BRAND, "url": SITE + "/"}}
             nlead = S["changes"]; nsc = sum(1 for k, _, _ in S["neutral"] if k == "SC")
             dmr = {x["n"]: x for x in d["drivers"]}
