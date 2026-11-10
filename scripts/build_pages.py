@@ -10,7 +10,7 @@ changes when its content does). Data comes from the same places the app uses:
 the constants in index.html (standings, calendar, lap records) and the session results in data/.
 Needs Node.js to read the constants from index.html.
 """
-import html, json, math, os, re, subprocess, unicodedata
+import hashlib, html, json, math, os, re, subprocess, unicodedata
 from datetime import datetime, timedelta, timezone
 
 import replay_pages as RP
@@ -182,6 +182,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Pit Wall F1: race stories" href="/feed.xml">
 <script src="/assets/diwali.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
@@ -263,6 +264,7 @@ def main():
     champ_now = CHL[0] == YEAR and CHL[1] == f"{leader['first']} {leader['last']}"
     left = (total - done) * 25
     pages = []
+    FEED = []  # race stories for /feed.xml
 
     # ---------- standings ----------
     rows = "".join(f'<tr style="--team:{tc(d["team"])}"><td class="pos">{i+1}</td><td><span class="sw"></span>{drv(d["code"])}</td><td>{e(NATIONS.get(d["nat"], d["nat"]))}</td><td>{team_link(d["team"])}</td><td class="n">{wins.get(d["code"], 0)}</td><td class="n">{d["pts"]}</td><td class="n">{"" if i == 0 else "+" + str(leader["pts"] - d["pts"])}</td></tr>' for i, d in enumerate(D))
@@ -288,7 +290,7 @@ def main():
 <p class="sub">All {total} rounds of the {YEAR} Formula 1 World Championship, with circuits, dates, winners and session results.</p>
 <p class="lead">The {YEAR} season runs from the {e(gp_long(RACES[0]))} in March to the {e(gp_long(RACES[-1]))} in December, with six sprint weekends. The Saudi Arabian Grand Prix was cancelled and the Bahrain Grand Prix moved to Sepang, Malaysia.</p>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Circuit</th><th>Dates</th><th>Result</th></tr></thead><tbody>{''.join(crow)}</tbody></table></div>
-<p class="note" style="margin-top:16px">Session times in your own time zone, with live countdowns: <a href="/calendar">open the interactive calendar</a>.</p>"""
+<p class="note" style="margin-top:16px">Session times in your own time zone, with live countdowns: <a href="/calendar">open the interactive calendar</a>. Or <a href="/subscribe/"><b>add every session to your calendar</b></a> (Google, Apple, Outlook): times update automatically.</p>"""
     pages.append(page(f"/f1-calendar-{YEAR}/", f"F1 {YEAR} calendar: every Grand Prix, date and result | {BRAND}",
                       f"The full {YEAR} Formula 1 calendar: all {total} Grands Prix with circuits, dates, sprint weekends, winners and results.",
                       body, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/")]))
@@ -394,6 +396,11 @@ def main():
                 fl = (fmt_lap(r["fl"]), next((x["n"] for x in d["drivers"] if x["c"] == r["flBy"]), None))
             paras = RP.story(d, S, kind, name, YEAR, fl, None, drv)
             word = "race" if kind == "Race" else "sprint"
+            why = {}
+            for head, t in RP.why(d, S, drv):
+                why.setdefault(head, []).append(t)
+            why_html = (f'<h2>Why the {word} went this way</h2><div class="story why">' + "".join(f"<p><b>{e(h)}.</b> {' '.join(ts)}</p>" for h, ts in why.items())
+                        + "<p class=\"note\">Worked out from the lap times, pit-lane log and lap-by-lap order. Race pace is each driver's median lap, leaving out lap 1, in- and out-laps and safety car laps.</p></div>") if why else ""
             path = f"{race_url(rd)}{'replay' if kind == 'Race' else 'sprint-replay'}/"
             plain = re.sub("<[^>]+>", "", paras[0])
             rbody = f"""<h1>{e(name)} {YEAR}: {word} replay &amp; lap-by-lap story</h1>
@@ -401,10 +408,10 @@ def main():
 <p class="lead">{paras[0]}</p>
 <div class="rp-cta"><a class="btn primary" href="/race-centre?replay={sk}">▶ Watch the full {word} replay</a><span class="note">Timing tower, track map, race control messages and team radio, lap by lap.</span></div>
 <h2>How the {word} unfolded</h2><div class="story">{"".join(f"<p>{x}</p>" for x in paras[1:])}</div>
-<h2>Lap by lap</h2>{RP.position_chart(d, S, f"Position of every driver on every lap of the {YEAR} {name} {word}")}
+{why_html}<h2>Lap by lap</h2>{RP.position_chart(d, S, f"Position of every driver on every lap of the {YEAR} {name} {word}")}
 <h2>Tyre strategy</h2>{RP.tyre_chart(d, S)}
 <h2>Final classification</h2>{result_table(sk, kind)}
-<div class="pager"><a href="{race_url(rd)}">← All {e(name)} results</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} stats</a></div>"""
+<div class="pager"><a href="{race_url(rd)}">← All {e(name)} results</a><a href="/f1-results-{YEAR}/">{YEAR} results</a><a href="/f1-stats-{YEAR}/">{YEAR} stats</a><a href="/subscribe/">Get every race story (RSS)</a></div>"""
             rld = {"@context": "https://schema.org", "@type": "Article", "headline": f"{name} {YEAR} {word} replay and lap-by-lap story",
                    "description": plain, "url": SITE + path, "inLanguage": "en", "datePublished": d["date"][:10],
                    "about": {"@id": SITE + race_url(rd) + "#event"},  # the full event (with location) lives on the race page
@@ -415,6 +422,8 @@ def main():
             pog = OG.ensure(f"{word}-replay-{rslug[rd]}", {"kicker": f"{word} replay · round {rd}", "title": [name.replace(" Grand Prix", " GP"), "Lap by lap"],
                                                            "sub": f'{S["total"]} laps · {nlead} lead change{"s" if nlead != 1 else ""} · {nsc} safety car{"s" if nsc != 1 else ""}' + (f' · {len(S["reds"])} red flag' if S["reds"] else ""),
                                                            "podium": rpod, "track": csl, "accent": rpod[0][1] if rpod else "#E10600"})
+            FEED.append({"path": path, "title": plain.split(",")[0],
+                         "desc": plain, "date": d["date"]})
             pages.append(page(path, f"{name} {YEAR} {word} replay: lap-by-lap positions, pit stops & tyres | {BRAND}",
                               f"{plain} Lap-by-lap position chart, tyre strategy and full {word} replay with team radio.",
                               rbody, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/"), (name, race_url(rd)), (f"{word.title()} replay", path)], rld, extra_head=RP.CSS, og=pog))
@@ -605,9 +614,33 @@ def main():
             rows = "".join(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td class="n">{q if q is not None else "–"}</td><td class="n">{f if f is not None else "–"}</td><td class="n">{pt}</td><td class="n">{cum[cc][r["rd"] - 1]}</td><td>{f'<a href="{race_url(r["rd"])}replay/">Replay story</a>' if sess.get(r["rd"], {}).get("Race") else ""}</td></tr>' for r, f, q, pt in CS["rows"])
             full_c = f'{champ["first"]} {champ["last"]}'
             first_win = wins_list[0] if wins_list else None
+            # the finale: once the last round is in, the same page becomes the final review
+            final = done == total
+            after = "at the end of the season" if final else f"after round {done}"
+            winners = [r for r in RACES[:done] if r.get("win")]
+            wcount = {}
+            for r in winners: wcount[r["win"]] = wcount.get(r["win"], 0) + 1
+            twins = {}
+            for r in winners: twins[r.get("winTeam") or ""] = twins.get(r.get("winTeam") or "", 0) + 1
+            c_left = sum(43 + (15 if x["sprint"] else 0) for x in RACES[done:])
+            c_done = final or C[0][1] - C[1][1] > c_left
+            d_rows = "".join(f'<tr style="--team:{tc(x["team"])}"><td class="pos">{i + 1}</td><td><span class="sw"></span>{drv(x["code"])}</td><td>{team_link(x["team"])}</td><td class="n">{wcount.get(x["code"], 0)}</td><td class="n">{x["pts"]}</td></tr>' for i, x in enumerate(D[:10]))
+            c_rows = "".join(f'<tr style="--team:{tc(t)}"><td class="pos">{i + 1}</td><td><span class="sw"></span>{team_link(t)}</td><td class="n">{twins.get(t, 0)}</td><td class="n">{pt}</td></tr>' for i, (t, pt) in enumerate(C[:10]))
+            w_rows = "".join(f'<tr><td class="pos">{r["rd"]}</td><td><a href="{race_url(r["rd"])}">{e(gp_long(r))}</a></td><td>{drv(r["win"])}</td><td>{e(r.get("winTeam") or "")}</td><td>{f'<a href="{race_url(r["rd"])}replay/">Story</a>' if sess.get(r["rd"], {}).get("Race") else ""}</td></tr>' for r in winners)
+            tw = sorted(twins.items(), key=lambda kv: -kv[1])
+            numbers = (f'<p>{len(wcount)} different drivers won Grands Prix {"in " + str(YEAR) if final else "so far"}, for {len(twins)} teams: '
+                       + ", ".join(f"{e(t)} {k}" for t, k in tw) + ". "
+                       + (f"{team_link(C[0][0])} won the constructors' championship with {C[0][1]} points, {C[0][1] - C[1][1]} ahead of {team_link(C[1][0])}." if c_done
+                          else f"{team_link(C[0][0])} lead the constructors' championship by {C[0][1] - C[1][1]} points with {c_left} still available.") + "</p>")
+            standings_html = f"""<h2>{"Final standings" if final else f"Standings after round {done}"}</h2>
+{numbers}
+<h3>Drivers (top ten)</h3><div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th class="n">Wins</th><th class="n">Points</th></tr></thead><tbody>{d_rows}</tbody></table></div>
+<h3>Constructors</h3><div class="tbl"><table><thead><tr><th>Pos</th><th>Team</th><th class="n">Wins</th><th class="n">Points</th></tr></thead><tbody>{c_rows}</tbody></table></div>
+<h2>Every {YEAR} Grand Prix winner</h2>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Winner</th><th>Team</th><th></th></tr></thead><tbody>{w_rows}</tbody></table></div>"""
             body = f"""<h1>How {e(full_c)} won the {YEAR} F1 title</h1>
-<p class="sub">The {YEAR} Formula 1 season, told through the numbers · updated after round {done}</p>
-<p class="lead">{drv(cc)} is the {YEAR} Formula 1 World Champion. He sealed the title at the <a href="{race_url(sr["rd"])}">{e(gp_long(sr))}</a> (round {sr["rd"]}), when his lead became bigger than the {avail(sealed)} points still available, and he did it with {total - sr["rd"]} rounds to spare. At 20, he is the youngest world champion in Formula 1 history.</p>
+<p class="sub">The {YEAR} Formula 1 season, told through the numbers · {"final review, all " + str(total) + " rounds" if final else f"updated after round {done} of {total}"}</p>
+<p class="lead">{drv(cc)} is the {YEAR} Formula 1 World Champion. He sealed the title at the <a href="{race_url(sr["rd"])}">{e(gp_long(sr))}</a> (round {sr["rd"]}), when his lead became bigger than the {avail(sealed)} points still available, and he did it with {total - sr["rd"]} rounds to spare. At 20, he is the youngest world champion in Formula 1 history.{f' He finished the season on {champ["pts"]} points, {gap} ahead of {drv(rival)}.' if final else ""}</p>
 <div class="tiles"><div class="tile"><span>Points</span><b>{champ["pts"]}</b></div><div class="tile"><span>Wins</span><b>{len(wins_list)}</b></div><div class="tile"><span>Podiums</span><b>{CS["podiums"]}</b></div><div class="tile"><span>Poles</span><b>{CS["poles"]}</b></div><div class="tile"><span>Lead over P2</span><b>+{gap}</b></div></div>
 <h2>The title race, round by round</h2>
 {chart}
@@ -617,15 +650,17 @@ def main():
 <li><b>Scoring {"every" if CS["in_points"] == done else "nearly every" if CS["in_points"] >= done - 2 else "regularly"}{" weekend" if CS["in_points"] >= done - 2 else ""}.</b> {CS["in_points"]} points finishes and {CS["podiums"]} podiums in {done} rounds, with {CS["dnfs"]} retirement{"s" if CS["dnfs"] != 1 else ""}.</li>
 <li><b>Starting at the front.</b> An average grid slot of P{CS["avg_q"]:.1f} and {CS["poles"]} pole position{"s" if CS["poles"] != 1 else ""}.</li>
 <li><b>Leading the table.</b> Top of the championship after {led_rounds} of {done} rounds{f", and every round since the {e(gp_long(RACES[led_from]))}" if led_from is not None else ""}.</li>
-<li><b>The nearest challenger:</b> {drv(rival)}, {gap} points behind after round {done}.</li>
+<li><b>The nearest challenger:</b> {drv(rival)}, {gap} points behind {after}.</li>
 </ul>
+{standings_html}
 <h2>{e(champ["last"])}'s season, race by race</h2>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th class="n">Qualified</th><th class="n">Finished</th><th class="n">Points</th><th class="n">Total</th><th></th></tr></thead><tbody>{rows}</tbody></table></div>
 <p class="note" style="margin-top:10px">Numbers come from official timing data via OpenF1 and update after every session. See the <a href="/f1-stats-{YEAR}/">{YEAR} F1 stats</a>, the <a href="/formula-1-standings-{YEAR}/">standings</a> and <a href="/formula-1-world-champions/">every world champion since 1950</a>.</p>"""
             faq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": f"Who won the {YEAR} F1 World Championship?", "acceptedAnswer": {"@type": "Answer", "text": f"{full_c} ({champ['team']}) won the {YEAR} Formula 1 World Drivers' Championship."}},
                 {"@type": "Question", "name": f"When did {full_c} clinch the {YEAR} title?", "acceptedAnswer": {"@type": "Answer", "text": f"At the {gp_long(sr)}, round {sr['rd']} of {total}, with {total - sr['rd']} rounds to spare."}},
-                {"@type": "Question", "name": f"How many races did {full_c} win in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{len(wins_list)} after {done} rounds."}}]}
+                {"@type": "Question", "name": f"How many races did {full_c} win in {YEAR}?", "acceptedAnswer": {"@type": "Answer", "text": f"{len(wins_list)} of the {total} Grands Prix." if final else f"{len(wins_list)} after {done} rounds."}}]
+                + ([{"@type": "Question", "name": f"Who won the {YEAR} F1 constructors' championship?", "acceptedAnswer": {"@type": "Answer", "text": f"{C[0][0]}, with {C[0][1]} points, {C[0][1] - C[1][1]} ahead of {C[1][0]}."}}] if c_done else [])}
             path = f"/f1-{YEAR}-season-review/"
             pages.append(page(path, f"How {full_c} won the {YEAR} F1 title: season review | {BRAND}",
                               f"How {full_c} won the {YEAR} Formula 1 World Championship: sealed at the {gp_long(sr)} with {total - sr['rd']} rounds to spare. {len(wins_list)} wins, {CS['podiums']} podiums, {CS['poles']} poles and the points race, round by round.",
@@ -687,6 +722,7 @@ def main():
     write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url)
     write_robots()
     app_urls = write_app_shells(A)
+    pages.append(write_feeds(A, RACES, FEED, race_url, gp_long))
 
     # ---------- sitemap: lastmod only moves when a page actually changes ----------
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -701,6 +737,96 @@ def main():
     open(smp, "w").write(sm)
     OG.finish()
     print(f"Built {len(pages)} pages and sitemap.xml ({sum(1 for u in urls if lm(u) == today)} updated today)")
+
+
+def ics_text(t):
+    return str(t).replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+
+
+def ics_fold(line):
+    """RFC 5545: lines longer than 75 bytes continue on the next line after a space."""
+    b = line.encode("utf-8"); out = []
+    while len(b) > 75:
+        cut = 75 if not out else 74
+        while cut and (b[cut] & 0xC0) == 0x80: cut -= 1  # don't split a UTF-8 character
+        out.append(b[:cut].decode("utf-8")); b = b[cut:]
+    out.append(b.decode("utf-8"))
+    return "\r\n ".join(out)
+
+
+def write_feeds(A, RACES, FEED, race_url, gp_long):
+    """/f1-2026.ics (every Grand Prix and, once announced, every session), /feed.xml (race stories) and /subscribe/."""
+    stamp = f"{YEAR}0101T000000Z"
+    z = lambda iso: datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(timezone.utc)
+    ical = lambda dt: dt.strftime("%Y%m%dT%H%M%SZ")
+    by_rd = {}
+    for x in A.get("SESSIONS") or []:
+        by_rd.setdefault(x["rd"], []).append(x)
+    ev = []
+    for r in RACES:
+        rd, name = r["rd"], gp_long(r)
+        url = SITE + race_url(rd)
+        sess = by_rd.get(rd) or [{"k": "GP", "n": "Grand Prix", "start": r["race"], "m": 120}]
+        for x in sess:
+            st = z(x["start"]); en = st + timedelta(minutes=x.get("m") or (120 if x["k"] == "GP" else 60))
+            what = "Race" if x["k"] == "GP" else x["n"]
+            summ = f"🏁 {name}" if x["k"] == "GP" else f"{name}: {what}"
+            desc = f"Round {rd} of {len(RACES)}, {r['circuit']}, {r['place']}."
+            if x["k"] == "GP" and r.get("win"):
+                wn = next((f"{x['first']} {x['last']}" for x in A["DRIVERS"] if x["code"] == r["win"]), r["win"])
+                desc += f" Winner: {wn} ({r.get('winTeam') or ''}). Results and replay: {url}"
+            else:
+                desc += f" Results, replay and lap-by-lap story after the session: {url}"
+            ev += ["BEGIN:VEVENT", f"UID:{YEAR}-r{rd}-{x['k'].lower()}@pitwallf1.in", f"DTSTAMP:{stamp}",
+                   f"DTSTART:{ical(st)}", f"DTEND:{ical(en)}", f"SUMMARY:{ics_text(summ)}",
+                   f"LOCATION:{ics_text(r['circuit'] + ', ' + r['place'])}", f"DESCRIPTION:{ics_text(desc)}", f"URL:{url}",
+                   "TRANSP:TRANSPARENT", "END:VEVENT"]
+    cal = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Pit Wall F1//pitwallf1.in//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+           f"X-WR-CALNAME:F1 {YEAR} · Pit Wall F1", "X-WR-CALDESC:Every Formula 1 Grand Prix and session (unofficial). Times update when the weekend schedule is confirmed.",
+           "X-PUBLISHED-TTL:PT6H", "REFRESH-INTERVAL;VALUE=DURATION:PT6H"] + ev + ["END:VCALENDAR"]
+    txt = "\r\n".join(ics_fold(l) for l in cal) + "\r\n"
+    p = os.path.join(ROOT, f"f1-{YEAR}.ics")
+    if not os.path.exists(p) or open(p, encoding="utf-8", newline="").read() != txt:
+        open(p, "w", encoding="utf-8", newline="").write(txt)
+
+    # RSS: newest race stories first
+    items = sorted(FEED, key=lambda f: f["date"], reverse=True)[:40]
+    rfc = lambda iso: z(iso).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    rss = ('<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>\n'
+           f"<title>Pit Wall F1: race stories</title><link>{SITE}/</link>"
+           f'<atom:link href="{SITE}/feed.xml" rel="self" type="application/rss+xml"/>'
+           f"<description>Every {YEAR} Formula 1 race and sprint in words: how it was won, pit stops, safety cars and tyre strategy. Unofficial fan site.</description>"
+           f"<language>en</language>" + (f"<lastBuildDate>{rfc(items[0]['date'])}</lastBuildDate>" if items else "") + "\n"
+           + "".join(f"<item><title>{e(f['title'])}</title><link>{SITE}{f['path']}</link><guid isPermaLink=\"true\">{SITE}{f['path']}</guid>"
+                     f"<pubDate>{rfc(f['date'])}</pubDate><description>{e(f['desc'])}</description></item>\n" for f in items)
+           + "</channel></rss>\n")
+    p = os.path.join(ROOT, "feed.xml")
+    if not os.path.exists(p) or open(p, encoding="utf-8").read() != rss:
+        open(p, "w", encoding="utf-8").write(rss)
+
+    ics_url = f"{SITE}/f1-{YEAR}.ics"; webcal = ics_url.replace("https://", "webcal://")
+    from urllib.parse import quote
+    body = f"""<h1>Get F1 {YEAR} in your calendar</h1>
+<p class="sub">Every Grand Prix and every session of the {YEAR} season, in your own time zone. Free, no sign-up.</p>
+<p class="lead">Subscribe once and every race weekend appears in your phone's calendar: practice, qualifying, sprints and the race. When a weekend's schedule is confirmed or changes, your calendar updates by itself. Each finished race shows the winner and a link to the replay.</p>
+<div class="sub-btns"><a class="btn primary" href="https://calendar.google.com/calendar/r?cid={quote(webcal, safe='')}" rel="nofollow">Google Calendar</a>
+<a class="btn primary" href="{webcal}">Apple Calendar (iPhone, Mac)</a>
+<a class="btn" href="https://outlook.live.com/calendar/0/addfromweb?url={quote(ics_url, safe='')}&amp;name={quote(f'F1 {YEAR}')}" rel="nofollow">Outlook</a>
+<a class="btn" href="/f1-{YEAR}.ics" download>Download .ics</a></div>
+<h2>Other calendar apps</h2>
+<p>Copy this address and add it as a calendar from a URL (sometimes called "Subscribe" or "From web"):</p>
+<p><code class="addr">{ics_url}</code></p>
+<ul><li><b>Android:</b> add it with Google Calendar on a computer (Settings → Add calendar → From URL); it then syncs to your phone.</li>
+<li><b>Outlook desktop:</b> Add calendar → Subscribe from web, then paste the address.</li>
+<li>Calendar apps check for changes every few hours. Times are stored in UTC and shown in your local time.</li></ul>
+<h2>Race stories by RSS</h2>
+<p>Every race and sprint gets a written story here within about 45 minutes of the chequered flag: how it was won, pit stops, safety cars and tyre strategy. Follow them in any feed reader:</p>
+<div class="sub-btns"><a class="btn" href="/feed.xml">RSS feed</a> <a class="btn" href="https://feedly.com/i/subscription/feed/{quote(SITE + '/feed.xml', safe='')}" rel="nofollow">Follow on Feedly</a></div>
+<p class="note" style="margin-top:18px">Unofficial: Pit Wall F1 is a fan site and is not associated with Formula 1. Session times come from OpenF1 and the published {YEAR} calendar. See the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a> or the <a href="/next-f1-race/">next race</a>.</p>"""
+    css = "<style>.sub-btns{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}.sub-btns .btn{font-size:15px;padding:12px 16px}code.addr{display:inline-block;max-width:100%;overflow-wrap:anywhere;background:var(--panel);border:1px solid var(--line);padding:8px 10px;border-radius:4px}</style>"
+    return page("/subscribe/", f"Add the F1 {YEAR} calendar to Google, Apple or Outlook | {BRAND}",
+                f"Free F1 {YEAR} calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus an RSS feed of every race story.",
+                body, [("Subscribe", "/subscribe/")], extra_head=css)
 
 
 def fill_bits(b, d):
@@ -1096,7 +1222,7 @@ def build_next_race(A, RACES, done, total, gp_long, race_url, drv):
 <div class="tiles"><div class="tile"><span>Lights out in</span><b id="cd">–</b></div><div class="tile"><span>Circuit</span><b style="font-size:16px">{e(nxt["circuit"])}</b></div>{f'<div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Race laps</span><b>{78 if I.get("rd") == 6 else math.ceil(305 / I["length"])}</b></div>' if I else ""}</div>
 <h2>Weekend schedule</h2>
 <div class="tbl"><table><thead><tr><th>Session</th><th>Day</th><th class="n">UTC</th><th class="n">Your time</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p style="margin-top:14px"><a class="btn" href="/calendar">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
+<p style="margin-top:14px"><a class="btn primary" href="/subscribe/">📅 Add F1 {YEAR} to your calendar</a> <a class="btn" href="/calendar" style="margin-left:6px">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
 <h2>Championship so far</h2><p>After round {done}, see the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, every <a href="/f1-results-{YEAR}/">race result</a>, and the <a href="{race_url(nxt["rd"])}">{e(name)} page</a> for results as each session finishes.</p>
 <script>
 (function(){{document.querySelectorAll("[data-local]").forEach(function(el){{var d=new Date(el.getAttribute("data-local"));el.textContent=el.dataset.full?d.toLocaleString([], {{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}})+" your time":d.toLocaleString([], {{weekday:"short",hour:"2-digit",minute:"2-digit"}})}});
@@ -1277,9 +1403,11 @@ def section_content(A, key, src):
            '.sec-about td.n,.sec-about th.n{text-align:right;font-family:var(--f-mono)}</style>')
     if key == "travel":
         m = re.search(r"const VENUES=(\[.*?\n\]);", src, re.S)
-        if not m: return ""
+        if not m: raise SystemExit("section_content: VENUES not found in index.html (travel text would be empty)")
         V = json.loads(subprocess.run(["node", "-e", "process.stdout.write(JSON.stringify(eval(require('fs').readFileSync(0,'utf8'))))"],
                                       input=m.group(1), capture_output=True, text=True, check=True).stdout)
+        # only races that happen this year at that venue (no cancelled or relocated rounds)
+        V = [v for v in V if not v.get("note")]
         ga = sorted((v for v in V if v.get("ga")), key=lambda v: v["ga"])
         main = sorted(V, key=lambda v: -v["main"])
         med = sorted(v["main"] for v in V)[len(V) // 2]
@@ -1289,7 +1417,7 @@ def section_content(A, key, src):
 <h3>Cheapest races to go to (3-day general admission)</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">From</th></tr></thead><tbody>{"".join(row(v, "ga") for v in ga[:5])}</tbody></table>
 <h3>Most expensive main grandstands</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">3 days</th></tr></thead><tbody>{"".join(row(v, "main") for v in main[:5])}</tbody></table>
 <h3>Planning tips</h3><ul><li><b>Book early:</b> the cheapest general admission tickets usually sell out first.</li><li><b>Hotels matter more than tickets</b> at expensive cities: the planner above adds hotels, food and flights for your home city.</li><li><b>Go for Friday too:</b> practice day is quieter, and you can explore the circuit on foot.</li></ul>
-<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May {YEAR}). See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a>.</p></section>"""
+<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May {YEAR}). The Bahrain GP, moved to Sepang for {YEAR}, is left out of these lists. See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a>.</p></section>"""
     if key == "title-fight":
         D, C = A["DRIVERS"], A["CONSTRUCTORS"]
         left = RACES[done:]
@@ -1310,7 +1438,40 @@ def section_content(A, key, src):
 <li>A title is decided once the leader's advantage is bigger than the points still available to everyone else. On equal points, the driver with more wins is ahead.</li>
 <li>A team can score at most 43 points at a Grand Prix (a 1-2) and 15 at a sprint.</li></ul>
 <p>Follow it on the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, the <a href="/f1-stats-{YEAR}/">season stats</a> and the story of <a href="/f1-{YEAR}-season-review/">how the title was won</a>.</p></section>"""
-    return ""
+    return ""  # other sections have no written block
+
+
+def app_assets(src):
+    """Move the app's code out of the page so browsers download it once.
+
+    index.html keeps everything inline (it is the source the update scripts edit). For the pages people
+    actually load (/, /standings, /race-centre …) the big inline <style> and <script> are written to
+    /assets/app/<hash>.css and .js, which _headers caches for a year: the hash changes whenever the code
+    or its data does. Returns a function that turns a copy of index.html into the light version.
+    """
+    out_dir = os.path.join(ROOT, "assets", "app"); os.makedirs(out_dir, exist_ok=True)
+    blocks = []
+    for m in re.finditer(r"<(style|script)>(.*?)</\1>", src, re.S):
+        body = m.group(2)
+        if (m.group(1) == "style" and len(body) > 10000) or (m.group(1) == "script" and len(body) > 20000):
+            ext = "css" if m.group(1) == "style" else "js"
+            name = f"{hashlib.sha1(body.encode()).hexdigest()[:12]}.{ext}"
+            path = os.path.join(out_dir, name)
+            if not os.path.exists(path): open(path, "w", encoding="utf-8").write(body)
+            tag = (f'<link rel="stylesheet" href="/assets/app/{name}">' if ext == "css" else f'<script src="/assets/app/{name}"></script>')
+            blocks.append((m.group(0), tag, name))
+    if len(blocks) != 2:
+        raise SystemExit(f"app_assets: expected the app's one big <style> and one big <script>, found {len(blocks)}")
+    keep = {b[2] for b in blocks}
+    for f in os.listdir(out_dir):
+        if f not in keep: os.remove(os.path.join(out_dir, f))
+
+    def light(h):
+        for old, tag, _ in blocks:
+            if h.count(old) != 1: raise SystemExit("app_assets: app code block not found once in a page copy")
+            h = h.replace(old, tag)
+        return h
+    return light
 
 
 def write_app_shells(APP):
@@ -1329,10 +1490,15 @@ def write_app_shells(APP):
     learn_desc = {f"/learn-f1/{t[0]}/": t[4] for t in LEARN_TOPICS}
     home_desc = re.search(r'<meta name="description" content="([^"]*)"', src).group(1)
     os.makedirs(os.path.join(ROOT, "app"), exist_ok=True)
+    light = app_assets(src)
     keep, sitemap, rules = set(), [], []
+    # the homepage itself: "/" is served from app/home.html (a forced rewrite, so it wins over index.html)
+    home = light(src); keep.add("home.html")
+    hp = os.path.join(ROOT, "app", "home.html")
+    if not os.path.exists(hp) or open(hp, encoding="utf-8").read() != home: open(hp, "w", encoding="utf-8").write(home)
     for key, M in meta.items():
         if key in ("privacy", "terms", "contact", "about"):
-            rules.append((f"/{key}", "/index.html")); continue
+            rules.append((f"/{key}", "/app/home.html")); continue
         canon = M.get("c") or f"/{key}"
         title = f'{M["t"]} · {BRAND}'
         desc = M.get("d") or learn_desc.get(canon) or home_desc
@@ -1350,6 +1516,7 @@ def write_app_shells(APP):
         if extra:  # written section at the foot of that panel, so this page is clearly more than the homepage
             i = h.find(f'<section class="panel" id="p-{key}"'); j = h.find("\n  </section>", i)
             if i > 0 and j > i: h = h[:j] + "\n" + extra + h[j:]
+        h = light(h)
         fname = key.replace("/", "-") + ".html"; keep.add(fname)
         out = os.path.join(ROOT, "app", fname)
         old = open(out, encoding="utf-8").read() if os.path.exists(out) else None
@@ -1364,6 +1531,8 @@ def write_app_shells(APP):
     txt = ("# Generated by scripts/build_pages.py from ROUTE_META in index.html: do not edit by hand.\n"
            "# Clean URLs for the app's sections. Each one is the app with that section's own title, description and\n"
            "# canonical link (app/<section>.html). Real pages such as /circuits/ or /learn-f1/ are files and win.\n"
+           + "# The homepage loads the same light copy (app/home.html); index.html stays as the full source.\n"
+           + f"{'/':<26}{'/app/home.html':<34}200!\n"
            + "".join(f"{a:<26}{b:<34}200\n" for a, b in rules))
     rp = os.path.join(ROOT, "_redirects")
     if not os.path.exists(rp) or open(rp).read() != txt: open(rp, "w").write(txt)
@@ -1394,6 +1563,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 - [{YEAR} results]({SITE}/f1-results-{YEAR}/): winner, podium, pole and sprint winner of every race so far
 - [{YEAR} season review]({SITE}/f1-{YEAR}-season-review/): how the {YEAR} title was won, with the points race round by round
 - [{YEAR} F1 stats]({SITE}/f1-stats-{YEAR}/): wins, podiums, poles, fastest laps, sprint wins and DNFs for every driver and team
+- [Subscribe]({SITE}/subscribe/): the {YEAR} calendar as a live .ics feed ({SITE}/f1-{YEAR}.ics) and race stories by RSS ({SITE}/feed.xml)
 - [How fast is an F1 car?]({SITE}/how-fast-is-an-f1-car/): top speed, average speed and slowest corner at every circuit, from pole-lap telemetry
 - [Learn F1]({SITE}/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test]({SITE}/f1-reaction-test/): the five-light start, playable in the browser

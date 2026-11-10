@@ -1,16 +1,21 @@
 name: Add finished sessions
 
-# Checks OpenF1 for newly finished practice, qualifying, sprint and race sessions
-# and commits their replay data to data/. Your host redeploys from the new commit.
+# Watches OpenF1 through each race weekend and publishes every finished session (practice, qualifying,
+# sprint, race) about 20-40 minutes after it ends: replay data, standings, race story, share image,
+# sitemap, then an IndexNow ping. scripts/watch_sessions.py does the work.
+#
+# GitHub starts scheduled runs late (every 4-7 hours in practice), so one check per run left results
+# hours behind. Now each run keeps watching while a session is due or coming within 30 hours, and just
+# before its time limit it starts a fresh run of this workflow, so coverage is continuous. The repo is
+# public, so the runner time is free. Thursday is included so the watch is already running for Friday.
 on:
   schedule:
-    # every 10 minutes, Friday to Monday (UTC), which covers every race weekend in every time zone.
-    # New sessions usually appear 30-45 minutes after they end: OpenF1 opens free access about 30 minutes after a session.
-    - cron: "*/10 * * * 5,6,0,1"
+    - cron: "*/30 * * * 4,5,6,0,1"
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: write   # commit data and pages
+  actions: write    # start the next watch run
 
 concurrency:
   group: update-sessions
@@ -19,7 +24,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
 
@@ -34,37 +39,7 @@ jobs:
       - name: Install Pillow (draws each page's share image)
         run: pip install --quiet pillow
 
-      - name: Fetch finished sessions from OpenF1
-        run: python3 scripts/update_sessions.py
-
-      - name: Refresh the weekend timetables from OpenF1
-        run: python3 scripts/update_schedule.py
-
-      - name: Update standings, winners and search pages if there is new data
-        run: |
-          if [ -n "$(git status --porcelain data)" ]; then
-            python3 scripts/update_standings.py
-            python3 scripts/build_pages.py
-          elif [ -n "$(git status --porcelain index.html)" ]; then
-            python3 scripts/build_pages.py
-          fi
-
-      - name: Commit new replay data and pages
-        run: |
-          if [ -z "$(git status --porcelain data index.html)" ]; then
-            echo "No new sessions or timetable changes."
-            exit 0
-          fi
-          git config user.name "pitwall-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A   # data, the app, every generated page, the API and the sitemap
-          git commit -m "Add newly finished sessions: replays, standings and pages"
-          git push
-          echo "pushed=1" >> "$GITHUB_OUTPUT"
-        id: commit
-
-      - name: Tell search engines about the changed pages
-        if: steps.commit.outputs.pushed == '1'
-        run: |
-          sleep 120   # give Netlify time to deploy
-          python3 scripts/indexnow.py || true
+      - name: Watch OpenF1 and publish finished sessions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/watch_sessions.py

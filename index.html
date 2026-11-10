@@ -32,6 +32,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <script src="/assets/diwali.js" defer></script>
+<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Pit Wall F1: race stories">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Site summary for AI assistants">
 <link rel="alternate" type="application/json" href="/api/index.json" title="Pit Wall F1 open data">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Pit Wall F1", "alternateName": ["PitWall F1", "Pit Wall", "pitwallf1", "pitwallf1.in"], "url": "https://pitwallf1.in/", "description": "Lights out! Pit Wall F1 is the free, unofficial F1 fan hub: live 2026 standings, results and race stats, the next race in your time zone, lap-by-lap replays with team radio, every circuit in 3D, F1 explained for new fans, and F1 games.", "inLanguage": "en"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Pit Wall F1", "alternateName": "pitwallf1.in", "url": "https://pitwallf1.in/", "logo": "https://pitwallf1.in/assets/icon-512.png", "sameAs": ["https://www.instagram.com/pitwall_f1_/"], "founder": {"@type": "Person", "name": "Kanathil Manish Nair"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Pit Wall F1", "url": "https://pitwallf1.in/", "applicationCategory": "SportsApplication", "operatingSystem": "Any", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "featureList": ["Formula 1 2026 drivers' and constructors' standings", "Lap-by-lap race replays with team radio", "3D model of every F1 circuit", "F1 calendar with lap records", "Title fight calculator", "Race travel planner", "F1 reaction test", "F1 qualifying game"]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "Pit Wall F1 sections", "itemListElement": [{"@type": "SiteNavigationElement", "position": 1, "name": "Next F1 race", "url": "https://pitwallf1.in/next-f1-race/"}, {"@type": "SiteNavigationElement", "position": 2, "name": "Race centre: every race replayed", "url": "https://pitwallf1.in/race-centre"}, {"@type": "SiteNavigationElement", "position": 3, "name": "Season replay", "url": "https://pitwallf1.in/replay"}, {"@type": "SiteNavigationElement", "position": 4, "name": "Title fight", "url": "https://pitwallf1.in/title-fight"}, {"@type": "SiteNavigationElement", "position": 5, "name": "Race travel planner", "url": "https://pitwallf1.in/travel"}, {"@type": "SiteNavigationElement", "position": 6, "name": "2026 standings", "url": "https://pitwallf1.in/formula-1-standings-2026/"}, {"@type": "SiteNavigationElement", "position": 7, "name": "2026 results", "url": "https://pitwallf1.in/f1-results-2026/"}, {"@type": "SiteNavigationElement", "position": 8, "name": "2026 F1 stats", "url": "https://pitwallf1.in/f1-stats-2026/"}, {"@type": "SiteNavigationElement", "position": 9, "name": "2026 calendar", "url": "https://pitwallf1.in/f1-calendar-2026/"}, {"@type": "SiteNavigationElement", "position": 10, "name": "How fast is an F1 car?", "url": "https://pitwallf1.in/how-fast-is-an-f1-car/"}, {"@type": "SiteNavigationElement", "position": 11, "name": "F1 circuits", "url": "https://pitwallf1.in/circuits/"}, {"@type": "SiteNavigationElement", "position": 12, "name": "Drivers", "url": "https://pitwallf1.in/drivers/"}, {"@type": "SiteNavigationElement", "position": 13, "name": "Teams", "url": "https://pitwallf1.in/teams/"}, {"@type": "SiteNavigationElement", "position": 14, "name": "World champions", "url": "https://pitwallf1.in/formula-1-world-champions/"}, {"@type": "SiteNavigationElement", "position": 15, "name": "F1 reaction test", "url": "https://pitwallf1.in/f1-reaction-test/"}, {"@type": "SiteNavigationElement", "position": 16, "name": "F1 qualifying game", "url": "https://pitwallf1.in/f1-qualifying-game/"}, {"@type": "SiteNavigationElement", "position": 17, "name": "Learn F1", "url": "https://pitwallf1.in/learn-f1/"}]}</script>
@@ -183,6 +184,7 @@ button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;curso
 .sr-scroll{overflow-x:auto;margin:0 -4px}
 .sr-act{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .tzline{position:relative;z-index:1;margin-top:8px;font-size:12px;color:var(--muted)}
+.cal-sub{position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--fg);text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px}
 
 .pulse-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:16px;align-content:start;min-width:0}
 .hero-side{display:flex;flex-direction:column;gap:16px;min-width:0}.hero-side .pulse-card{flex:1}
@@ -1144,6 +1146,7 @@ nav.tabs a:first-child{padding-left:0}
       <div class="cd-for" id="cdFor">Until <strong>Practice 1</strong></div>
       <div class="sessions" id="sessions"></div>
       <div class="tzline" id="tzline"></div>
+      <a class="cal-sub" href="/subscribe/">📅 Add every session to your calendar</a>
     </div>
 
     <div class="hero-side">
@@ -1213,7 +1216,7 @@ nav.tabs a:first-child{padding-left:0}
       </div>
     </div>
     <div class="cal" id="cal"></div>
-    <p class="cal-note">The Saudi Arabian GP was cancelled. The Bahrain GP was relocated to Sepang, Malaysia, and run on 4 October. Times show in your local time zone.</p>
+    <p class="cal-note">The Saudi Arabian GP was cancelled. The Bahrain GP was relocated to Sepang, Malaysia, and run on 4 October. Times show in your local time zone. <a href="/subscribe/">Add every session to your calendar</a>.</p>
   </section>
 
   <!-- TITLE FIGHT -->
@@ -2214,7 +2217,7 @@ function play(){
   playT=setInterval(()=>{if(rd>=COMPLETED){stop();return}step(1)},reduce?400:1100);
 }
 function stop(){playing=false;clearInterval(playT);$("#rpPlay").textContent=rd>=COMPLETED?"Replay":"Play"}
-$("#rpPlay").onclick=play;$("#rpBack").onclick=()=>{stop();step(-1)};$("#rpFwd").onclick=()=>{stop();step(1)};
+$("#rpPlay").onclick=()=>{if(!playing)pwTrack("replay/season");play()};$("#rpBack").onclick=()=>{stop();step(-1)};$("#rpFwd").onclick=()=>{stop();step(1)};
 $("#rpRange").oninput=e=>{stop();rd=+e.target.value;drawReplay()};
 
 /* line chart */
@@ -2391,9 +2394,6 @@ const VENUES=[
  {k:"BHR",gp:"Bahrain GP",city:"Sakhir",mon:"April",ll:[26.03,50.51],ga:null,cheap:186,main:517,idx:2,note:"In 2026 the race moved to Sepang, Malaysia. Prices are for Sakhir.",
   pick:"Turn 1 stands for the start and the first big braking zone.",
   go:"Shuttle buses from Manama.",tip:"A desert night race, cool after sunset."},
- {k:"SAU",gp:"Saudi Arabian GP",city:"Jeddah",mon:"April",ll:[21.63,39.10],ga:140,cheap:270,main:778,idx:2,note:"Cancelled in 2026. Prices are the published 2026 rates.",
-  pick:"Main grandstand on the seafront section.",
-  go:"Taxi or rideshare. Plan your exit after the race.",tip:"Very fast street circuit under lights."},
  {k:"SGP",gp:"Singapore GP",city:"Singapore",mon:"October",ll:[1.29,103.86],ga:422,cheap:473,main:1384,idx:3,
   pick:"Bay grandstand for the Marina Bay skyline at night.",
   go:"MRT stations sit right by the gates.",tip:"Sessions run late into the night, with concerts inside the circuit."},
@@ -2462,7 +2462,7 @@ function renderAnswers(){
   const med=a=>a[Math.floor(a.length/2)];
   const cheapest=[...VENUES].sort((a,b)=>(a.ga??a.cheap)-(b.ga??b.cheap))[0];
   const priciest=[...VENUES].sort((a,b)=>b.main-a.main)[0];
-  const trips=VENUES.filter(v=>v.k!=="SAU").map(v=>({v,c:tripCost(v,{people:1,nights:3,hotel:"mid",merch:60,tier:"cheap",flightOverride:null}).total})).sort((a,b)=>a.c-b.c);
+  const trips=VENUES.map(v=>({v,c:tripCost(v,{people:1,nights:3,hotel:"mid",merch:60,tier:"cheap",flightOverride:null}).total})).sort((a,b)=>a.c-b.c);
   $("#answers").innerHTML=`
    <button type="button" class="ans" data-go="t-prices"><span class="label">How much does an F1 race cost?</span>
      <b>${money(cheapest.ga??cheapest.cheap)}</b><span>is the cheapest 3-day ticket (${esc(cheapest.gp)} general admission). A typical grandstand weekend costs ${money(med(sorted("cheap")))}, and main grandstands average ${money(med(sorted("main")))}.</span>
@@ -2485,7 +2485,7 @@ function renderPriceBars(animate){
   const list=[...VENUES].map(v=>({v,p:tier==="ga"?v.ga:v[tier]})).sort((a,b)=>(a.p??1e9)-(b.p??1e9));
   const max=Math.max(...list.map(x=>x.p||0));
   box.innerHTML=list.map((x,i)=>`<button type="button" class="pb${x.v.k===plan.v?" sel":""}" data-k="${x.v.k}" style="animation-delay:${animate?i*22:0}ms">
-      <span class="pb-name">${vFlag(x.v)}<span>${esc(x.v.gp)}${x.v.note?' <span class="pb-tag">'+(x.v.k==="SAU"?"Cancelled":"Moved")+"</span>":""}</span></span>
+      <span class="pb-name">${vFlag(x.v)}<span>${esc(x.v.gp)}${x.v.note?' <span class="pb-tag">'+"Moved"+"</span>":""}</span></span>
       <span class="pb-track">${x.p?`<i style="width:${x.p/max*100}%;${animate?"":"animation:none"}"></i>`:""}</span>
       <span class="pb-val mono">${x.p?money(x.p):"No GA"}</span></button>`).join("");
   box.querySelectorAll(".pb").forEach(b=>b.onclick=()=>{plan.v=b.dataset.k;plan.flightOverride=null;if(tier!=="ga"||VENUES.find(v=>v.k===plan.v).ga)plan.tier=tier;savePlan();renderPriceBars(false);renderPlanner(true);document.getElementById("t-plan").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
@@ -2917,7 +2917,9 @@ async function rcInit(){
   sel.onchange=()=>{rcPause();rcOpen(+sel.value)};
   const first=RCX.pending||RCX.idx[0].sk;RCX.pending=null;rcOpen(first);
 }
-$("#rcPlay").onclick=()=>RCX.playing?rcPause():rcPlay();
+$("#rcPlay").onclick=()=>{if(!RCX.playing&&RCX.d){const m=(RCX.idx||[]).find(s=>s.sk==RCX.d.sk);RCX.counted=RCX.counted||{};
+  if(m&&m.round&&!RCX.counted[m.sk]){RCX.counted[m.sk]=1;pwTrack(`replay/${m.round.short.toLowerCase()}-${m.type.toLowerCase().replace(/\s+/g,"-")}`)}}
+  RCX.playing?rcPause():rcPlay()};
 $("#rcSpeed").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;RCX.speed=+b.dataset.s;$("#rcSpeed").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
 $("#rcRange").addEventListener("input",e=>{RCX.t=+e.target.value;rcRender(true)});
 $("#rcPrev").onclick=()=>rcJumpLap(-1);$("#rcNext").onclick=()=>rcJumpLap(1);
@@ -2947,6 +2949,8 @@ if(/[?&]embed=dash\b/.test(location.search))document.documentElement.classList.a
 if(SITE.goatcounter&&!document.documentElement.classList.contains("embed")){SITE.analytics="GoatCounter";
   window.goatcounter={path:()=>location.pathname};
   const g=document.createElement("script");g.async=true;g.src="https://gc.zgo.at/count.js";g.dataset.goatcounter=`https://${SITE.goatcounter}.goatcounter.com/count`;document.head.appendChild(g);}
+/* count an action (share, retry, replay play) as a GoatCounter event: it shows under "Events" on the dashboard */
+function pwTrack(name){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:name,title:name,event:true})}catch(e){}}
 /* ============================================================================ */
 const ph=v=>/^\[.*\]$/.test(String(v))?`<mark class="ph" title="Placeholder: edit SITE settings">${esc(v)}</mark>`:esc(v);
 const IG_ICON=`<svg class="ig-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>`;
@@ -3138,7 +3142,7 @@ function rxSetup(){
   const b=parseFloat(GM_STORE.get("pw_rx_best"));RX.best=isFinite(b)?b:null;rxStats();
   const st=$("#rxStage");
   st.addEventListener("pointerdown",e=>{if(e.button>0)return;if(e.target.closest(".gm-actions"))return;e.preventDefault();rxPress()});
-  $("#rxRetry").addEventListener("click",e=>{e.stopPropagation();rxActions(false);rxStart()});
+  $("#rxRetry").addEventListener("click",e=>{e.stopPropagation();pwTrack("retry/reaction-test");rxActions(false);rxStart()});
   $("#rxShareBtn").addEventListener("click",e=>{e.stopPropagation();pwShare(e.currentTarget,rxShareText(RX.last),"https://pitwallf1.in/f1-reaction-test/")});
   document.addEventListener("keydown",e=>{
     if(!gmVisible()||gmTab!=="rx"||e.repeat)return;
@@ -3199,13 +3203,13 @@ function rxStats(){
 
 /* ---------- share a game result: the phone's share sheet, or a WhatsApp / X / Copy menu ---------- */
 function pwShare(btn,text,url){
-  const msg=text+" 🏁",full=msg+" "+url;
-  if(navigator.share){navigator.share({title:"Pit Wall F1",text:msg,url}).catch(()=>{});return}
+  const msg=text+" 🏁",full=msg+" "+url,game=/qualifying/.test(url)?"qualifying":"reaction-test";
+  if(navigator.share){pwTrack(`share/${game}/phone`);navigator.share({title:"Pit Wall F1",text:msg,url}).catch(()=>{});return}
   const box=btn.parentElement,old=box.querySelector(".pw-menu");if(old){old.remove();return}
   const m=document.createElement("div");m.className="pw-menu pw-share";
   m.innerHTML='<button type="button" class="main" data-k="wa">WhatsApp</button><button type="button" data-k="x">Post on X</button><button type="button" data-k="cp">Copy</button><span class="ok" hidden>Copied!</span>';
   m.addEventListener("pointerdown",e=>e.stopPropagation());
-  m.onclick=e=>{const k=(e.target.closest("button")||{}).dataset;if(!k||!k.k)return;e.stopPropagation();
+  m.onclick=e=>{const k=(e.target.closest("button")||{}).dataset;if(!k||!k.k)return;e.stopPropagation();pwTrack(`share/${game}/${{wa:"whatsapp",x:"x",cp:"copy"}[k.k]}`);
     if(k.k==="wa")open("https://wa.me/?text="+encodeURIComponent(full),"_blank","noopener");
     else if(k.k==="x")open("https://x.com/intent/post?text="+encodeURIComponent(msg)+"&url="+encodeURIComponent(url),"_blank","noopener");
     else{const ok=m.querySelector(".ok");(navigator.clipboard?navigator.clipboard.writeText(full):Promise.reject()).then(()=>{ok.hidden=false;setTimeout(()=>m.remove(),1400)}).catch(()=>{prompt("Copy this:",full)});return}
@@ -3315,7 +3319,7 @@ function dashSetup(){
   tw.innerHTML=Object.entries(TEAMS).map(([k,t])=>`<button type="button" role="radio" aria-checked="${k===D.team}" data-team="${esc(k)}" style="--c:${t.c}"><i></i>${esc(t.short)}</button>`).join("");
   tw.addEventListener("click",e=>{const b=e.target.closest("[data-team]");if(!b)return;D.team=b.dataset.team;GM_STORE.set("pw_dash_team",D.team);
     tw.querySelectorAll("[data-team]").forEach(x=>x.setAttribute("aria-checked",x===b));qRenderSheet();dashDraw()});
-  $("#dashGo").addEventListener("click",()=>{if(D.state==="paused")dashResume();else dashStart()});
+  $("#dashGo").addEventListener("click",()=>{if(D.state==="paused")dashResume();else{if(D.state==="over")pwTrack("retry/qualifying");dashStart()}});
   $("#dashShareBtn").addEventListener("click",e=>pwShare(e.currentTarget,dashShareText(),"https://pitwallf1.in/f1-qualifying-game/"));
   $("#dashTeamBtn").addEventListener("click",dashIntro);
   const live=()=>D.state==="out"||D.state==="lap";
@@ -4779,7 +4783,7 @@ function themeApply(t,save){
 /* ================= ROUTING ================= */
 const ROUTES=["standings","race-centre","replay","calendar","tracks","title-fight","travel","games","learn"];
 /* each section's title and description: the browser tab here, and each address's own <head> (scripts/build_pages.py reads this line) */
-const ROUTE_META={"standings":{"t":"F1 2026 standings live: drivers' and constructors' table","d":"Live Formula 1 2026 drivers' and constructors' standings, the next race countdown in your time zone, and the 2026 world champion.","h":"F1 2026 standings, live","og":"standings","c":"/"},"race-centre":{"t":"F1 race replays 2026: every race lap by lap with team radio","d":"Replay every 2026 Formula 1 race and sprint lap by lap: live timing tower, track map, gaps, tyres, pit stops, race control messages and team radio.","h":"F1 race centre: every 2026 race replayed lap by lap","og":"results","sm":1},"replay":{"t":"F1 2026 season replay: the championship race by race","d":"Watch the 2026 Formula 1 championship unfold race by race: the points table animated from Australia to the latest Grand Prix.","h":"F1 2026 season replay","og":"standings","sm":1},"calendar":{"t":"F1 2026 calendar with countdowns, results and replays","d":"Every round of the 2026 F1 calendar with dates, start times in your time zone, winners, lap records and replays of every session.","h":"F1 2026 calendar","og":"calendar","c":"/f1-calendar-2026/"},"tracks":{"t":"Every F1 circuit in 3D: explore all 2026 tracks","d":"Spin, zoom and fly around every 2026 Formula 1 circuit in 3D, built from real pole-lap telemetry: speed, gears, elevation and corner names.","h":"Every F1 circuit in 3D","og":"circuits","c":"/circuits/"},"title-fight":{"t":"F1 2026 title fight: who could still win the championship?","d":"The 2026 Formula 1 title maths: points still available, who can still win and how the championship was decided.","h":"F1 2026 title fight","og":"champions","sm":1},"travel":{"t":"F1 race travel planner 2026: ticket prices and trip costs","d":"Plan a trip to a Formula 1 race: 2026 ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.","h":"F1 race travel planner","og":"calendar","sm":1},"games":{"t":"Free F1 games: reaction test and qualifying game","d":"Two free Formula 1 games: the lights-out reaction test and Pit Wall Dash, a three-lap qualifying game against the 2026 grid.","h":"F1 games","og":"reaction","c":"/f1-reaction-test/"},"games/reaction-test":{"t":"F1 reaction test: can you beat Bottas's 0.201s?","d":"Free F1 reaction time test with the real five-light start. Beat Valtteri Bottas's famous 0.201s start and share your time.","h":"F1 reaction test","og":"reaction","c":"/f1-reaction-test/"},"games/qualifying":{"t":"F1 qualifying game: three laps to beat the 2026 grid","d":"Pit Wall Dash, a free browser F1 qualifying game: three flying laps, a ghost car and the whole 2026 grid on the timing sheet.","h":"F1 qualifying game","og":"quali","c":"/f1-qualifying-game/"},"learn":{"t":"Learn F1: Formula 1 explained for beginners","d":"Formula 1 explained for beginners, with animations: what F1 is, race weekends and points, trophies, track terms, tyres, the steering wheel, 2026 car tech and the people of F1.","h":"Learn F1","og":"learn","c":"/learn-f1/"},"learn/about":{"t":"What is Formula 1? F1 explained for beginners","h":"What is Formula 1?","og":"learn-about","c":"/learn-f1/what-is-formula-1/"},"learn/weekend":{"t":"F1 race weekend explained: practice, qualifying, sprint and points","h":"F1 race weekend explained","og":"learn-weekend","c":"/learn-f1/race-weekend-format/"},"learn/trophies":{"t":"F1 trophies and championships explained","h":"F1 trophies and championships","og":"learn-trophies","c":"/learn-f1/trophies-and-championships/"},"learn/track":{"t":"F1 terms explained: apex, kerbs, chicanes, VSC and flags","h":"F1 track terms explained","og":"learn-track","c":"/learn-f1/track-terms/"},"learn/tyres":{"t":"F1 tyres explained: soft, medium, hard, inters and wets","h":"F1 tyres explained","og":"learn-tyres","c":"/learn-f1/f1-tyres-explained/"},"learn/wheel":{"t":"F1 steering wheel explained: every button and dial in 3D","h":"F1 steering wheel explained","og":"learn-wheel","c":"/learn-f1/f1-steering-wheel-buttons/"},"learn/tech":{"t":"2026 F1 car tech explained: active aero, overtake mode and ERS","h":"2026 F1 car tech explained","og":"learn-tech","c":"/learn-f1/f1-car-technology-2026/"},"learn/people":{"t":"Who's who in F1: drivers, engineers, pit crews and marshals","h":"The people of F1","og":"learn-people","c":"/learn-f1/people-of-f1/"},"privacy":{"t":"Privacy Policy","h":"Privacy Policy"},"terms":{"t":"Terms and Conditions","h":"Terms and Conditions"},"contact":{"t":"Contact us","h":"Contact us"},"about":{"t":"About Pit Wall F1","h":"About Pit Wall F1"}};
+const ROUTE_META={"standings":{"t":"F1 2026 standings live: drivers' and constructors' table","d":"Live Formula 1 2026 drivers' and constructors' standings, the next race countdown in your time zone, and the 2026 world champion.","h":"F1 2026 standings, live","og":"standings","c":"/formula-1-standings-2026/"},"race-centre":{"t":"F1 race replays 2026: every race lap by lap with team radio","d":"Replay every 2026 Formula 1 race and sprint lap by lap: live timing tower, track map, gaps, tyres, pit stops, race control messages and team radio.","h":"F1 race centre: every 2026 race replayed lap by lap","og":"results","sm":1},"replay":{"t":"F1 2026 season replay: the championship race by race","d":"Watch the 2026 Formula 1 championship unfold race by race: the points table animated from Australia to the latest Grand Prix.","h":"F1 2026 season replay","og":"standings","sm":1},"calendar":{"t":"F1 2026 calendar with countdowns, results and replays","d":"Every round of the 2026 F1 calendar with dates, start times in your time zone, winners, lap records and replays of every session.","h":"F1 2026 calendar","og":"calendar","c":"/f1-calendar-2026/"},"tracks":{"t":"Every F1 circuit in 3D: explore all 2026 tracks","d":"Spin, zoom and fly around every 2026 Formula 1 circuit in 3D, built from real pole-lap telemetry: speed, gears, elevation and corner names.","h":"Every F1 circuit in 3D","og":"circuits","c":"/circuits/"},"title-fight":{"t":"F1 2026 title fight: championship maths and points left","d":"The 2026 Formula 1 title maths: how the championship was decided, points still available and the fights for second place in both championships.","h":"F1 2026 title fight","og":"champions","sm":1},"travel":{"t":"F1 race travel planner 2026: ticket prices and trip costs","d":"Plan a trip to a Formula 1 race: 2026 ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.","h":"F1 race travel planner","og":"calendar","sm":1},"games":{"t":"Free F1 games: reaction test and qualifying game","d":"Two free Formula 1 games: the lights-out reaction test and Pit Wall Dash, a three-lap qualifying game against the 2026 grid.","h":"F1 games","og":"reaction","c":"/f1-reaction-test/"},"games/reaction-test":{"t":"F1 reaction test: can you beat Bottas's 0.201s?","d":"Free F1 reaction time test with the real five-light start. Beat Valtteri Bottas's famous 0.201s start and share your time.","h":"F1 reaction test","og":"reaction","c":"/f1-reaction-test/"},"games/qualifying":{"t":"F1 qualifying game: three laps to beat the 2026 grid","d":"Pit Wall Dash, a free browser F1 qualifying game: three flying laps, a ghost car and the whole 2026 grid on the timing sheet.","h":"F1 qualifying game","og":"quali","c":"/f1-qualifying-game/"},"learn":{"t":"Learn F1: Formula 1 explained for beginners","d":"Formula 1 explained for beginners, with animations: what F1 is, race weekends and points, trophies, track terms, tyres, the steering wheel, 2026 car tech and the people of F1.","h":"Learn F1","og":"learn","c":"/learn-f1/"},"learn/about":{"t":"What is Formula 1? F1 explained for beginners","h":"What is Formula 1?","og":"learn-about","c":"/learn-f1/what-is-formula-1/"},"learn/weekend":{"t":"F1 race weekend explained: practice, qualifying, sprint and points","h":"F1 race weekend explained","og":"learn-weekend","c":"/learn-f1/race-weekend-format/"},"learn/trophies":{"t":"F1 trophies and championships explained","h":"F1 trophies and championships","og":"learn-trophies","c":"/learn-f1/trophies-and-championships/"},"learn/track":{"t":"F1 terms explained: apex, kerbs, chicanes, VSC and flags","h":"F1 track terms explained","og":"learn-track","c":"/learn-f1/track-terms/"},"learn/tyres":{"t":"F1 tyres explained: soft, medium, hard, inters and wets","h":"F1 tyres explained","og":"learn-tyres","c":"/learn-f1/f1-tyres-explained/"},"learn/wheel":{"t":"F1 steering wheel explained: every button and dial in 3D","h":"F1 steering wheel explained","og":"learn-wheel","c":"/learn-f1/f1-steering-wheel-buttons/"},"learn/tech":{"t":"2026 F1 car tech explained: active aero, overtake mode and ERS","h":"2026 F1 car tech explained","og":"learn-tech","c":"/learn-f1/f1-car-technology-2026/"},"learn/people":{"t":"Who's who in F1: drivers, engineers, pit crews and marshals","h":"The people of F1","og":"learn-people","c":"/learn-f1/people-of-f1/"},"privacy":{"t":"Privacy Policy","h":"Privacy Policy"},"terms":{"t":"Terms and Conditions","h":"Terms and Conditions"},"contact":{"t":"Contact us","h":"Contact us"},"about":{"t":"About Pit Wall F1","h":"About Pit Wall F1"}};
 const HOME_TITLE="Pit Wall F1 · Every F1 Stat, Every Lap, Every Track",HOME_H1="Pit Wall F1: live Formula 1 2026 standings, stats, race replays and 3D tracks";
 function routeMeta(h){const m=ROUTE_META[h];if(m)return m;const t=h.match(/^tracks\/([\w-]+)/);if(t&&typeof TRACK_INFO!=="undefined"&&TRACK_INFO[t[1]]){const I=TRACK_INFO[t[1]];return{t:`${I.full} in 3D: F1 track map and pole lap`,h:`${I.full} in 3D`,c:`/circuits/${t[1]}/`}}return ROUTE_META[h.split("/")[0]]||null}
 function setRouteMeta(h){const m=h?routeMeta(h):null;document.title=m?`${m.t} · Pit Wall F1`:HOME_TITLE;const e=document.querySelector(".pw-h1");if(e)e.textContent=m?m.h:HOME_H1;
