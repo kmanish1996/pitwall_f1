@@ -18,6 +18,7 @@ Current state (after round 20 of 23, the São Paulo Grand Prix):
 - [2026 results](https://pitwallf1.in/f1-results-2026/): winner, podium, pole and sprint winner of every race so far
 - [2026 season review](https://pitwallf1.in/f1-2026-season-review/): how the 2026 title was won, with the points race round by round
 - [2026 F1 stats](https://pitwallf1.in/f1-stats-2026/): wins, podiums, poles, fastest laps, sprint wins and DNFs for every driver and team
+- [Subscribe](https://pitwallf1.in/subscribe/): the 2026 calendar as a live .ics feed (https://pitwallf1.in/f1-2026.ics) and race stories by RSS (https://pitwallf1.in/feed.xml)
 - [How fast is an F1 car?](https://pitwallf1.in/how-fast-is-an-f1-car/): top speed, average speed and slowest corner at every circuit, from pole-lap telemetry
 - [Learn F1](https://pitwallf1.in/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)
 - [F1 reaction test](https://pitwallf1.in/f1-reaction-test/): the five-light start, playable in the browser

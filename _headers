@@ -6,10 +6,20 @@
 /data/*
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=600
+/f1-2026.ics
+  Content-Type: text/calendar; charset=utf-8
+  Cache-Control: public, max-age=3600
+  Access-Control-Allow-Origin: *
+/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=600
 /llms.txt
   Content-Type: text/plain; charset=utf-8
   Access-Control-Allow-Origin: *
 /assets/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+# The app's code, named by a hash of its contents (scripts/build_pages.py), so it can be cached for good
+/assets/app/*
   Cache-Control: public, max-age=31536000, immutable
 /*
   X-Content-Type-Options: nosniff
