@@ -1,0 +1,59 @@
+{
+  "year": 2027,
+  "updated": "2026-11-11",
+  "sources": {
+    "calendar": "https://www.formula1.com/en/racing/2027",
+    "calendarNews": "https://www.formula1.com/en/latest/article/formula-1-reveals-calendar-for-2027-season-with-10-sprint-events.5J8ePLyjRuMyWEIDNUKgY4",
+    "grid": "https://www.the-race.com/formula-1/2027-f1-grid-every-confirmed-driver/"
+  },
+  "announced": "2026-09-16",
+  "note": "F1 has said the Bahrain, Saudi Arabian, Qatar and Abu Dhabi rounds depend on the situation in the Middle East.",
+  "testing": [{"name": "Pre-season testing", "place": "Bahrain International Circuit, Sakhir", "from": "2027-02-24", "to": "2027-02-27"}],
+  "rounds": [
+    {"rd": 1,  "gp": "Bahrain Grand Prix",        "short": "BHR", "circuit": "Bahrain International Circuit", "place": "Sakhir",       "from": "2027-03-12", "race": "2027-03-14", "sprint": true},
+    {"rd": 2,  "gp": "Saudi Arabian Grand Prix",  "short": "SAU", "circuit": "Jeddah Corniche Circuit",       "place": "Jeddah",       "from": "2027-03-19", "race": "2027-03-21", "sprint": false},
+    {"rd": 3,  "gp": "Australian Grand Prix",     "short": "AUS", "circuit": "Albert Park",                   "place": "Melbourne",    "from": "2027-04-02", "race": "2027-04-04", "sprint": true},
+    {"rd": 4,  "gp": "Japanese Grand Prix",       "short": "JPN", "circuit": "Suzuka",                        "place": "Suzuka",       "from": "2027-04-09", "race": "2027-04-11", "sprint": true},
+    {"rd": 5,  "gp": "Chinese Grand Prix",        "short": "CHN", "circuit": "Shanghai International Circuit","place": "Shanghai",     "from": "2027-04-16", "race": "2027-04-18", "sprint": false},
+    {"rd": 6,  "gp": "Miami Grand Prix",          "short": "MIA", "circuit": "Miami International Autodrome", "place": "Miami",        "from": "2027-04-30", "race": "2027-05-02", "sprint": false},
+    {"rd": 7,  "gp": "Canadian Grand Prix",       "short": "CAN", "circuit": "Circuit Gilles Villeneuve",     "place": "Montréal",     "from": "2027-05-21", "race": "2027-05-23", "sprint": true},
+    {"rd": 8,  "gp": "Monaco Grand Prix",         "short": "MON", "circuit": "Circuit de Monaco",             "place": "Monte Carlo",  "from": "2027-06-04", "race": "2027-06-06", "sprint": true},
+    {"rd": 9,  "gp": "Portuguese Grand Prix",     "short": "POR", "circuit": "Algarve International Circuit", "place": "Portimão",     "from": "2027-06-18", "race": "2027-06-20", "sprint": false, "new": "Back for the first time since 2021"},
+    {"rd": 10, "gp": "British Grand Prix",        "short": "GBR", "circuit": "Silverstone",                   "place": "Silverstone",  "from": "2027-07-02", "race": "2027-07-04", "sprint": true},
+    {"rd": 11, "gp": "Austrian Grand Prix",       "short": "AUT", "circuit": "Red Bull Ring",                 "place": "Spielberg",    "from": "2027-07-09", "race": "2027-07-11", "sprint": false},
+    {"rd": 12, "gp": "Belgian Grand Prix",        "short": "BEL", "circuit": "Spa-Francorchamps",             "place": "Spa",          "from": "2027-07-23", "race": "2027-07-25", "sprint": false},
+    {"rd": 13, "gp": "Hungarian Grand Prix",      "short": "HUN", "circuit": "Hungaroring",                   "place": "Budapest",     "from": "2027-07-30", "race": "2027-08-01", "sprint": false},
+    {"rd": 14, "gp": "Italian Grand Prix",        "short": "ITA", "circuit": "Monza",                         "place": "Monza",        "from": "2027-09-03", "race": "2027-09-05", "sprint": true},
+    {"rd": 15, "gp": "Spanish Grand Prix",        "short": "ESP", "circuit": "Madring",                       "place": "Madrid",       "from": "2027-09-10", "race": "2027-09-12", "sprint": false},
+    {"rd": 16, "gp": "Azerbaijan Grand Prix",     "short": "AZE", "circuit": "Baku City Circuit",             "place": "Baku",         "from": "2027-09-24", "race": "2027-09-26", "sprint": false},
+    {"rd": 17, "gp": "Turkish Grand Prix",        "short": "TUR", "circuit": "Istanbul Park",                 "place": "Istanbul",     "from": "2027-10-01", "race": "2027-10-03", "sprint": false, "new": "Back for the first time since 2021"},
+    {"rd": 18, "gp": "Singapore Grand Prix",      "short": "SGP", "circuit": "Marina Bay Street Circuit",     "place": "Singapore",    "from": "2027-10-08", "race": "2027-10-10", "sprint": false},
+    {"rd": 19, "gp": "United States Grand Prix",  "short": "USA", "circuit": "Circuit of the Americas",       "place": "Austin",       "from": "2027-10-22", "race": "2027-10-24", "sprint": false},
+    {"rd": 20, "gp": "Mexico City Grand Prix",    "short": "MEX", "circuit": "Autódromo Hermanos Rodríguez",  "place": "Mexico City",  "from": "2027-10-29", "race": "2027-10-31", "sprint": false},
+    {"rd": 21, "gp": "São Paulo Grand Prix",      "short": "BRA", "circuit": "Interlagos",                    "place": "São Paulo",    "from": "2027-11-05", "race": "2027-11-07", "sprint": true},
+    {"rd": 22, "gp": "Las Vegas Grand Prix",      "short": "LVG", "circuit": "Las Vegas Strip Circuit",       "place": "Las Vegas",    "from": "2027-11-18", "race": "2027-11-20", "sprint": false},
+    {"rd": 23, "gp": "Qatar Grand Prix",          "short": "QAT", "circuit": "Lusail International Circuit",  "place": "Lusail",       "from": "2027-12-03", "race": "2027-12-05", "sprint": true},
+    {"rd": 24, "gp": "Abu Dhabi Grand Prix",      "short": "ABU", "circuit": "Yas Marina Circuit",            "place": "Abu Dhabi",    "from": "2027-12-10", "race": "2027-12-12", "sprint": true}
+  ],
+  "dropped": [
+    {"gp": "Dutch Grand Prix", "why": "Zandvoort's contract ended after 2026"},
+    {"gp": "Barcelona-Catalunya Grand Prix", "why": "Spain keeps one race, at the Madring in Madrid"}
+  ],
+  "grid": [
+    {"team": "Mercedes",        "drivers": [["George Russell", "confirmed"], ["Kimi Antonelli", "confirmed"]]},
+    {"team": "Ferrari",         "drivers": [["Charles Leclerc", "confirmed"], ["Lewis Hamilton", "confirmed"]]},
+    {"team": "Red Bull Racing", "drivers": [["Max Verstappen", "confirmed"], ["Isack Hadjar", "confirmed"]]},
+    {"team": "McLaren",         "drivers": [["Lando Norris", "confirmed"], ["Oscar Piastri", "confirmed"]]},
+    {"team": "Aston Martin",    "drivers": [["Fernando Alonso", "confirmed"], ["Lance Stroll", "confirmed"]]},
+    {"team": "Williams",        "drivers": [["Carlos Sainz", "confirmed"], ["Alexander Albon", "confirmed"]]},
+    {"team": "Alpine",          "drivers": [["Pierre Gasly", "confirmed"], ["Franco Colapinto", "confirmed"]]},
+    {"team": "Audi",            "drivers": [["Nico Hulkenberg", "confirmed"], ["Gabriel Bortoleto", "confirmed"]]},
+    {"team": "Cadillac",        "drivers": [["Sergio Perez", "confirmed"], ["Valtteri Bottas", "confirmed"]]},
+    {"team": "Haas F1 Team",    "drivers": [["Rafael Camara", "confirmed"], ["Oliver Bearman", "expected"]]},
+    {"team": "Racing Bulls",    "drivers": [["Liam Lawson", "expected"], ["Arvid Lindblad", "expected"]]}
+  ],
+  "moves": [
+    {"driver": "Rafael Camara", "from": "Ferrari Driver Academy", "to": "Haas F1 Team", "note": "Multi-year deal; the only new driver confirmed for 2027 so far."},
+    {"driver": "Esteban Ocon", "from": "Haas F1 Team", "to": null, "note": "Replaced by Camara at Haas."}
+  ]
+}

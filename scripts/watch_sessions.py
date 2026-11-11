@@ -18,7 +18,8 @@ import argparse, json, os, subprocess, sys, time, urllib.request
 from datetime import datetime, timedelta, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WEEKEND = ("Practice 1", "Practice 2", "Practice 3", "Sprint Qualifying", "Qualifying", "Sprint", "Race")
+WEEKEND = ("Practice 1", "Practice 2", "Practice 3", "Sprint Qualifying", "Qualifying", "Sprint", "Race",
+           "Day 1", "Day 2", "Day 3", "Day 4")  # pre-season testing days too (scripts/update_testing.py)
 SETTLE = timedelta(minutes=20)       # same as update_sessions.SETTLE_MIN
 GIVE_UP = timedelta(hours=12)        # stop waiting for a session this long after it ended
 BUSY_SLEEP = 5 * 60                  # while a session has ended but its data isn't in yet
@@ -51,7 +52,11 @@ def sessions(year):
 
 def imported():
     p = os.path.join(ROOT, "data", "index.json")
-    return {x["sk"] for x in json.load(open(p))} if os.path.exists(p) else set()
+    have = {x["sk"] for x in json.load(open(p))} if os.path.exists(p) else set()
+    for f in os.listdir(os.path.join(ROOT, "data")):
+        if f.startswith("testing-") and f.endswith(".json"):
+            have |= {d["sk"] for d in json.load(open(os.path.join(ROOT, "data", f)))["days"] if d.get("rows")}
+    return have
 
 
 def status(year, now):
@@ -74,6 +79,7 @@ def one_pass(push):
     """The old workflow's steps, once. Returns True if something was committed."""
     sh("python3 scripts/update_sessions.py", check=False)
     sh("python3 scripts/update_schedule.py", check=False)
+    sh("python3 scripts/update_testing.py", check=False)
     if out("git status --porcelain data"):
         sh("python3 scripts/update_standings.py")
         sh("python3 scripts/build_pages.py")
@@ -119,7 +125,7 @@ def dispatch_again():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--once", action="store_true", help="one pass, no push, no waiting")
-    ap.add_argument("--year", type=int, default=2026)
+    ap.add_argument("--year", type=int, default=datetime.now(timezone.utc).year)
     a = ap.parse_args()
     if a.once:
         one_pass(push=False); return

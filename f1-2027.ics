@@ -1,0 +1,286 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Pit Wall F1//pitwallf1.in//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:F1 2027 · Pit Wall F1
+X-WR-CALDESC:Every 2027 Formula 1 race weekend and pre-season testing (unof
+ ficial).
+X-PUBLISHED-TTL:PT12H
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+BEGIN:VEVENT
+UID:2027-testing@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270224
+DTEND;VALUE=DATE:20270228
+SUMMARY:F1 2027 pre-season testing
+LOCATION:Bahrain International Circuit\, Sakhir
+DESCRIPTION:Day-by-day results: https://pitwallf1.in/f1-2027-testing/
+URL:https://pitwallf1.in/f1-2027-testing/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r1-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270312
+DTEND;VALUE=DATE:20270315
+SUMMARY:🏁 Bahrain Grand Prix (sprint weekend)
+LOCATION:Bahrain International Circuit\, Sakhir
+DESCRIPTION:Round 1 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r2-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270319
+DTEND;VALUE=DATE:20270322
+SUMMARY:🏁 Saudi Arabian Grand Prix
+LOCATION:Jeddah Corniche Circuit\, Jeddah
+DESCRIPTION:Round 2 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r3-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270402
+DTEND;VALUE=DATE:20270405
+SUMMARY:🏁 Australian Grand Prix (sprint weekend)
+LOCATION:Albert Park\, Melbourne
+DESCRIPTION:Round 3 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r4-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270409
+DTEND;VALUE=DATE:20270412
+SUMMARY:🏁 Japanese Grand Prix (sprint weekend)
+LOCATION:Suzuka\, Suzuka
+DESCRIPTION:Round 4 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r5-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270416
+DTEND;VALUE=DATE:20270419
+SUMMARY:🏁 Chinese Grand Prix
+LOCATION:Shanghai International Circuit\, Shanghai
+DESCRIPTION:Round 5 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r6-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270430
+DTEND;VALUE=DATE:20270503
+SUMMARY:🏁 Miami Grand Prix
+LOCATION:Miami International Autodrome\, Miami
+DESCRIPTION:Round 6 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r7-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270521
+DTEND;VALUE=DATE:20270524
+SUMMARY:🏁 Canadian Grand Prix (sprint weekend)
+LOCATION:Circuit Gilles Villeneuve\, Montréal
+DESCRIPTION:Round 7 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r8-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270604
+DTEND;VALUE=DATE:20270607
+SUMMARY:🏁 Monaco Grand Prix (sprint weekend)
+LOCATION:Circuit de Monaco\, Monte Carlo
+DESCRIPTION:Round 8 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r9-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270618
+DTEND;VALUE=DATE:20270621
+SUMMARY:🏁 Portuguese Grand Prix
+LOCATION:Algarve International Circuit\, Portimão
+DESCRIPTION:Round 9 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r10-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270702
+DTEND;VALUE=DATE:20270705
+SUMMARY:🏁 British Grand Prix (sprint weekend)
+LOCATION:Silverstone\, Silverstone
+DESCRIPTION:Round 10 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r11-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270709
+DTEND;VALUE=DATE:20270712
+SUMMARY:🏁 Austrian Grand Prix
+LOCATION:Red Bull Ring\, Spielberg
+DESCRIPTION:Round 11 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r12-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270723
+DTEND;VALUE=DATE:20270726
+SUMMARY:🏁 Belgian Grand Prix
+LOCATION:Spa-Francorchamps\, Spa
+DESCRIPTION:Round 12 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r13-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270730
+DTEND;VALUE=DATE:20270802
+SUMMARY:🏁 Hungarian Grand Prix
+LOCATION:Hungaroring\, Budapest
+DESCRIPTION:Round 13 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r14-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270903
+DTEND;VALUE=DATE:20270906
+SUMMARY:🏁 Italian Grand Prix (sprint weekend)
+LOCATION:Monza\, Monza
+DESCRIPTION:Round 14 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r15-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270910
+DTEND;VALUE=DATE:20270913
+SUMMARY:🏁 Spanish Grand Prix
+LOCATION:Madring\, Madrid
+DESCRIPTION:Round 15 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r16-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20270924
+DTEND;VALUE=DATE:20270927
+SUMMARY:🏁 Azerbaijan Grand Prix
+LOCATION:Baku City Circuit\, Baku
+DESCRIPTION:Round 16 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r17-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271001
+DTEND;VALUE=DATE:20271004
+SUMMARY:🏁 Turkish Grand Prix
+LOCATION:Istanbul Park\, Istanbul
+DESCRIPTION:Round 17 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r18-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271008
+DTEND;VALUE=DATE:20271011
+SUMMARY:🏁 Singapore Grand Prix
+LOCATION:Marina Bay Street Circuit\, Singapore
+DESCRIPTION:Round 18 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r19-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271022
+DTEND;VALUE=DATE:20271025
+SUMMARY:🏁 United States Grand Prix
+LOCATION:Circuit of the Americas\, Austin
+DESCRIPTION:Round 19 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r20-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271029
+DTEND;VALUE=DATE:20271101
+SUMMARY:🏁 Mexico City Grand Prix
+LOCATION:Autódromo Hermanos Rodríguez\, Mexico City
+DESCRIPTION:Round 20 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r21-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271105
+DTEND;VALUE=DATE:20271108
+SUMMARY:🏁 São Paulo Grand Prix (sprint weekend)
+LOCATION:Interlagos\, São Paulo
+DESCRIPTION:Round 21 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r22-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271118
+DTEND;VALUE=DATE:20271121
+SUMMARY:🏁 Las Vegas Grand Prix
+LOCATION:Las Vegas Strip Circuit\, Las Vegas
+DESCRIPTION:Round 22 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r23-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271203
+DTEND;VALUE=DATE:20271206
+SUMMARY:🏁 Qatar Grand Prix (sprint weekend)
+LOCATION:Lusail International Circuit\, Lusail
+DESCRIPTION:Round 23 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-r24-weekend@pitwallf1.in
+DTSTAMP:20260101T000000Z
+DTSTART;VALUE=DATE:20271210
+DTEND;VALUE=DATE:20271213
+SUMMARY:🏁 Abu Dhabi Grand Prix (sprint weekend)
+LOCATION:Yas Marina Circuit\, Abu Dhabi
+DESCRIPTION:Round 24 of 24. Session times are added when F1 publishes them.
+URL:https://pitwallf1.in/f1-calendar-2027/
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

@@ -27,9 +27,11 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Pit Wall F1: race stories" href="/feed.xml">
 <script src="/assets/diwali.js" defer></script>
+<script src="/assets/alerts.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
+.h2h-win{color:#2FD480;font-weight:700}.h2h-lose{color:var(--muted)}main h3{margin:20px 0 8px;font-size:18px}
 :root{--bg:#0A0C11;--panel:#12161E;--panel2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;--red:#E10600;--purple:#B54BE8;
 --fd:"Saira Condensed","Arial Narrow",Impact,sans-serif;--fb:"Barlow","Segoe UI",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--fb);-webkit-font-smoothing:antialiased}
@@ -59,6 +61,7 @@ td{padding:8px 10px;border-top:1px solid var(--line);white-space:nowrap}
 td.n{font:700 14px var(--fm);text-align:right}th.n{text-align:right}
 td.pos{font:italic 900 17px var(--fd);width:40px}
 .sw{display:inline-block;width:4px;height:16px;vertical-align:-3px;margin-right:8px;background:var(--team,#888)}
+button.btn{border:0;cursor:pointer}
 .btn{display:inline-block;background:var(--red);color:#fff;font:800 13px var(--fd);text-transform:uppercase;letter-spacing:.08em;padding:9px 14px;border-radius:3px}
 .btn:hover{text-decoration:none;filter:brightness(1.1)}
 .note{color:var(--muted);font-size:14px}
@@ -74,7 +77,7 @@ footer.site nav a{color:var(--fg);font-weight:500}
 .theme-btn svg{width:17px;height:17px}.theme-btn .sun{display:none}:root[data-theme="light"] .theme-btn .sun{display:block}:root[data-theme="light"] .theme-btn .moon{display:none}
 </style>
 
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pitwallf1.in/"}, {"@type": "ListItem", "position": 2, "name": "How fast is an F1 car?", "item": "https://pitwallf1.in/how-fast-is-an-f1-car/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How fast is an F1 car?", "description": "Top speeds at every 2026 track.", "url": "https://pitwallf1.in/how-fast-is-an-f1-car/", "inLanguage": "en", "dateModified": "2026-11-10", "author": {"@type": "Organization", "name": "Pit Wall F1", "url": "https://pitwallf1.in/"}, "publisher": {"@type": "Organization", "name": "Pit Wall F1", "url": "https://pitwallf1.in/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How fast is an F1 car?", "acceptedAnswer": {"@type": "Answer", "text": "F1 cars reach around 350 km/h. On 2026 pole laps the highest top speed was 350 km/h at Autódromo Hermanos Rodríguez."}}, {"@type": "Question", "name": "What is the fastest F1 track?", "acceptedAnswer": {"@type": "Answer", "text": "By average speed over a lap, Autodromo Nazionale Monza: 254 km/h on the pole lap. Lusail International Circuit was next at 245 km/h."}}, {"@type": "Question", "name": "What is the slowest corner in F1?", "acceptedAnswer": {"@type": "Answer", "text": "Circuit de Monaco's, taken at 44 km/h on the pole lap."}}, {"@type": "Question", "name": "How much horsepower does a 2026 F1 car have?", "acceptedAnswer": {"@type": "Answer", "text": "About 1,000 hp: roughly 400 kW from the engine and up to 350 kW from the electric motor."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pitwallf1.in/"}, {"@type": "ListItem", "position": 2, "name": "How fast is an F1 car?", "item": "https://pitwallf1.in/how-fast-is-an-f1-car/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How fast is an F1 car?", "description": "Top speeds at every 2026 track.", "url": "https://pitwallf1.in/how-fast-is-an-f1-car/", "inLanguage": "en", "dateModified": "2026-11-11", "author": {"@type": "Organization", "name": "Pit Wall F1", "url": "https://pitwallf1.in/"}, "publisher": {"@type": "Organization", "name": "Pit Wall F1", "url": "https://pitwallf1.in/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How fast is an F1 car?", "acceptedAnswer": {"@type": "Answer", "text": "F1 cars reach around 350 km/h. On 2026 pole laps the highest top speed was 350 km/h at Autódromo Hermanos Rodríguez."}}, {"@type": "Question", "name": "What is the fastest F1 track?", "acceptedAnswer": {"@type": "Answer", "text": "By average speed over a lap, Autodromo Nazionale Monza: 254 km/h on the pole lap. Lusail International Circuit was next at 245 km/h."}}, {"@type": "Question", "name": "What is the slowest corner in F1?", "acceptedAnswer": {"@type": "Answer", "text": "Circuit de Monaco's, taken at 44 km/h on the pole lap."}}, {"@type": "Question", "name": "How much horsepower does a 2026 F1 car have?", "acceptedAnswer": {"@type": "Answer", "text": "About 1,000 hp: roughly 400 kW from the engine and up to 350 kW from the electric motor."}}]}</script>
 </head>
 <body>
 <header class="top"><div class="w">

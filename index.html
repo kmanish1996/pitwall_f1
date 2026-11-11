@@ -32,6 +32,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <script src="/assets/diwali.js" defer></script>
+<script src="/assets/alerts.js" defer></script>
 <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Pit Wall F1: race stories">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Site summary for AI assistants">
 <link rel="alternate" type="application/json" href="/api/index.json" title="Pit Wall F1 open data">
@@ -184,6 +185,8 @@ button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;curso
 .sr-scroll{overflow-x:auto;margin:0 -4px}
 .sr-act{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .tzline{position:relative;z-index:1;margin-top:8px;font-size:12px;color:var(--muted)}
+.hero-subs{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:4px 18px}
+.alerts-btn{background:none;border:0;padding:0;font-family:inherit;cursor:pointer}
 .cal-sub{position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--fg);text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px}
 
 .pulse-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:16px;align-content:start;min-width:0}
@@ -425,6 +428,7 @@ button.t-row:hover{background:color-mix(in srgb,var(--team) 12%,var(--panel))}
 .pb.sel{background:color-mix(in srgb,var(--red) 14%,var(--panel))}
 .pb-name{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;min-width:0}
 .pb-name>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pb-date{font-size:11px;color:var(--muted);font-weight:600;margin-left:6px;white-space:nowrap}
 .pb-tag{font-size:10px;font-family:var(--f-display);text-transform:uppercase;letter-spacing:.08em;color:var(--amber);font-weight:700}
 .pb-track{height:10px;background:var(--panel-2);border-radius:1px;overflow:hidden}
 .pb-track i{display:block;height:100%;background:linear-gradient(90deg,color-mix(in srgb,var(--red) 40%,transparent),var(--red));transform-origin:left;animation:grow .8s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:inherit}
@@ -1146,7 +1150,7 @@ nav.tabs a:first-child{padding-left:0}
       <div class="cd-for" id="cdFor">Until <strong>Practice 1</strong></div>
       <div class="sessions" id="sessions"></div>
       <div class="tzline" id="tzline"></div>
-      <a class="cal-sub" href="/subscribe/">📅 Add every session to your calendar</a>
+      <div class="hero-subs"><a class="cal-sub" href="/subscribe/">📅 Add every session to your calendar</a><button type="button" class="cal-sub alerts-btn" data-alerts>🔔 Get race-live alerts</button></div>
     </div>
 
     <div class="hero-side">
@@ -1216,7 +1220,7 @@ nav.tabs a:first-child{padding-left:0}
       </div>
     </div>
     <div class="cal" id="cal"></div>
-    <p class="cal-note">The Saudi Arabian GP was cancelled. The Bahrain GP was relocated to Sepang, Malaysia, and run on 4 October. Times show in your local time zone. <a href="/subscribe/">Add every session to your calendar</a>.</p>
+    <p class="cal-note">The Saudi Arabian GP was cancelled. The Bahrain GP was relocated to Sepang, Malaysia, and run on 4 October. Times show in your local time zone. <a href="/subscribe/">Add every session to your calendar</a>. Looking ahead: the <a href="/f1-calendar-2027/">2027 calendar</a>, <a href="/f1-2027-grid/">grid</a> and <a href="/f1-2027-testing/">testing</a>.</p>
   </section>
 
   <!-- TITLE FIGHT -->
@@ -1295,15 +1299,15 @@ nav.tabs a:first-child{padding-left:0}
   <!-- TRAVEL -->
   <section class="panel" id="p-travel" hidden>
     <div class="tv-hero">
-      <div><div class="label">Tickets, trips and the race-weekend experience</div><h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Race travel</h2>
-        <p>Compare ticket prices across every circuit, cost a trip from your country, and learn how to get close to the drivers.</p></div>
+      <div><div class="label">Plan your 2027 race weekend</div><h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Race travel 2027</h2>
+        <p>Every 2027 race weekend with its dates: compare ticket prices across the circuits, cost a trip from your country, and learn how to get close to the drivers. See the full <a href="/f1-calendar-2027/">2027 calendar</a>.</p></div>
       <div class="home"><span id="homeFlag"></span><label for="homeSel"><span class="label">Prices for fans in</span><select id="homeSel"></select></label></div>
     </div>
     <div class="answers" id="answers"></div>
 
     <div class="tv-sec" id="t-prices">
       <h3>Ticket prices by circuit</h3>
-      <div class="tv-sub"><p>Official 3-day prices for 2026, cheapest first. Select a race to cost a trip.</p>
+      <div class="tv-sub"><p>Official 3-day prices, cheapest first, with each race's 2027 dates. Prices are the published 2026 rates until 2027 tickets go on sale. Select a race to cost a trip.</p>
         <div class="seg" role="group" aria-label="Ticket type" id="tierSeg">
           <button type="button" data-t="ga" aria-pressed="false">General admission</button>
           <button type="button" data-t="cheap" aria-pressed="true">Grandstand</button>
@@ -1311,6 +1315,7 @@ nav.tabs a:first-child{padding-left:0}
         </div></div>
       <div class="pricebars" id="priceBars"></div>
       <p class="est" id="priciestNote" style="margin-top:8px"></p>
+      <p class="est" style="margin-top:4px">New for 2027: the Portuguese GP (Portimão, 18–20 Jun) and the Turkish GP (Istanbul Park, 1–3 Oct). Their ticket prices are not published yet.</p>
     </div>
 
     <div class="tv-sec" id="t-plan">
@@ -2346,73 +2351,70 @@ const HOMES=[
 // Official 3-day prices in USD (GP Destinations, May 2026 rates). ga:null = no general admission sold.
 // idx = local cost level for hotels and daily spend (1 low – 4 extreme)
 const VENUES=[
- {k:"AUS",gp:"Australian GP",city:"Melbourne",mon:"March",ll:[-37.85,144.97],ga:258,cheap:377,main:549,idx:3,days4:1,
+ {k:"AUS",gp:"Australian GP",city:"Melbourne",mon:"April",d27:"2–4 Apr",rd27:3,ll:[-37.85,144.97],ga:258,cheap:377,main:549,idx:3,days4:1,
   pick:"Turn 1–2 stands see the start and the heavy braking into the first corner. General admission lets you roam the lakeside.",
   go:"Trams run from the city centre to the park gates.",tip:"Four days of support races and air displays make Thursday great value."},
- {k:"CHN",gp:"Chinese GP",city:"Shanghai",mon:"March",ll:[31.34,121.22],ga:68,cheap:226,main:367,idx:1,
+ {k:"CHN",gp:"Chinese GP",city:"Shanghai",mon:"April",d27:"16–18 Apr",rd27:5,ll:[31.34,121.22],ga:68,cheap:226,main:367,idx:1,
   pick:"Stands at the Turn 14 hairpin, at the end of the 1.2 km back straight. It is the circuit's best overtaking spot.",
   go:"Metro Line 11 runs to Shanghai Circuit station.",tip:"The cheapest race to attend. Stay near Line 11 to skip traffic."},
- {k:"JPN",gp:"Japanese GP",city:"Suzuka",mon:"March",ll:[34.84,136.54],ga:122,cheap:140,main:639,idx:2,
+ {k:"JPN",gp:"Japanese GP",city:"Suzuka",mon:"April",d27:"9–11 Apr",rd27:4,ll:[34.84,136.54],ga:122,cheap:140,main:639,idx:2,
   pick:"S-Curves stands give a view of the cars flowing through the esses, one of F1's great sights.",
   go:"Kintetsu train to Shiroko, then a shuttle bus. Most fans stay in Nagoya.",tip:"Japanese fans bring incredible costumes and banners. Pack for spring rain."},
- {k:"MIA",gp:"Miami GP",city:"Miami",mon:"May",ll:[25.96,-80.24],ga:650,cheap:670,main:1175,idx:3,
+ {k:"MIA",gp:"Miami GP",city:"Miami",mon:"May",d27:"30 Apr–2 May",rd27:6,ll:[25.96,-80.24],ga:650,cheap:670,main:1175,idx:3,
   pick:"Turn 1 stands for the start, or the Marina zone if you want the party.",
   go:"Official shuttles and rideshare lots. Driving in is slow.",tip:"Hot and humid. Plan for sun, water and shade."},
- {k:"CAN",gp:"Canadian GP",city:"Montréal",mon:"May",ll:[45.50,-73.52],ga:299,cheap:319,main:777,idx:3,
+ {k:"CAN",gp:"Canadian GP",city:"Montréal",mon:"May",d27:"21–23 May",rd27:7,ll:[45.50,-73.52],ga:299,cheap:319,main:777,idx:3,
   pick:"Hairpin stands at Turn 10 put you close to late braking and overtakes.",
   go:"Metro Yellow Line to Jean-Drapeau. There is no public parking on the island.",tip:"Downtown turns into a street festival on race weekend."},
- {k:"MON",gp:"Monaco GP",city:"Monte Carlo",mon:"June",ll:[43.73,7.42],ga:293,cheap:1080,main:1289,idx:4,
+ {k:"MON",gp:"Monaco GP",city:"Monte Carlo",mon:"June",d27:"4–6 Jun",rd27:8,ll:[43.73,7.42],ga:293,cheap:1080,main:1289,idx:4,
   pick:"Grandstand K on the harbour faces the yachts and the Tabac corner.",
   go:"Trains from Nice take about 25 minutes. Staying in Nice saves a lot.",tip:"General admission is the Rocher hillside. Arrive very early for a spot."},
- {k:"BCN",gp:"Barcelona-Catalunya GP",city:"Barcelona",mon:"June",ll:[41.57,2.26],ga:263,cheap:409,main:737,idx:2,
-  pick:"Turn 1 stands see the start, the run to the first corner and the pit exit.",
-  go:"Train to Montmeló, then about a 25-minute walk.",tip:"Base yourself in Barcelona and make a holiday of it."},
- {k:"AUT",gp:"Austrian GP",city:"Spielberg",mon:"June",ll:[47.22,14.76],ga:184,cheap:321,main:796,idx:2,
+ {k:"AUT",gp:"Austrian GP",city:"Spielberg",mon:"July",d27:"9–11 Jul",rd27:11,ll:[47.22,14.76],ga:184,cheap:321,main:796,idx:2,
   pick:"Stands at the Turn 3 hairpin, a classic overtaking spot. The hillsides show most of the lap.",
   go:"Shuttle buses from nearby stations. Many fans camp.",tip:"Mountain weather changes fast. Bring a rain layer."},
- {k:"GBR",gp:"British GP",city:"Silverstone",mon:"July",ll:[52.07,-1.02],ga:431,cheap:618,main:959,idx:3,
+ {k:"GBR",gp:"British GP",city:"Silverstone",mon:"July",d27:"2–4 Jul",rd27:10,ll:[52.07,-1.02],ga:431,cheap:618,main:959,idx:3,
   pick:"Club corner stands sit near the finish line and podium. Luffield is good for overtakes.",
   go:"Shuttle buses from Milton Keynes and Northampton stations. Sunday roads jam.",tip:"Expect four seasons in a day. Bring layers and waterproofs."},
- {k:"BEL",gp:"Belgian GP",city:"Spa-Francorchamps",mon:"July",ll:[50.44,5.97],ga:240,cheap:368,main:731,idx:2,
+ {k:"BEL",gp:"Belgian GP",city:"Spa-Francorchamps",mon:"July",d27:"23–25 Jul",rd27:12,ll:[50.44,5.97],ga:240,cheap:368,main:731,idx:2,
   pick:"Stands around Eau Rouge and Raidillon, where the cars climb the hill flat out.",
   go:"Park-and-ride shuttles. Many fans stay in Liège or camp.",tip:"Rain and mud are likely. Waterproof shoes are essential."},
- {k:"HUN",gp:"Hungarian GP",city:"Budapest",mon:"July",ll:[47.58,19.25],ga:187,cheap:234,main:737,idx:1,
+ {k:"HUN",gp:"Hungarian GP",city:"Budapest",mon:"July",d27:"30 Jul–1 Aug",rd27:13,ll:[47.58,19.25],ga:187,cheap:234,main:737,idx:1,
   pick:"Turn 1 stands at the end of the main straight. General admission hills give wide views.",
   go:"Shuttle buses run from central Budapest.",tip:"July heat is intense. Budapest makes a great city break."},
- {k:"NED",gp:"Dutch GP",city:"Zandvoort",mon:"August",ll:[52.39,4.54],ga:372,cheap:536,main:1024,idx:3,
-  pick:"The banked Hugenholtz bend at Turn 3, or the Arena section near the end of the lap.",
-  go:"Trains from Amsterdam. The event is planned around public transport.",tip:"Expect a sea of orange. The beach is next to the track."},
- {k:"ITA",gp:"Italian GP",city:"Monza",mon:"September",ll:[45.62,9.28],ga:140,cheap:246,main:800,idx:2,
+ {k:"ITA",gp:"Italian GP",city:"Monza",mon:"September",d27:"3–5 Sep",rd27:14,ll:[45.62,9.28],ga:140,cheap:246,main:800,idx:2,
   pick:"Turn 1 stands for the start, or the Parabolica for the final corner.",
   go:"Train from Milano Centrale to Monza, then walk or shuttle.",tip:"After the race, fans flood the track to stand under the podium."},
- {k:"ESP",gp:"Spanish GP",city:"Madrid",mon:"September",ll:[40.46,-3.62],ga:325,cheap:518,main:1360,idx:2,
+ {k:"ESP",gp:"Spanish GP",city:"Madrid",mon:"September",d27:"10–12 Sep",rd27:15,ll:[40.46,-3.62],ga:325,cheap:518,main:1360,idx:2,
   pick:"Stands at La Monumental, the circuit's banked corner.",
   go:"Metro to IFEMA. The circuit is close to Madrid's airport.",tip:"A new venue for 2026. Madrid's evenings are made for late dinners."},
- {k:"AZE",gp:"Azerbaijan GP",city:"Baku",mon:"September",ll:[40.37,49.85],ga:140,cheap:380,main:1150,idx:1,
+ {k:"AZE",gp:"Azerbaijan GP",city:"Baku",mon:"September",d27:"24–26 Sep",rd27:16,ll:[40.37,49.85],ga:140,cheap:380,main:1150,idx:1,
   pick:"Main-straight stands see top speeds and the Turn 1 lunge.",
   go:"Walk or take the metro. The track runs through the city centre.",tip:"The castle section beneath the old city walls is unforgettable."},
- {k:"BHR",gp:"Bahrain GP",city:"Sakhir",mon:"April",ll:[26.03,50.51],ga:null,cheap:186,main:517,idx:2,note:"In 2026 the race moved to Sepang, Malaysia. Prices are for Sakhir.",
+ {k:"BHR",gp:"Bahrain GP",city:"Sakhir",mon:"March",d27:"12–14 Mar",rd27:1,ll:[26.03,50.51],ga:null,cheap:186,main:517,idx:2,
   pick:"Turn 1 stands for the start and the first big braking zone.",
   go:"Shuttle buses from Manama.",tip:"A desert night race, cool after sunset."},
- {k:"SGP",gp:"Singapore GP",city:"Singapore",mon:"October",ll:[1.29,103.86],ga:422,cheap:473,main:1384,idx:3,
+ {k:"SAU",gp:"Saudi Arabian GP",city:"Jeddah",mon:"March",d27:"19–21 Mar",rd27:2,ll:[21.63,39.10],ga:140,cheap:270,main:778,idx:2,
+  pick:"Main grandstand on the seafront section.",
+  go:"Taxi or rideshare. Plan your exit after the race.",tip:"Very fast street circuit under lights, on the Red Sea shore."},
+ {k:"SGP",gp:"Singapore GP",city:"Singapore",mon:"October",d27:"8–10 Oct",rd27:18,ll:[1.29,103.86],ga:422,cheap:473,main:1384,idx:3,
   pick:"Bay grandstand for the Marina Bay skyline at night.",
   go:"MRT stations sit right by the gates.",tip:"Sessions run late into the night, with concerts inside the circuit."},
- {k:"USA",gp:"United States GP",city:"Austin",mon:"October",ll:[30.13,-97.64],ga:355,cheap:662,main:1310,idx:3,
+ {k:"USA",gp:"United States GP",city:"Austin",mon:"October",d27:"22–24 Oct",rd27:19,ll:[30.13,-97.64],ga:355,cheap:662,main:1310,idx:3,
   pick:"The Turn 1 grandstand at the top of the steep climb after the start.",
   go:"Shuttles from downtown Austin.",tip:"A big concert line-up runs alongside the racing."},
- {k:"MEX",gp:"Mexico City GP",city:"Mexico City",mon:"October",ll:[19.40,-99.09],ga:215,cheap:389,main:1678,idx:2,
+ {k:"MEX",gp:"Mexico City GP",city:"Mexico City",mon:"October",d27:"29–31 Oct",rd27:20,ll:[19.40,-99.09],ga:215,cheap:389,main:1678,idx:2,
   pick:"The Foro Sol stadium section. It has the loudest crowd in F1, and the podium is there.",
   go:"Metro Line 9 to Ciudad Deportiva.",tip:"The circuit sits at 2,200 m. Take it easy and stay hydrated."},
- {k:"BRA",gp:"São Paulo GP",city:"São Paulo",mon:"November",ll:[-23.70,-46.70],ga:null,cheap:182,main:636,idx:2,
+ {k:"BRA",gp:"São Paulo GP",city:"São Paulo",mon:"November",d27:"5–7 Nov",rd27:21,ll:[-23.70,-46.70],ga:null,cheap:182,main:636,idx:2,
   pick:"Stands at the Senna S, the first corner after the start.",
   go:"CPTM train Line 9 to Autódromo station.",tip:"Afternoon rain is common, and the fans are passionate."},
- {k:"LVG",gp:"Las Vegas GP",city:"Las Vegas",mon:"November",ll:[36.11,-115.17],ga:492,cheap:925,main:2051,idx:3,
+ {k:"LVG",gp:"Las Vegas GP",city:"Las Vegas",mon:"November",d27:"18–20 Nov",rd27:22,ll:[36.11,-115.17],ga:492,cheap:925,main:2051,idx:3,
   pick:"Zones along the Strip straight, where cars pass the hotels flat out.",
   go:"Walk or take the monorail from Strip hotels.",tip:"A November night race gets cold. Bring a warm jacket."},
- {k:"QAT",gp:"Qatar GP",city:"Lusail",mon:"November",ll:[25.49,51.45],ga:165,cheap:275,main:549,idx:2,
+ {k:"QAT",gp:"Qatar GP",city:"Lusail",mon:"December",d27:"3–5 Dec",rd27:23,ll:[25.49,51.45],ga:165,cheap:275,main:549,idx:2,
   pick:"Main grandstand opposite the pits, or general admission on Lusail Hill.",
   go:"Doha Metro, then circuit shuttles.",tip:"A night race with warm, comfortable evenings."},
- {k:"ABU",gp:"Abu Dhabi GP",city:"Yas Marina",mon:"December",ll:[24.47,54.60],ga:461,cheap:516,main:951,idx:3,
+ {k:"ABU",gp:"Abu Dhabi GP",city:"Yas Marina",mon:"December",d27:"10–12 Dec",rd27:24,ll:[24.47,54.60],ga:461,cheap:516,main:951,idx:3,
   pick:"Stands at the hairpin after the first long straight, the main overtaking spot.",
   go:"Shuttle buses from Abu Dhabi and Dubai.",tip:"The season finale races from sunset into the night, with big concerts after."}
 ];
@@ -2485,7 +2487,7 @@ function renderPriceBars(animate){
   const list=[...VENUES].map(v=>({v,p:tier==="ga"?v.ga:v[tier]})).sort((a,b)=>(a.p??1e9)-(b.p??1e9));
   const max=Math.max(...list.map(x=>x.p||0));
   box.innerHTML=list.map((x,i)=>`<button type="button" class="pb${x.v.k===plan.v?" sel":""}" data-k="${x.v.k}" style="animation-delay:${animate?i*22:0}ms">
-      <span class="pb-name">${vFlag(x.v)}<span>${esc(x.v.gp)}${x.v.note?' <span class="pb-tag">'+"Moved"+"</span>":""}</span></span>
+      <span class="pb-name">${vFlag(x.v)}<span>${esc(x.v.gp)}${x.v.d27?' <span class="pb-date">'+esc(x.v.d27)+"</span>":""}</span></span>
       <span class="pb-track">${x.p?`<i style="width:${x.p/max*100}%;${animate?"":"animation:none"}"></i>`:""}</span>
       <span class="pb-val mono">${x.p?money(x.p):"No GA"}</span></button>`).join("");
   box.querySelectorAll(".pb").forEach(b=>b.onclick=()=>{plan.v=b.dataset.k;plan.flightOverride=null;if(tier!=="ga"||VENUES.find(v=>v.k===plan.v).ga)plan.tier=tier;savePlan();renderPriceBars(false);renderPlanner(true);document.getElementById("t-plan").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})});
@@ -2514,7 +2516,7 @@ function renderPlanner(fresh){
   $("#plStack").innerHTML=parts.map(([k,,col])=>`<i style="flex:${Math.max(c[k],0.0001)};background:${col}" title="${k}"></i>`).join("");
   $("#plLines").innerHTML=parts.map(([k,l,col])=>`<div class="pl-line"><span><i style="background:${col}"></i>${l}</span><span class="mono">${money(c[k])}</span></div>`).join("");
   $("#guide").innerHTML=`
-    <div class="g-head">${FLAG(GP_FLAG[v.k],40)}<div><div class="label">${esc(v.city)} · usually ${v.mon}</div><h3>${esc(v.gp)}</h3></div></div>
+    <div class="g-head">${FLAG(GP_FLAG[v.k],40)}<div><div class="label">${esc(v.city)} · 2027: ${esc(v.d27||v.mon)}${v.rd27?" · round "+v.rd27:""}</div><h3>${esc(v.gp)}</h3></div></div>
     ${v.note?`<p class="g-note">${esc(v.note)}</p>`:""}
     <dl class="g-dl">
       <div><dt class="label">First-timer seat</dt><dd>${esc(v.pick)}</dd></div>
@@ -2972,6 +2974,8 @@ LEGAL.privacy=()=>`
 <li>the items you tick on the first-timer checklist</li>
 </ul>
 <p>You can clear it at any time through your browser's settings (clear site data). The site works normally without it.</p>
+<h3>Race alerts (only if you turn them on)</h3>
+<p>If you turn on race alerts, your browser gives us a push subscription: an anonymous web address at your browser's push service (Google, Mozilla, Apple or Microsoft) plus encryption keys, and we store it with the alerts you picked. It contains no name, email or location. We use it only to send the alerts you chose, and delete it when you turn alerts off or when the push service tells us it no longer works. It is stored with our host, Netlify.</p>
 <h3>Information collected automatically</h3>
 <p>Like any website, our hosting provider records standard server logs when your browser requests a page: IP address, browser type, the page requested, referring page and time. These logs are used for security and to keep the site running, and are deleted on the host's normal schedule.</p>
 ${SITE.analytics?`<p>We use ${esc(SITE.analytics)}, a privacy-friendly visitor counter, to see how many people visit and which pages they use. It sets no cookies and doesn't store your IP address or any personal data: it counts page views along with the referring site, browser, screen size and country. Blocking it in your browser doesn't affect the site.</p>`:`<p>We do not use analytics, advertising trackers or tracking cookies. If that changes, we will update this policy first.</p>`}
@@ -4783,7 +4787,7 @@ function themeApply(t,save){
 /* ================= ROUTING ================= */
 const ROUTES=["standings","race-centre","replay","calendar","tracks","title-fight","travel","games","learn"];
 /* each section's title and description: the browser tab here, and each address's own <head> (scripts/build_pages.py reads this line) */
-const ROUTE_META={"standings":{"t":"F1 2026 standings live: drivers' and constructors' table","d":"Live Formula 1 2026 drivers' and constructors' standings, the next race countdown in your time zone, and the 2026 world champion.","h":"F1 2026 standings, live","og":"standings","c":"/formula-1-standings-2026/"},"race-centre":{"t":"F1 race replays 2026: every race lap by lap with team radio","d":"Replay every 2026 Formula 1 race and sprint lap by lap: live timing tower, track map, gaps, tyres, pit stops, race control messages and team radio.","h":"F1 race centre: every 2026 race replayed lap by lap","og":"results","sm":1},"replay":{"t":"F1 2026 season replay: the championship race by race","d":"Watch the 2026 Formula 1 championship unfold race by race: the points table animated from Australia to the latest Grand Prix.","h":"F1 2026 season replay","og":"standings","sm":1},"calendar":{"t":"F1 2026 calendar with countdowns, results and replays","d":"Every round of the 2026 F1 calendar with dates, start times in your time zone, winners, lap records and replays of every session.","h":"F1 2026 calendar","og":"calendar","c":"/f1-calendar-2026/"},"tracks":{"t":"Every F1 circuit in 3D: explore all 2026 tracks","d":"Spin, zoom and fly around every 2026 Formula 1 circuit in 3D, built from real pole-lap telemetry: speed, gears, elevation and corner names.","h":"Every F1 circuit in 3D","og":"circuits","c":"/circuits/"},"title-fight":{"t":"F1 2026 title fight: championship maths and points left","d":"The 2026 Formula 1 title maths: how the championship was decided, points still available and the fights for second place in both championships.","h":"F1 2026 title fight","og":"champions","sm":1},"travel":{"t":"F1 race travel planner 2026: ticket prices and trip costs","d":"Plan a trip to a Formula 1 race: 2026 ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.","h":"F1 race travel planner","og":"calendar","sm":1},"games":{"t":"Free F1 games: reaction test and qualifying game","d":"Two free Formula 1 games: the lights-out reaction test and Pit Wall Dash, a three-lap qualifying game against the 2026 grid.","h":"F1 games","og":"reaction","c":"/f1-reaction-test/"},"games/reaction-test":{"t":"F1 reaction test: can you beat Bottas's 0.201s?","d":"Free F1 reaction time test with the real five-light start. Beat Valtteri Bottas's famous 0.201s start and share your time.","h":"F1 reaction test","og":"reaction","c":"/f1-reaction-test/"},"games/qualifying":{"t":"F1 qualifying game: three laps to beat the 2026 grid","d":"Pit Wall Dash, a free browser F1 qualifying game: three flying laps, a ghost car and the whole 2026 grid on the timing sheet.","h":"F1 qualifying game","og":"quali","c":"/f1-qualifying-game/"},"learn":{"t":"Learn F1: Formula 1 explained for beginners","d":"Formula 1 explained for beginners, with animations: what F1 is, race weekends and points, trophies, track terms, tyres, the steering wheel, 2026 car tech and the people of F1.","h":"Learn F1","og":"learn","c":"/learn-f1/"},"learn/about":{"t":"What is Formula 1? F1 explained for beginners","h":"What is Formula 1?","og":"learn-about","c":"/learn-f1/what-is-formula-1/"},"learn/weekend":{"t":"F1 race weekend explained: practice, qualifying, sprint and points","h":"F1 race weekend explained","og":"learn-weekend","c":"/learn-f1/race-weekend-format/"},"learn/trophies":{"t":"F1 trophies and championships explained","h":"F1 trophies and championships","og":"learn-trophies","c":"/learn-f1/trophies-and-championships/"},"learn/track":{"t":"F1 terms explained: apex, kerbs, chicanes, VSC and flags","h":"F1 track terms explained","og":"learn-track","c":"/learn-f1/track-terms/"},"learn/tyres":{"t":"F1 tyres explained: soft, medium, hard, inters and wets","h":"F1 tyres explained","og":"learn-tyres","c":"/learn-f1/f1-tyres-explained/"},"learn/wheel":{"t":"F1 steering wheel explained: every button and dial in 3D","h":"F1 steering wheel explained","og":"learn-wheel","c":"/learn-f1/f1-steering-wheel-buttons/"},"learn/tech":{"t":"2026 F1 car tech explained: active aero, overtake mode and ERS","h":"2026 F1 car tech explained","og":"learn-tech","c":"/learn-f1/f1-car-technology-2026/"},"learn/people":{"t":"Who's who in F1: drivers, engineers, pit crews and marshals","h":"The people of F1","og":"learn-people","c":"/learn-f1/people-of-f1/"},"privacy":{"t":"Privacy Policy","h":"Privacy Policy"},"terms":{"t":"Terms and Conditions","h":"Terms and Conditions"},"contact":{"t":"Contact us","h":"Contact us"},"about":{"t":"About Pit Wall F1","h":"About Pit Wall F1"}};
+const ROUTE_META={"standings":{"t":"F1 2026 standings live: drivers' and constructors' table","d":"Live Formula 1 2026 drivers' and constructors' standings, the next race countdown in your time zone, and the 2026 world champion.","h":"F1 2026 standings, live","og":"standings","c":"/formula-1-standings-2026/"},"race-centre":{"t":"F1 race replays 2026: every race lap by lap with team radio","d":"Replay every 2026 Formula 1 race and sprint lap by lap: live timing tower, track map, gaps, tyres, pit stops, race control messages and team radio.","h":"F1 race centre: every 2026 race replayed lap by lap","og":"results","sm":1},"replay":{"t":"F1 2026 season replay: the championship race by race","d":"Watch the 2026 Formula 1 championship unfold race by race: the points table animated from Australia to the latest Grand Prix.","h":"F1 2026 season replay","og":"standings","sm":1},"calendar":{"t":"F1 2026 calendar with countdowns, results and replays","d":"Every round of the 2026 F1 calendar with dates, start times in your time zone, winners, lap records and replays of every session.","h":"F1 2026 calendar","og":"calendar","c":"/f1-calendar-2026/"},"tracks":{"t":"Every F1 circuit in 3D: explore all 2026 tracks","d":"Spin, zoom and fly around every 2026 Formula 1 circuit in 3D, built from real pole-lap telemetry: speed, gears, elevation and corner names.","h":"Every F1 circuit in 3D","og":"circuits","c":"/circuits/"},"title-fight":{"t":"F1 2026 title fight: championship maths and points left","d":"The 2026 Formula 1 title maths: how the championship was decided, points still available and the fights for second place in both championships.","h":"F1 2026 title fight","og":"champions","sm":1},"travel":{"t":"F1 2027 travel planner: race dates, ticket prices and trip costs","d":"Plan a trip to a 2027 Formula 1 race: every race weekend's dates, ticket prices for each circuit in 11 currencies, a trip cost planner and first-timer tips.","h":"F1 2027 race travel planner","og":"calendar","sm":1},"games":{"t":"Free F1 games: reaction test and qualifying game","d":"Two free Formula 1 games: the lights-out reaction test and Pit Wall Dash, a three-lap qualifying game against the 2026 grid.","h":"F1 games","og":"reaction","c":"/f1-reaction-test/"},"games/reaction-test":{"t":"F1 reaction test: can you beat Bottas's 0.201s?","d":"Free F1 reaction time test with the real five-light start. Beat Valtteri Bottas's famous 0.201s start and share your time.","h":"F1 reaction test","og":"reaction","c":"/f1-reaction-test/"},"games/qualifying":{"t":"F1 qualifying game: three laps to beat the 2026 grid","d":"Pit Wall Dash, a free browser F1 qualifying game: three flying laps, a ghost car and the whole 2026 grid on the timing sheet.","h":"F1 qualifying game","og":"quali","c":"/f1-qualifying-game/"},"learn":{"t":"Learn F1: Formula 1 explained for beginners","d":"Formula 1 explained for beginners, with animations: what F1 is, race weekends and points, trophies, track terms, tyres, the steering wheel, 2026 car tech and the people of F1.","h":"Learn F1","og":"learn","c":"/learn-f1/"},"learn/about":{"t":"What is Formula 1? F1 explained for beginners","h":"What is Formula 1?","og":"learn-about","c":"/learn-f1/what-is-formula-1/"},"learn/weekend":{"t":"F1 race weekend explained: practice, qualifying, sprint and points","h":"F1 race weekend explained","og":"learn-weekend","c":"/learn-f1/race-weekend-format/"},"learn/trophies":{"t":"F1 trophies and championships explained","h":"F1 trophies and championships","og":"learn-trophies","c":"/learn-f1/trophies-and-championships/"},"learn/track":{"t":"F1 terms explained: apex, kerbs, chicanes, VSC and flags","h":"F1 track terms explained","og":"learn-track","c":"/learn-f1/track-terms/"},"learn/tyres":{"t":"F1 tyres explained: soft, medium, hard, inters and wets","h":"F1 tyres explained","og":"learn-tyres","c":"/learn-f1/f1-tyres-explained/"},"learn/wheel":{"t":"F1 steering wheel explained: every button and dial in 3D","h":"F1 steering wheel explained","og":"learn-wheel","c":"/learn-f1/f1-steering-wheel-buttons/"},"learn/tech":{"t":"2026 F1 car tech explained: active aero, overtake mode and ERS","h":"2026 F1 car tech explained","og":"learn-tech","c":"/learn-f1/f1-car-technology-2026/"},"learn/people":{"t":"Who's who in F1: drivers, engineers, pit crews and marshals","h":"The people of F1","og":"learn-people","c":"/learn-f1/people-of-f1/"},"privacy":{"t":"Privacy Policy","h":"Privacy Policy"},"terms":{"t":"Terms and Conditions","h":"Terms and Conditions"},"contact":{"t":"Contact us","h":"Contact us"},"about":{"t":"About Pit Wall F1","h":"About Pit Wall F1"}};
 const HOME_TITLE="Pit Wall F1 · Every F1 Stat, Every Lap, Every Track",HOME_H1="Pit Wall F1: live Formula 1 2026 standings, stats, race replays and 3D tracks";
 function routeMeta(h){const m=ROUTE_META[h];if(m)return m;const t=h.match(/^tracks\/([\w-]+)/);if(t&&typeof TRACK_INFO!=="undefined"&&TRACK_INFO[t[1]]){const I=TRACK_INFO[t[1]];return{t:`${I.full} in 3D: F1 track map and pole lap`,h:`${I.full} in 3D`,c:`/circuits/${t[1]}/`}}return ROUTE_META[h.split("/")[0]]||null}
 function setRouteMeta(h){const m=h?routeMeta(h):null;document.title=m?`${m.t} · Pit Wall F1`:HOME_TITLE;const e=document.querySelector(".pw-h1");if(e)e.textContent=m?m.h:HOME_H1;

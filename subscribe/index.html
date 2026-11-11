@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Add the F1 2026 calendar to Google, Apple or Outlook | Pit Wall F1</title>
-<meta name="description" content="Free F1 2026 calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus an RSS feed of every race story.">
+<meta name="description" content="Free F1 2026 calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus race-live alerts and an RSS feed of every race story.">
 <link rel="canonical" href="https://pitwallf1.in/subscribe/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pit Wall F1">
 <meta property="og:title" content="Add the F1 2026 calendar to Google, Apple or Outlook | Pit Wall F1">
-<meta property="og:description" content="Free F1 2026 calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus an RSS feed of every race story.">
+<meta property="og:description" content="Free F1 2026 calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus race-live alerts and an RSS feed of every race story.">
 <meta property="og:url" content="https://pitwallf1.in/subscribe/">
 <meta property="og:image" content="https://pitwallf1.in/assets/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -27,9 +27,11 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Pit Wall F1: race stories" href="/feed.xml">
 <script src="/assets/diwali.js" defer></script>
+<script src="/assets/alerts.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
+.h2h-win{color:#2FD480;font-weight:700}.h2h-lose{color:var(--muted)}main h3{margin:20px 0 8px;font-size:18px}
 :root{--bg:#0A0C11;--panel:#12161E;--panel2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;--red:#E10600;--purple:#B54BE8;
 --fd:"Saira Condensed","Arial Narrow",Impact,sans-serif;--fb:"Barlow","Segoe UI",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--fb);-webkit-font-smoothing:antialiased}
@@ -59,6 +61,7 @@ td{padding:8px 10px;border-top:1px solid var(--line);white-space:nowrap}
 td.n{font:700 14px var(--fm);text-align:right}th.n{text-align:right}
 td.pos{font:italic 900 17px var(--fd);width:40px}
 .sw{display:inline-block;width:4px;height:16px;vertical-align:-3px;margin-right:8px;background:var(--team,#888)}
+button.btn{border:0;cursor:pointer}
 .btn{display:inline-block;background:var(--red);color:#fff;font:800 13px var(--fd);text-transform:uppercase;letter-spacing:.08em;padding:9px 14px;border-radius:3px}
 .btn:hover{text-decoration:none;filter:brightness(1.1)}
 .note{color:var(--muted);font-size:14px}
@@ -97,6 +100,10 @@ footer.site nav a{color:var(--fg);font-weight:500}
 <ul><li><b>Android:</b> add it with Google Calendar on a computer (Settings → Add calendar → From URL); it then syncs to your phone.</li>
 <li><b>Outlook desktop:</b> Add calendar → Subscribe from web, then paste the address.</li>
 <li>Calendar apps check for changes every few hours. Times are stored in UTC and shown in your local time.</li></ul>
+<h2>Race-live alerts</h2>
+<p>Prefer a nudge when it starts? Turn on alerts and this device shows a notification when the lights go out (and, if you like, when qualifying or a sprint starts and when the result is in). Free, no account, and you can turn them off any time. On iPhone, add Pit Wall to your Home Screen first.</p>
+<div class="sub-btns"><button type="button" class="btn primary" data-alerts>🔔 Get race-live alerts</button></div>
+<h2>The 2027 season</h2><p>A separate calendar for 2027: testing and all 24 race weekends, as all-day events for now. Session times are added when F1 publishes them.</p><div class="sub-btns"><a class="btn primary" href="https://calendar.google.com/calendar/r?cid=webcal%3A%2F%2Fpitwallf1.in%2Ff1-2027.ics" rel="nofollow">Google Calendar (2027)</a><a class="btn primary" href="webcal://pitwallf1.in/f1-2027.ics">Apple Calendar (2027)</a><a class="btn" href="https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fpitwallf1.in%2Ff1-2027.ics&amp;name=F1%202027" rel="nofollow">Outlook (2027)</a><a class="btn" href="/f1-2027.ics" download>Download 2027 .ics</a></div><p>Address: <code class="addr">https://pitwallf1.in/f1-2027.ics</code></p>
 <h2>Race stories by RSS</h2>
 <p>Every race and sprint gets a written story here within about 45 minutes of the chequered flag: how it was won, pit stops, safety cars and tyre strategy. Follow them in any feed reader:</p>
 <div class="sub-btns"><a class="btn" href="/feed.xml">RSS feed</a> <a class="btn" href="https://feedly.com/i/subscription/feed/https%3A%2F%2Fpitwallf1.in%2Ffeed.xml" rel="nofollow">Follow on Feedly</a></div>
