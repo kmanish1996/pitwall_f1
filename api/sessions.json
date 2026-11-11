@@ -1,0 +1,129 @@
+{
+ "source": "https://pitwallf1.in",
+ "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
+ "season": 2026,
+ "afterRound": 20,
+ "rounds": 23,
+ "sessions": [
+  {
+   "round": 21,
+   "gp": "Las Vegas Grand Prix",
+   "key": "FP1",
+   "name": "Practice 1",
+   "start": "2026-11-20T00:30:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 21,
+   "gp": "Las Vegas Grand Prix",
+   "key": "FP2",
+   "name": "Practice 2",
+   "start": "2026-11-20T04:00:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 21,
+   "gp": "Las Vegas Grand Prix",
+   "key": "FP3",
+   "name": "Practice 3",
+   "start": "2026-11-21T00:30:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 21,
+   "gp": "Las Vegas Grand Prix",
+   "key": "Q",
+   "name": "Qualifying",
+   "start": "2026-11-21T04:00:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 21,
+   "gp": "Las Vegas Grand Prix",
+   "key": "GP",
+   "name": "Grand Prix",
+   "start": "2026-11-22T04:00:00.000Z",
+   "minutes": 120
+  },
+  {
+   "round": 22,
+   "gp": "Qatar Grand Prix",
+   "key": "FP1",
+   "name": "Practice 1",
+   "start": "2026-11-27T13:30:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 22,
+   "gp": "Qatar Grand Prix",
+   "key": "FP2",
+   "name": "Practice 2",
+   "start": "2026-11-27T17:00:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 22,
+   "gp": "Qatar Grand Prix",
+   "key": "FP3",
+   "name": "Practice 3",
+   "start": "2026-11-28T14:30:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 22,
+   "gp": "Qatar Grand Prix",
+   "key": "Q",
+   "name": "Qualifying",
+   "start": "2026-11-28T18:00:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 22,
+   "gp": "Qatar Grand Prix",
+   "key": "GP",
+   "name": "Grand Prix",
+   "start": "2026-11-29T16:00:00.000Z",
+   "minutes": 120
+  },
+  {
+   "round": 23,
+   "gp": "Abu Dhabi Grand Prix",
+   "key": "FP1",
+   "name": "Practice 1",
+   "start": "2026-12-04T09:30:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 23,
+   "gp": "Abu Dhabi Grand Prix",
+   "key": "FP2",
+   "name": "Practice 2",
+   "start": "2026-12-04T13:00:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 23,
+   "gp": "Abu Dhabi Grand Prix",
+   "key": "FP3",
+   "name": "Practice 3",
+   "start": "2026-12-05T10:30:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 23,
+   "gp": "Abu Dhabi Grand Prix",
+   "key": "Q",
+   "name": "Qualifying",
+   "start": "2026-12-05T14:00:00.000Z",
+   "minutes": 60
+  },
+  {
+   "round": 23,
+   "gp": "Abu Dhabi Grand Prix",
+   "key": "GP",
+   "name": "Grand Prix",
+   "start": "2026-12-06T13:00:00.000Z",
+   "minutes": 120
+  }
+ ]
+}

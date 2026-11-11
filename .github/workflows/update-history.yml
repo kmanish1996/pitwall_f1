@@ -1,0 +1,47 @@
+name: Update career stats
+
+# Career numbers on the driver and team pages come from F1DB (github.com/f1db/f1db, CC BY 4.0),
+# which publishes a new release a day or two after each race. This picks it up twice a week.
+on:
+  schedule:
+    - cron: "23 5 * * 2,4"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-history
+  cancel-in-progress: false
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install PyYAML and Pillow
+        run: pip install --quiet pyyaml pillow
+
+      - name: Read F1DB and rebuild the pages if anything changed
+        run: |
+          python3 scripts/update_history.py
+          if [ -n "$(git status --porcelain data/history.json)" ]; then
+            python3 scripts/build_pages.py
+            git config user.name "pitwall-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -q -m "Update career stats from F1DB"
+            for i in 1 2 3; do git push -q && break; git pull -q --rebase || { git rebase --abort; exit 1; }; done
+          else
+            echo "No new F1DB data"
+          fi

@@ -7,10 +7,10 @@ name: Add finished sessions
 # GitHub starts scheduled runs late (every 4-7 hours in practice), so one check per run left results
 # hours behind. Now each run keeps watching while a session is due or coming within 30 hours, and just
 # before its time limit it starts a fresh run of this workflow, so coverage is continuous. The repo is
-# public, so the runner time is free. Thursday is included so the watch is already running for Friday.
+# public, so the runner time is free. Thursday is included so the watch is already running for Friday, and Wednesday for pre-season testing.
 on:
   schedule:
-    - cron: "*/30 * * * 4,5,6,0,1"
+    - cron: "*/30 * * * 3,4,5,6,0,1"
   workflow_dispatch: {}
 
 permissions:

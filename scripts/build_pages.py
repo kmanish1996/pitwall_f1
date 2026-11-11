@@ -73,6 +73,7 @@ def nice_date(iso):
 
 
 CSS = """
+.h2h-win{color:#2FD480;font-weight:700}.h2h-lose{color:var(--muted)}main h3{margin:20px 0 8px;font-size:18px}
 :root{--bg:#0A0C11;--panel:#12161E;--panel2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;--red:#E10600;--purple:#B54BE8;
 --fd:"Saira Condensed","Arial Narrow",Impact,sans-serif;--fb:"Barlow","Segoe UI",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--fb);-webkit-font-smoothing:antialiased}
@@ -102,6 +103,7 @@ td{padding:8px 10px;border-top:1px solid var(--line);white-space:nowrap}
 td.n{font:700 14px var(--fm);text-align:right}th.n{text-align:right}
 td.pos{font:italic 900 17px var(--fd);width:40px}
 .sw{display:inline-block;width:4px;height:16px;vertical-align:-3px;margin-right:8px;background:var(--team,#888)}
+button.btn{border:0;cursor:pointer}
 .btn{display:inline-block;background:var(--red);color:#fff;font:800 13px var(--fd);text-transform:uppercase;letter-spacing:.08em;padding:9px 14px;border-radius:3px}
 .btn:hover{text-decoration:none;filter:brightness(1.1)}
 .note{color:var(--muted);font-size:14px}
@@ -184,6 +186,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Pit Wall F1: race stories" href="/feed.xml">
 <script src="/assets/diwali.js" defer></script>
+<script src="/assets/alerts.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>{CSS}</style>
@@ -290,7 +293,8 @@ def main():
 <p class="sub">All {total} rounds of the {YEAR} Formula 1 World Championship, with circuits, dates, winners and session results.</p>
 <p class="lead">The {YEAR} season runs from the {e(gp_long(RACES[0]))} in March to the {e(gp_long(RACES[-1]))} in December, with six sprint weekends. The Saudi Arabian Grand Prix was cancelled and the Bahrain Grand Prix moved to Sepang, Malaysia.</p>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Circuit</th><th>Dates</th><th>Result</th></tr></thead><tbody>{''.join(crow)}</tbody></table></div>
-<p class="note" style="margin-top:16px">Session times in your own time zone, with live countdowns: <a href="/calendar">open the interactive calendar</a>. Or <a href="/subscribe/"><b>add every session to your calendar</b></a> (Google, Apple, Outlook): times update automatically.</p>"""
+<p class="note" style="margin-top:16px"><b>Looking ahead?</b> The <a href="/f1-calendar-{YEAR + 1}/">{YEAR + 1} F1 calendar</a> is out, with 24 races and pre-season testing in Bahrain.</p>
+<p class="note" style="margin-top:8px">Session times in your own time zone, with live countdowns: <a href="/calendar">open the interactive calendar</a>. Or <a href="/subscribe/"><b>add every session to your calendar</b></a> (Google, Apple, Outlook): times update automatically.</p>"""
     pages.append(page(f"/f1-calendar-{YEAR}/", f"F1 {YEAR} calendar: every Grand Prix, date and result | {BRAND}",
                       f"The full {YEAR} Formula 1 calendar: all {total} Grands Prix with circuits, dates, sprint weekends, winners and results.",
                       body, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/")]))
@@ -474,6 +478,108 @@ def main():
         gl = "".join(f'<line x1="{L}" x2="{W}" y1="{H - B - v / mx * (H - B - T):.1f}" y2="{H - B - v / mx * (H - B - T):.1f}" stroke="currentColor" opacity=".1"/><text x="{L - 6}" y="{H - B - v / mx * (H - B - T) + 4:.1f}" font-size="10" text-anchor="end" fill="currentColor" opacity=".55">{v}</text>' for v in range(0, mx + 1, 10 if mx > 30 else 5))
         return f'<figure class="chart"><svg viewBox="0 0 {W} {H}" role="img" aria-label="{e(label)}" style="width:100%;height:auto;color:var(--fg)">{gl}{"".join(bars)}{"".join(ticks)}</svg><figcaption>{e(label)}, sprint points included.</figcaption></figure>'
 
+    # ---------- careers (F1DB) ----------
+    HP = os.path.join(ROOT, "data", "history.json")
+    HIST = json.load(open(HP, encoding="utf-8")) if os.path.exists(HP) else None
+    thru = (f'the {HIST["through"]["y"]} {e(HIST["through"]["gp"])}' if HIST else "")
+    credit = (f'<p class="note" style="margin-top:8px">Career figures up to {thru}, from <a href="{HIST["url"]}" rel="nofollow">F1DB</a> (CC BY 4.0), '
+              f'which updates a day or two after each race. Pole = fastest in qualifying; points include sprints.</p>') if HIST else ""
+    ordn = lambda n: f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+    fmt_pts = lambda v: f"{v:,.1f}".rstrip("0").rstrip(".") if isinstance(v, (int, float)) else "–"
+    hcode = {}  # f1db driver id -> our code (for links)
+    if HIST:
+        for c_, h_ in HIST["drivers"].items(): hcode[h_["id"]] = c_
+
+    def career_html(code, full, is_champ):
+        H = (HIST or {}).get("drivers", {}).get(code)
+        if not H or not H["starts"]:
+            return "", None
+        titles = list(H["titles"]) + ([YEAR] if is_champ and YEAR not in H["titles"] else [])
+        last = full.split()[-1]
+        def span(a, b): return str(a) if a == b else f"{a}–{b}"
+        teams = " → ".join(f"{e(t)} ({span(a, b)})" for t, a, b in H["teams"])
+        first = H["first"]
+        txt = (f'{e(full)} made his Formula 1 debut at the {first["y"]} {e(first["gp"])}' + (f', finishing P{first["pos"]}' if first.get("pos") else "") + '. '
+               f'He has started {H["starts"]} Grands Prix, with {H["wins"]} win{"s" if H["wins"] != 1 else ""}, {H["podiums"]} podium{"s" if H["podiums"] != 1 else ""}, '
+               f'{H["poles"]} pole position{"s" if H["poles"] != 1 else ""} and {fmt_pts(H["points"])} points.')
+        if titles:
+            txt += f' He is a {len(titles)}-time world champion ({", ".join(map(str, titles))}).' if len(titles) > 1 else f' He was world champion in {titles[0]}.'
+        if H["firstWin"]:
+            txt += f' First win: the {H["firstWin"]["y"]} {e(H["firstWin"]["gp"])}' + (f'; latest: the {H["lastWin"]["y"]} {e(H["lastWin"]["gp"])}.' if H["lastWin"] != H["firstWin"] else ".")
+        elif H["best"]:
+            txt += f' Best finish so far: P{H["best"]}' + (f' ({H["bestN"]} times)' if H["bestN"] > 1 else "") + "."
+        tiles = (f'<div class="tiles"><div class="tile"><span>Starts</span><b>{H["starts"]}</b></div><div class="tile"><span>Wins</span><b>{H["wins"]}</b></div>'
+                 f'<div class="tile"><span>Podiums</span><b>{H["podiums"]}</b></div><div class="tile"><span>Poles</span><b>{H["poles"]}</b></div>'
+                 f'<div class="tile"><span>Titles</span><b>{len(titles)}</b></div><div class="tile"><span>Fastest laps</span><b>{H["fl"]}</b></div></div>')
+        srows = "".join(f'<tr><td class="pos">{y}</td><td>{e(t)}</td><td class="n">{ordn(p) if p else "–"}</td><td class="n">{fmt_pts(pt)}</td><td class="n">{st}</td><td class="n">{w}</td><td class="n">{pd}</td></tr>'
+                        for y, t, p, pt, st, w, pd in reversed(H["seasons"]))
+        def mate(h):
+            c_ = h.get("code"); link = drv(c_) if c_ in by_code else e(h["name"])
+            q = f'{h["qa"]}–{h["qb"]}' if h["qa"] + h["qb"] else "–"
+            r = f'{h["ra"]}–{h["rb"]}' if h["ra"] + h["rb"] else "–"
+            lead = "win" if h["ra"] > h["rb"] else "lose" if h["rb"] > h["ra"] else ""
+            return f'<tr><td>{link}</td><td>{e(next((t for t, a, b in H["teams"] if a <= h["to"] and b >= h["from"]), ""))}</td><td>{span(h["from"], h["to"])}</td><td class="n">{h["races"]}</td><td class="n">{q}</td><td class="n h2h-{lead}">{r}</td></tr>'
+        mates = [h for h in H["h2h"] if h["races"] >= 2][:14]
+        tot = {k: sum(h[k] for h in H["h2h"]) for k in ("qa", "qb", "ra", "rb")}
+        h2h_t = (f'<h3>Head-to-head against every team-mate</h3><p>Across his career, {e(last)} has out-qualified his team-mates {tot["qa"]}–{tot["qb"]} and finished ahead {tot["ra"]}–{tot["rb"]} '
+                 f'(counting races where at least one of them was classified).</p>'
+                 f'<div class="tbl"><table><thead><tr><th>Team-mate</th><th>Team</th><th>Years</th><th class="n">Races</th><th class="n">Qualifying</th><th class="n">Race</th></tr></thead><tbody>{"".join(mate(h) for h in mates)}</tbody></table></div>') if mates else ""
+        html = f"""<h2>Career</h2>
+{tiles}
+<p>{txt}</p>
+<p><b>Teams:</b> {teams}.</p>
+{h2h_t}
+<h3>Season by season</h3>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Team</th><th class="n">Champ.</th><th class="n">Points</th><th class="n">Starts</th><th class="n">Wins</th><th class="n">Podiums</th></tr></thead><tbody>{srows}</tbody></table></div>
+{credit}"""
+        return html, {"starts": H["starts"], "wins": H["wins"], "podiums": H["podiums"], "poles": H["poles"], "titles": titles}
+
+    c_left_now = sum(43 + (15 if x["sprint"] else 0) for x in RACES[done:])
+    c_sealed = len(C) > 1 and C[0][1] - C[1][1] > c_left_now
+
+    def team_history_html(t, ds, pos):
+        if not HIST:
+            return "", None
+        names = {HIST["drivers"].get(x["code"], {}).get("teams", [[None]])[-1][0] for x in ds}
+        T = next((v for v in HIST["teams"].values() if v["name"] in names), None)
+        if not T:
+            return "", None
+        own = T["own"]
+        titles = list(own["titles"]) + ([YEAR] if pos == 1 and c_sealed and YEAR not in own["titles"] else [])
+        name = e(t)
+        pl = lambda n, w, ws=None: f'{n} {w if n == 1 else (ws or w + "s")}'
+        txt = f'{name} first raced in Formula 1 at the {own["first"]["y"]} {e(own["first"]["gp"])}. Under this name the team has entered {own["entries"]} Grands Prix'
+        if own["podiums"]:
+            txt += (f', with {pl(own["wins"], "win")}, {pl(own["podiums"], "podium")} and {pl(own["poles"], "pole position")}'
+                    + (f', including {pl(own["oneTwos"], "one-two finish", "one-two finishes")}' if own["oneTwos"] else "") + ".")
+        else:
+            txt += " and is still chasing its first podium."
+        if titles:
+            txt += f' Constructors\' champions {len(titles)} time{"s" if len(titles) != 1 else ""}: {", ".join(map(str, titles))}.'
+        dt = own["driverTitles"]
+        if dt:
+            txt += f' Drivers have won {len(dt)} world title{"s" if len(dt) != 1 else ""} in its cars, most recently {e(dt[-1][1])} in {dt[-1][0]}.'
+        lin = ""
+        if T.get("all") and len(T["lineage"]) > 1:
+            A_ = T["all"]
+            chain = " → ".join(f'{e(n)} ({a}{"–" + str(b) if b and b != a else "" if b else "–"})' for n, a, b in T["lineage"])
+            lin = (f'<h3>Before it was {name}</h3><p>The same team, from the same factory, has raced under several names: {chain}. '
+                   f'Counting all of them: {A_["entries"]} Grands Prix, {pl(A_["wins"], "win")}, {pl(A_["podiums"], "podium")} and {pl(A_["poles"], "pole")}'
+                   + (f', and constructors\' titles in {", ".join(map(str, A_["titles"]))}' if A_["titles"] else "") + ".</p>")
+        recent = [x for x in T["seasons"] if x[1]][-12:]
+        srows = "".join(f'<tr><td class="pos">{y}</td><td class="n">{ordn(p_) if p_ else "–"}</td><td class="n">{fmt_pts(pt)}</td></tr>' for y, p_, pt in reversed(recent))
+        tiles = (f'<div class="tiles"><div class="tile"><span>Grands Prix</span><b>{own["entries"]}</b></div><div class="tile"><span>Wins</span><b>{own["wins"]}</b></div>'
+                 f'<div class="tile"><span>Poles</span><b>{own["poles"]}</b></div><div class="tile"><span>Constructors\' titles</span><b>{len(titles)}</b></div>'
+                 f'<div class="tile"><span>Drivers\' titles</span><b>{len(dt)}</b></div></div>')
+        html = f"""<h2>{name} in F1 history</h2>
+{tiles}
+<p>{txt}</p>
+{lin}
+<h3>Constructors' championship, recent seasons</h3>
+<div class="tbl"><table><thead><tr><th>Year</th><th class="n">Position</th><th class="n">Points</th></tr></thead><tbody>{srows}</tbody></table></div>
+{credit}"""
+        return html, {"entries": own["entries"], "wins": own["wins"], "titles": titles}
+
     # ---------- drivers ----------
     for pos, d in enumerate(D, 1):
         code = d["code"]; full = f'{d["first"]} {d["last"]}'
@@ -488,12 +594,20 @@ def main():
                 + (f', {wins[code]} Grand Prix win{"s" if wins[code] > 1 else ""}' if wins.get(code) else "")
                 + (f' and {swins[code]} sprint win{"s" if swins[code] > 1 else ""}' if swins.get(code) else "") + ".")
         if tm: lead += f' Teammate {drv(tm["code"])} has {tm["pts"]} points.'
+        NS = next_season()
+        if NS:
+            st27 = next(((t["team"], st) for t in NS["grid"] for n, st in t["drivers"] if plain_name(n) == plain_name(full)), None)
+            if st27:
+                lead += (f' For {NS["year"]}, he is confirmed at {team_link(st27[0])}.' if st27[1] == "confirmed" else f' For {NS["year"]}, he is expected to stay at {team_link(st27[0])} (not yet announced).') + f' <a href="/f1-{NS["year"]}-grid/">See the {NS["year"]} grid</a>.'
+            elif any(plain_name(m["driver"]) == plain_name(full) for m in NS.get("moves", [])):
+                lead += f' He has no {NS["year"]} seat announced yet. <a href="/f1-{NS["year"]}-grid/">See the {NS["year"]} grid</a>.'
         SS = season(code)
         facts = []
         if SS["best"]: facts.append(f'Best result: <b>P{SS["best"][0]}</b> at the <a href="{race_url(SS["best"][1]["rd"])}">{e(gp_long(SS["best"][1]))}</a>')
         if SS["worst"] and SS["worst"] != SS["best"]: facts.append(f'Lowest classified finish: P{SS["worst"][0]} at the {e(gp_long(SS["worst"][1]))}')
         facts.append(f'{SS["podiums"]} podium{"s" if SS["podiums"] != 1 else ""}, {SS["in_points"]} points finish{"es" if SS["in_points"] != 1 else ""} and {SS["dnfs"]} retirement{"s" if SS["dnfs"] != 1 else ""} in {done} rounds')
         if SS["avg_q"]: facts.append(f'Average grid slot P{SS["avg_q"]:.1f}' + (f', average finish P{SS["avg_fin"]:.1f}' if SS["avg_fin"] else "") + (f', {SS["poles"]} pole position{"s" if SS["poles"] != 1 else ""}' if SS["poles"] else ""))
+        car_html, CAR = career_html(code, full, champ_now and pos == 1)
         h2h_html = ""
         if tm:
             (qa, qb), (ra, rb) = h2h(code, tm["code"])
@@ -515,11 +629,13 @@ def main():
 {h2h_html}
 <h2>{YEAR} season, race by race</h2>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th class="n">Qualified</th><th class="n">Finished</th><th class="n">Points</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
-<p class="note" style="margin-top:10px">Points include sprint points. <a href="/formula-1-standings-{YEAR}/">See the full {YEAR} standings</a>.</p>"""
+<p class="note" style="margin-top:10px">Points include sprint points. <a href="/formula-1-standings-{YEAR}/">See the full {YEAR} standings</a>.</p>
+{car_html}"""
         ld = {"@context": "https://schema.org", "@type": "Person", "name": full, "nationality": NATIONS.get(d["nat"], d["nat"]),
               "jobTitle": "Racing driver", "memberOf": {"@type": "SportsTeam", "name": d["team"], "sport": "Formula 1"}, "url": f"{SITE}/drivers/{dslug[code]}/"}
-        pages.append(page(f"/drivers/{dslug[code]}/", f"{full} {YEAR}: F1 points, results and standings | {BRAND}",
-                          f"{full} in the {YEAR} Formula 1 season: P{pos} with {d['pts']} points for {d['team']}. Race-by-race qualifying and finishing positions.",
+        car_desc = (f" Career: {CAR['starts']} starts, {CAR['wins']} wins, {CAR['podiums']} podiums, {CAR['poles']} poles" + (f", {len(CAR['titles'])} title{'s' if len(CAR['titles']) != 1 else ''}" if CAR["titles"] else "") + ", and his record against every team-mate.") if CAR else " Race-by-race qualifying and finishing positions."
+        pages.append(page(f"/drivers/{dslug[code]}/", f"{full}: F1 {YEAR} results and career stats | {BRAND}",
+                          f"{full} in the {YEAR} Formula 1 season: P{pos} with {d['pts']} points for {d['team']}.{car_desc}",
                           body, [("Drivers", "/drivers/"), (full, f"/drivers/{dslug[code]}/")], ld, extra_head=RP.CSS,
                           og=OG.ensure(f"driver-{dslug[code]}", {"kicker": f"Driver · {YEAR} season", "title": [d["first"], d["last"]], "sub": f'{d["team"]} · #{d["no"]}',
                                                                   "number": d["no"], "accent": tc(d["team"]),
@@ -545,6 +661,7 @@ def main():
         tb = min(bests, key=lambda x: (x[0], x[1]["rd"])) if bests else None
         tfacts = [f'{tpod} podium{"s" if tpod != 1 else ""} and {tdnf} retirement{"s" if tdnf != 1 else ""} across both cars in {done} rounds']
         if tb: tfacts.append(f'Best result: P{tb[0]} for {drv(tb[2])} at the <a href="{race_url(tb[1]["rd"])}">{e(gp_long(tb[1]))}</a>')
+        th_html, TH = team_history_html(t, ds, pos)
         tbattle = ""
         if len(ds) == 2:
             (qa, qb), (ra, rb) = h2h(ds[0]["code"], ds[1]["code"])
@@ -560,11 +677,13 @@ def main():
 {tchart}
 {tbattle}
 <h2>Finishing positions by race</h2>
-<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Finishes</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>"""
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Finishes</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
+{th_html}"""
         ld = {"@context": "https://schema.org", "@type": "SportsTeam", "name": t, "sport": "Formula 1",
               "athlete": [{"@type": "Person", "name": f'{x["first"]} {x["last"]}'} for x in ds], "url": f"{SITE}/teams/{tslug[t]}/"}
-        pages.append(page(f"/teams/{tslug[t]}/", f"{t} F1 {YEAR}: points, drivers and results | {BRAND}",
-                          f"{t} in the {YEAR} Formula 1 season: P{pos} in the constructors' championship with {p} points. Drivers, wins and race-by-race results.",
+        th_desc = (f" History: {TH['entries']} Grands Prix, {TH['wins']} wins" + (f", {len(TH['titles'])} constructors' titles" if TH["titles"] else "") + ".") if TH else ""
+        pages.append(page(f"/teams/{tslug[t]}/", f"{t} F1 {YEAR}: results, drivers and team history | {BRAND}",
+                          f"{t} in the {YEAR} Formula 1 season: P{pos} in the constructors' championship with {p} points. Drivers, wins and race-by-race results.{th_desc}",
                           body, [("Teams", "/teams/"), (t, f"/teams/{tslug[t]}/")], ld, extra_head=RP.CSS,
                           og=OG.ensure(f"team-{tslug[t]}", {"kicker": f"F1 team · {YEAR} season", "title": [t.replace(" F1 Team", "")], "sub": " & ".join(f'{x["first"]} {x["last"]}' for x in ds),
                                                             "accent": tc(t), "stats": [["Constructors'", f"P{pos}"], ["Points", p], ["Wins", tw], ["Podiums", tpod]]})))
@@ -722,6 +841,7 @@ def main():
     write_llms(A, D, C, RACES, done, total, champ_now, gp_long, race_url)
     write_robots()
     app_urls = write_app_shells(A)
+    pages.extend(build_next_season(tc, team_link, NameLinks({plain_name(f"{d['first']} {d['last']}"): drv(d["code"]) for d in D})))
     pages.append(write_feeds(A, RACES, FEED, race_url, gp_long))
 
     # ---------- sitemap: lastmod only moves when a page actually changes ----------
@@ -752,6 +872,147 @@ def ics_fold(line):
         out.append(b[:cut].decode("utf-8")); b = b[cut:]
     out.append(b.decode("utf-8"))
     return "\r\n ".join(out)
+
+
+def plain_name(n):
+    return unicodedata.normalize("NFKD", n).encode("ascii", "ignore").decode().lower().strip()
+
+
+class NameLinks(dict):
+    """Driver name -> linked name, matching without accents (Hulkenberg = Hülkenberg)."""
+    def get(self, k, default=None):
+        return super().get(plain_name(k), default)
+
+
+def next_season():
+    p = os.path.join(ROOT, "data", f"season-{YEAR + 1}.json")
+    return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else None
+
+
+def dspan(a, b):
+    """'12–14 Mar' / '30 Apr–2 May' from two ISO dates."""
+    a, b = datetime.fromisoformat(a), datetime.fromisoformat(b)
+    return f"{a.day}–{b.day} {b.strftime('%b')}" if a.month == b.month else f"{a.day} {a.strftime('%b')}–{b.day} {b.strftime('%b')}"
+
+
+TYRE_NAME = {"S": "Soft", "M": "Medium", "H": "Hard", "I": "Inter", "W": "Wet"}
+
+
+def build_next_season(tc, team_link, name_link):
+    """Next season: /f1-calendar-<Y>/, /f1-<Y>-grid/ and /f1-<Y>-testing/ from data/season-<Y>.json and data/testing-<Y>.json."""
+    N = next_season()
+    if not N:
+        return []
+    Y = N["year"]; R = N["rounds"]; out = []
+    upd = datetime.fromisoformat(N["updated"]).strftime("%d %B %Y").lstrip("0")
+    sprints = [r for r in R if r["sprint"]]
+    new = [r for r in R if r.get("new")]
+    T0 = N["testing"][0]
+    links = f'<p class="note" style="margin-top:16px">More on {Y}: the <a href="/f1-calendar-{Y}/">calendar</a> · the <a href="/f1-{Y}-grid/">driver line-ups</a> · <a href="/f1-{Y}-testing/">pre-season testing</a> · <a href="/travel">plan a trip to a {Y} race</a> · <a href="/subscribe/">add {Y} to your calendar</a>.</p>'
+
+    # ---------- calendar ----------
+    tags = lambda r: (' · <span class="tag">Sprint</span>' if r["sprint"] else "") + (f' · <span class="tag new">{e(r["new"])}</span>' if r.get("new") else "")
+    rows = "".join(f'<tr><td class="pos">{r["rd"]}</td><td><b>{e(r["gp"])}</b>{tags(r)}</td>'
+                   f'<td>{e(r["circuit"])}, {e(r["place"])}</td><td>{dspan(r["from"], r["race"])}</td></tr>' for r in R)
+    qa = [(f"When does the {Y} F1 season start?", f'Pre-season testing runs in Bahrain from {dspan(T0["from"], T0["to"])}. The first race is the {e(R[0]["gp"])} on {datetime.fromisoformat(R[0]["race"]).strftime("%d %B %Y").lstrip("0")}, and the season ends at the {e(R[-1]["gp"])} on {datetime.fromisoformat(R[-1]["race"]).strftime("%d %B")}.'),
+          (f"How many races are there in {Y}?", f"{len(R)} Grands Prix, {len(sprints)} of them sprint weekends."),
+          (f"Which {Y} races have a sprint?", ", ".join(e(r["gp"].replace(" Grand Prix", "")) for r in sprints) + "."),
+          (f"Which races are new or back in {Y}?", " and ".join(f'the {e(r["gp"])} ({e(r["circuit"])})' for r in new) + " return. " + " ".join(f'The {e(x["gp"])} is gone: {e(x["why"])}.' for x in N.get("dropped", [])))]
+    body = f"""<h1>F1 calendar {Y}</h1>
+<p class="sub">All {len(R)} rounds of the {Y} Formula 1 season · official calendar, announced {datetime.fromisoformat(N["announced"]).strftime("%d %B %Y").lstrip("0")}</p>
+<p class="lead">The {Y} season starts with pre-season testing in Bahrain ({dspan(T0["from"], T0["to"])}) and the <b>{e(R[0]["gp"])} on {datetime.fromisoformat(R[0]["race"]).strftime("%d %B").lstrip("0")}</b>, and finishes in Abu Dhabi on {datetime.fromisoformat(R[-1]["race"]).strftime("%d %B").lstrip("0")}. There are {len(R)} races and a record {len(sprints)} sprint weekends, including Monaco for the first time. The {" and ".join(e(r["gp"].replace(" Grand Prix", "")) for r in new)} Grands Prix return, at {" and ".join(e(r["circuit"]) for r in new)}; the Dutch GP and the Barcelona race drop off.</p>
+<div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Circuit</th><th>Weekend</th></tr></thead><tbody>
+<tr><td class="pos">–</td><td><b>Pre-season testing</b></td><td>{e(T0["place"])}</td><td>{dspan(T0["from"], T0["to"])}</td></tr>{rows}</tbody></table></div>
+<p class="note" style="margin-top:10px">{e(N.get("note", ""))} Session times are published by F1 closer to the season; they will appear here and in the <a href="/subscribe/">calendar feed</a> when they are.</p>
+<p style="margin-top:14px"><a class="btn primary" href="/subscribe/">📅 Add {Y} to your calendar</a></p>
+{qa_html(qa)}{links}"""
+    out.append(page(f"/f1-calendar-{Y}/", f"F1 {Y} calendar: all {len(R)} races, dates and sprint weekends | {BRAND}",
+                    f"The official {Y} Formula 1 calendar: {len(R)} races from Bahrain on {datetime.fromisoformat(R[0]['race']).strftime('%d %B').lstrip('0')} to Abu Dhabi, {len(sprints)} sprint weekends, Portugal and Turkey back, plus testing dates.",
+                    body, [(f"{Y} calendar", f"/f1-calendar-{Y}/")], ld_list=[faq_ld(qa)], extra_head=NS_CSS))
+
+    # ---------- grid ----------
+    badge = {"confirmed": '<span class="st ok">Confirmed</span>', "expected": '<span class="st exp">Expected, not announced</span>', "open": '<span class="st open">Open</span>'}
+    conf = sum(1 for t in N["grid"] for _, st in t["drivers"] if st == "confirmed")
+    grows = "".join(f'<tr style="--team:{tc(t["team"])}"><td><span class="sw"></span>{team_link(t["team"])}</td><td>' +
+                    "<br>".join(f'{name_link.get(n, e(n))} {badge.get(st, "")}' for n, st in t["drivers"]) + "</td></tr>" for t in N["grid"])
+    moves = "".join(f'<li><b>{name_link.get(m["driver"], e(m["driver"]))}</b>: {e(m["from"])} → {e(m["to"]) if m["to"] else "no seat announced"}. {e(m.get("note", ""))}</li>' for m in N.get("moves", []))
+    openseats = [f'{t["team"]}' for t in N["grid"] for _, st in t["drivers"] if st != "confirmed"]
+    qa = [(f"Who is new on the {Y} F1 grid?", " ".join(f'{e(m["driver"])} ({e(m["to"])}).' for m in N.get("moves", []) if m["to"]) or "No new drivers have been confirmed yet."),
+          (f"Which {Y} F1 seats are still open?", (f'{len(openseats)} seats are not officially confirmed: ' + ", ".join(sorted(set(openseats), key=openseats.index)) + ".") if openseats else "Every seat is confirmed.")]
+    body = f"""<h1>F1 {Y} grid: every driver and team</h1>
+<p class="sub">Driver line-ups for the {Y} Formula 1 season · updated {upd}</p>
+<p class="lead">{conf} of the 22 seats for {Y} are confirmed. {len(openseats)} {"is" if len(openseats) == 1 else "are"} still to be announced ({", ".join(sorted(set(openseats), key=openseats.index))}), though the teams' current drivers are expected to stay. The only driver move so far: {e(N["moves"][0]["driver"])} joins {e(N["moves"][0]["to"])}.</p>
+<div class="tbl"><table><thead><tr><th>Team</th><th>{Y} drivers</th></tr></thead><tbody>{grows}</tbody></table></div>
+<h2>Driver moves for {Y}</h2><ul>{moves}</ul>
+<p class="note">"Expected" means the driver is widely reported to be staying but the team has not announced it. Sources: team announcements and <a href="{N["sources"]["grid"]}" rel="nofollow">The Race</a>. We update this page as deals are confirmed.</p>
+{qa_html(qa)}{links}"""
+    out.append(page(f"/f1-{Y}-grid/", f"F1 {Y} grid: confirmed drivers, line-ups and moves | {BRAND}",
+                    f"Every confirmed Formula 1 driver for {Y}, team by team: {conf} of 22 seats confirmed, the seats still open and every driver move.",
+                    body, [(f"{Y} grid", f"/f1-{Y}-grid/")], ld_list=[faq_ld(qa)], extra_head=NS_CSS))
+
+    # ---------- testing tracker ----------
+    def tdata(y):
+        p_ = os.path.join(ROOT, "data", f"testing-{y}.json")
+        return json.load(open(p_, encoding="utf-8")) if os.path.exists(p_) else {"days": []}
+    fmt = lambda t: f"{int(t // 60)}:{t % 60:06.3f}" if t else "–"
+    def day_table(d, top=None):
+        rows_ = d.get("rows") or []
+        best = next((r["best"] for r in rows_ if r["best"]), None)
+        tr = "".join(f'<tr style="--team:{r["col"]}"><td class="pos">{i + 1}</td><td><span class="sw"></span>{name_link.get(r["name"], e(r["name"]))}</td><td>{e(r["team"])}</td>'
+                     f'<td class="n">{fmt(r["best"])}</td><td class="n">{"" if not r["best"] or i == 0 else "+" + format(r["best"] - best, ".3f")}</td><td>{TYRE_NAME.get(r.get("tyre") or "", "–")}</td><td class="n">{r["laps"]}</td></tr>'
+                     for i, r in enumerate(rows_[:top] if top else rows_))
+        return f'<div class="tbl"><table><thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th class="n">Best</th><th class="n">Gap</th><th>Tyre</th><th class="n">Laps</th></tr></thead><tbody>{tr}</tbody></table></div>'
+    def mileage(days):
+        tot = {}
+        for d in days:
+            for r in d.get("rows") or []:
+                x = tot.setdefault(r["team"], {"laps": 0, "best": None, "col": r["col"]})
+                x["laps"] += r["laps"]
+                if r["best"] and (x["best"] is None or r["best"] < x["best"]): x["best"] = r["best"]
+        mx = max((v["laps"] for v in tot.values()), default=1)
+        tr = "".join(f'<tr style="--team:{v["col"]}"><td><span class="sw"></span>{e(t)}</td><td class="n">{v["laps"]}</td><td style="width:40%"><span class="bar" style="width:{v["laps"] / mx * 100:.0f}%;background:{v["col"]}"></span></td><td class="n">{fmt(v["best"])}</td></tr>'
+                     for t, v in sorted(tot.items(), key=lambda kv: -kv[1]["laps"]))
+        return f'<div class="tbl"><table><thead><tr><th>Team</th><th class="n">Laps</th><th></th><th class="n">Best lap</th></tr></thead><tbody>{tr}</tbody></table></div>', tot
+    TD = tdata(Y); PD = tdata(Y - 1)
+    ran = [d for d in TD["days"] if d.get("rows")]
+    sched = "".join(f'<li><b>{e(d["name"])}</b>: {datetime.fromisoformat(d["date"]).strftime("%A %d %B").replace(" 0", " ")}{" ✓" if d.get("rows") else ""}</li>' for d in TD["days"]) or \
+            f'<li>{dspan(T0["from"], T0["to"])}, {e(T0["place"])}</li>'
+    if ran:
+        mt, tot = mileage(ran)
+        allrows = sorted((r | {"day": d["name"]} for d in ran for r in d["rows"] if r["best"]), key=lambda r: r["best"])
+        fast = allrows[0] if allrows else None
+        live = (f'<h2>{Y} testing so far</h2><p class="lead">After {len(ran)} day{"s" if len(ran) != 1 else ""}, the fastest lap is <b>{fmt(fast["best"])}</b> by {name_link.get(fast["name"], e(fast["name"]))} ({e(fast["team"])}, {e(fast["day"])}). '
+                f'{e(max(tot, key=lambda t: tot[t]["laps"]))} have done the most running, with {max(v["laps"] for v in tot.values())} laps.</p>'
+                f'<h3>Laps by team (mileage)</h3>{mt}' + "".join(f'<h3>{e(d["name"])} · {datetime.fromisoformat(d["date"]).strftime("%a %d %b")}</h3>{day_table(d)}' for d in reversed(ran)))
+    else:
+        live = (f'<h2>Before the cars run</h2><p>The tracker fills in automatically after each day of running: the fastest lap of every driver, the tyre it was set on, '
+                f'and how many laps each team managed, which matters more than the lap times in testing.</p>')
+    prev = ""
+    pran = [d for d in PD["days"] if d.get("rows")]
+    if pran:
+        pmt, ptot = mileage(pran)
+        pall = sorted((r | {"day": d["name"], "date": d["date"]} for d in pran for r in d["rows"] if r["best"]), key=lambda r: r["best"])
+        pf = pall[0]
+        prev = (f'<h2>How {Y - 1} testing went</h2><p>In {Y - 1} the teams ran {len(pran)} days of testing in Bahrain. The fastest lap was {fmt(pf["best"])} by {name_link.get(pf["name"], e(pf["name"]))} ({e(pf["team"])}), '
+                f'and {e(max(ptot, key=lambda t: ptot[t]["laps"]))} did the most laps ({max(v["laps"] for v in ptot.values())}). Testing times are a weak guide: teams run different fuel loads, engine modes and tyres.</p>'
+                f'<h3>{Y - 1}: laps by team</h3>{pmt}<h3>{Y - 1}: final day</h3>{day_table(pran[-1], 10)}')
+    body = f"""<h1>F1 {Y} pre-season testing</h1>
+<p class="sub">{e(T0["place"])} · {dspan(T0["from"], T0["to"])} {Y} · live tracker</p>
+<p class="lead">Formula 1's only pre-season test of {Y} runs over {(datetime.fromisoformat(T0["to"]) - datetime.fromisoformat(T0["from"])).days + 1} days at {e(T0["place"])}, from {datetime.fromisoformat(T0["from"]).strftime("%A %d %B").replace(" 0", " ")}. This page tracks every day: fastest laps, tyres and the laps each team completes.</p>
+<ul>{sched}</ul>
+{live}
+{prev}
+<p class="note" style="margin-top:16px">Lap data from OpenF1, added about 20–40 minutes after each day ends. Tyre = the compound of the driver's fastest lap.</p>{links}"""
+    out.append(page(f"/f1-{Y}-testing/", f"F1 {Y} pre-season testing: dates, times and live results | {BRAND}",
+                    f"F1 {Y} pre-season testing in Bahrain, {dspan(T0['from'], T0['to'])}: day-by-day fastest laps, tyres and laps per team, updated after every day. Plus how {Y - 1} testing went.",
+                    body, [(f"{Y} testing", f"/f1-{Y}-testing/")], extra_head=NS_CSS))
+    return out
+
+
+NS_CSS = ("<style>.tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:1px 6px;border-radius:3px;background:#FFC93C;color:#111;vertical-align:1px}"
+          ".tag.new{background:#2FD480}.st{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:6px;vertical-align:1px}"
+          ".st.ok{background:rgba(47,212,128,.16);color:#2FD480}.st.exp{background:rgba(255,201,60,.16);color:#E0A800}.st.open{background:rgba(225,6,0,.16);color:#E10600}"
+          ".bar{display:inline-block;height:10px;border-radius:3px;min-width:2px}</style>")
 
 
 def write_feeds(A, RACES, FEED, race_url, gp_long):
@@ -789,6 +1050,29 @@ def write_feeds(A, RACES, FEED, race_url, gp_long):
     if not os.path.exists(p) or open(p, encoding="utf-8", newline="").read() != txt:
         open(p, "w", encoding="utf-8", newline="").write(txt)
 
+    # next season: all-day events until F1 publishes session times
+    N = next_season()
+    if N:
+        Y2 = N["year"]; d8 = lambda iso: iso.replace("-", "")
+        nxt_day = lambda iso: (datetime.fromisoformat(iso) + timedelta(days=1)).strftime("%Y%m%d")
+        ev2 = []
+        for t in N["testing"]:
+            ev2 += ["BEGIN:VEVENT", f"UID:{Y2}-testing@pitwallf1.in", f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{d8(t['from'])}", f"DTEND;VALUE=DATE:{nxt_day(t['to'])}",
+                    f"SUMMARY:{ics_text(f'F1 {Y2} pre-season testing')}", f"LOCATION:{ics_text(t['place'])}",
+                    f"DESCRIPTION:{ics_text(f'Day-by-day results: {SITE}/f1-{Y2}-testing/')}", f"URL:{SITE}/f1-{Y2}-testing/", "TRANSP:TRANSPARENT", "END:VEVENT"]
+        for r in N["rounds"]:
+            ev2 += ["BEGIN:VEVENT", f"UID:{Y2}-r{r['rd']}-weekend@pitwallf1.in", f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{d8(r['from'])}", f"DTEND;VALUE=DATE:{nxt_day(r['race'])}",
+                    f"SUMMARY:{ics_text('🏁 ' + r['gp'] + (' (sprint weekend)' if r['sprint'] else ''))}", f"LOCATION:{ics_text(r['circuit'] + ', ' + r['place'])}",
+                    "DESCRIPTION:" + ics_text(f"Round {r['rd']} of {len(N['rounds'])}. Session times are added when F1 publishes them."),
+                    f"URL:{SITE}/f1-calendar-{Y2}/", "TRANSP:TRANSPARENT", "END:VEVENT"]
+        cal2 = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Pit Wall F1//pitwallf1.in//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+                f"X-WR-CALNAME:F1 {Y2} · Pit Wall F1", f"X-WR-CALDESC:Every {Y2} Formula 1 race weekend and pre-season testing (unofficial).",
+                "X-PUBLISHED-TTL:PT12H", "REFRESH-INTERVAL;VALUE=DURATION:PT12H"] + ev2 + ["END:VCALENDAR"]
+        txt2 = "\r\n".join(ics_fold(l) for l in cal2) + "\r\n"
+        p2 = os.path.join(ROOT, f"f1-{Y2}.ics")
+        if not os.path.exists(p2) or open(p2, encoding="utf-8", newline="").read() != txt2:
+            open(p2, "w", encoding="utf-8", newline="").write(txt2)
+
     # RSS: newest race stories first
     items = sorted(FEED, key=lambda f: f["date"], reverse=True)[:40]
     rfc = lambda iso: z(iso).strftime("%a, %d %b %Y %H:%M:%S +0000")
@@ -806,6 +1090,15 @@ def write_feeds(A, RACES, FEED, race_url, gp_long):
 
     ics_url = f"{SITE}/f1-{YEAR}.ics"; webcal = ics_url.replace("https://", "webcal://")
     from urllib.parse import quote
+    nxt_html = ""
+    if N:
+        u2 = f"{SITE}/f1-{N['year']}.ics"; w2 = u2.replace("https://", "webcal://")
+        nxt_html = (f'<h2>The {N["year"]} season</h2><p>A separate calendar for {N["year"]}: testing and all {len(N["rounds"])} race weekends, as all-day events for now. '
+                    f'Session times are added when F1 publishes them.</p>'
+                    f'<div class="sub-btns"><a class="btn primary" href="https://calendar.google.com/calendar/r?cid={quote(w2, safe="")}" rel="nofollow">Google Calendar ({N["year"]})</a>'
+                    f'<a class="btn primary" href="{w2}">Apple Calendar ({N["year"]})</a>'
+                    f'<a class="btn" href="https://outlook.live.com/calendar/0/addfromweb?url={quote(u2, safe="")}&amp;name={quote("F1 " + str(N["year"]))}" rel="nofollow">Outlook ({N["year"]})</a>'
+                    f'<a class="btn" href="/f1-{N["year"]}.ics" download>Download {N["year"]} .ics</a></div><p>Address: <code class="addr">{u2}</code></p>')
     body = f"""<h1>Get F1 {YEAR} in your calendar</h1>
 <p class="sub">Every Grand Prix and every session of the {YEAR} season, in your own time zone. Free, no sign-up.</p>
 <p class="lead">Subscribe once and every race weekend appears in your phone's calendar: practice, qualifying, sprints and the race. When a weekend's schedule is confirmed or changes, your calendar updates by itself. Each finished race shows the winner and a link to the replay.</p>
@@ -819,13 +1112,17 @@ def write_feeds(A, RACES, FEED, race_url, gp_long):
 <ul><li><b>Android:</b> add it with Google Calendar on a computer (Settings → Add calendar → From URL); it then syncs to your phone.</li>
 <li><b>Outlook desktop:</b> Add calendar → Subscribe from web, then paste the address.</li>
 <li>Calendar apps check for changes every few hours. Times are stored in UTC and shown in your local time.</li></ul>
+<h2>Race-live alerts</h2>
+<p>Prefer a nudge when it starts? Turn on alerts and this device shows a notification when the lights go out (and, if you like, when qualifying or a sprint starts and when the result is in). Free, no account, and you can turn them off any time. On iPhone, add Pit Wall to your Home Screen first.</p>
+<div class="sub-btns"><button type="button" class="btn primary" data-alerts>🔔 Get race-live alerts</button></div>
+{nxt_html}
 <h2>Race stories by RSS</h2>
 <p>Every race and sprint gets a written story here within about 45 minutes of the chequered flag: how it was won, pit stops, safety cars and tyre strategy. Follow them in any feed reader:</p>
 <div class="sub-btns"><a class="btn" href="/feed.xml">RSS feed</a> <a class="btn" href="https://feedly.com/i/subscription/feed/{quote(SITE + '/feed.xml', safe='')}" rel="nofollow">Follow on Feedly</a></div>
 <p class="note" style="margin-top:18px">Unofficial: Pit Wall F1 is a fan site and is not associated with Formula 1. Session times come from OpenF1 and the published {YEAR} calendar. See the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a> or the <a href="/next-f1-race/">next race</a>.</p>"""
     css = "<style>.sub-btns{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}.sub-btns .btn{font-size:15px;padding:12px 16px}code.addr{display:inline-block;max-width:100%;overflow-wrap:anywhere;background:var(--panel);border:1px solid var(--line);padding:8px 10px;border-radius:4px}</style>"
     return page("/subscribe/", f"Add the F1 {YEAR} calendar to Google, Apple or Outlook | {BRAND}",
-                f"Free F1 {YEAR} calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus an RSS feed of every race story.",
+                f"Free F1 {YEAR} calendar subscription: every Grand Prix, qualifying, sprint and practice session in your own time zone, updated automatically. Plus race-live alerts and an RSS feed of every race story.",
                 body, [("Subscribe", "/subscribe/")], extra_head=css)
 
 
@@ -1222,7 +1519,7 @@ def build_next_race(A, RACES, done, total, gp_long, race_url, drv):
 <div class="tiles"><div class="tile"><span>Lights out in</span><b id="cd">–</b></div><div class="tile"><span>Circuit</span><b style="font-size:16px">{e(nxt["circuit"])}</b></div>{f'<div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Race laps</span><b>{78 if I.get("rd") == 6 else math.ceil(305 / I["length"])}</b></div>' if I else ""}</div>
 <h2>Weekend schedule</h2>
 <div class="tbl"><table><thead><tr><th>Session</th><th>Day</th><th class="n">UTC</th><th class="n">Your time</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p style="margin-top:14px"><a class="btn primary" href="/subscribe/">📅 Add F1 {YEAR} to your calendar</a> <a class="btn" href="/calendar" style="margin-left:6px">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
+<p style="margin-top:14px"><a class="btn primary" href="/subscribe/">📅 Add F1 {YEAR} to your calendar</a> <button type="button" class="btn" data-alerts style="margin-left:6px">🔔 Get race-live alerts</button> <a class="btn" href="/calendar" style="margin-left:6px">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
 <h2>Championship so far</h2><p>After round {done}, see the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, every <a href="/f1-results-{YEAR}/">race result</a>, and the <a href="{race_url(nxt["rd"])}">{e(name)} page</a> for results as each session finishes.</p>
 <script>
 (function(){{document.querySelectorAll("[data-local]").forEach(function(el){{var d=new Date(el.getAttribute("data-local"));el.textContent=el.dataset.full?d.toLocaleString([], {{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}})+" your time":d.toLocaleString([], {{weekday:"short",hour:"2-digit",minute:"2-digit"}})}});
@@ -1376,6 +1673,13 @@ def write_api(A, D, C, RACES, wins, race_url, gp_long, dslug, tslug, done, total
     write_json("api/calendar.json", {**meta, "races": [{"round": r["rd"], "name": gp_long(r), "circuit": r["circuit"], "location": r["place"],
         "dates": r["dates"], "raceStart": r["race"], "sprint": r["sprint"], "winner": r.get("win"), "winnerTeam": r.get("winTeam"),
         "raceTime": r.get("time"), "url": SITE + race_url(r["rd"])} for r in RACES]})
+    # every timed session still to come (used by the race-alert sender, netlify/functions/alerts-send.mjs)
+    up = []
+    for x in A.get("SESSIONS") or []:
+        r = next((q for q in RACES if q["rd"] == x["rd"]), None)
+        if r and x["start"] >= (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M"):
+            up.append({"round": x["rd"], "gp": gp_long(r), "key": x["k"], "name": x["n"], "start": x["start"], "minutes": x.get("m")})
+    write_json("api/sessions.json", {**meta, "sessions": sorted(up, key=lambda s: s["start"])})
     TI = A.get("TRACK_INFO") or {}
     circ = []
     for sl, I in sorted(TI.items(), key=lambda kv: kv[1]["rd"]):
@@ -1406,18 +1710,23 @@ def section_content(A, key, src):
         if not m: raise SystemExit("section_content: VENUES not found in index.html (travel text would be empty)")
         V = json.loads(subprocess.run(["node", "-e", "process.stdout.write(JSON.stringify(eval(require('fs').readFileSync(0,'utf8'))))"],
                                       input=m.group(1), capture_output=True, text=True, check=True).stdout)
-        # only races that happen this year at that venue (no cancelled or relocated rounds)
-        V = [v for v in V if not v.get("note")]
+        V = [v for v in V if v.get("main")]
         ga = sorted((v for v in V if v.get("ga")), key=lambda v: v["ga"])
         main = sorted(V, key=lambda v: -v["main"])
         med = sorted(v["main"] for v in V)[len(V) // 2]
         row = lambda v, k: f'<tr><td>{e(v["gp"])}</td><td>{e(v["city"])}</td><td class="n">${v[k]:,}</td></tr>'
-        return css + f"""<section class="sec-about" aria-labelledby="secAboutT"><h2 id="secAboutT">What an F1 race weekend costs in {YEAR}</h2>
-<p>Three-day tickets for {YEAR} Grands Prix range from <b>${ga[0]["ga"]} for general admission at the {e(ga[0]["gp"])}</b> to <b>${main[0]["main"]:,} for a main grandstand seat at the {e(main[0]["gp"])}</b>. A typical main grandstand ticket costs about ${med:,}. {len(V) - len(ga)} races sell no general admission at all, so a grandstand seat is the only way in.</p>
+        N = next_season() or {"year": YEAR, "rounds": []}
+        Y = N["year"]
+        bydate = "".join(f'<tr><td>{v["rd27"]}</td><td>{e(v["gp"])}</td><td>{e(v["d27"])}</td><td class="n">${(v["ga"] or v["cheap"]):,}</td></tr>' for v in sorted((v for v in V if v.get("rd27")), key=lambda v: v["rd27"]))
+        newv = [r for r in N["rounds"] if r.get("new")]
+        return css + f"""<section class="sec-about" aria-labelledby="secAboutT"><h2 id="secAboutT">Planning a trip to a {Y} F1 race</h2>
+<p>The {Y} season has {len(N["rounds"]) or "24"} races, from Bahrain in March to Abu Dhabi in December{", with " + " and ".join("the " + e(r["gp"]) + " (" + dspan(r["from"], r["race"]) + ")" for r in newv) + " back on the calendar" if newv else ""}. Ticket prices below are the published {YEAR} rates, the best guide until each race puts {Y} tickets on sale.</p>
+<p>Three-day tickets range from <b>${ga[0]["ga"]} for general admission at the {e(ga[0]["gp"])}</b> to <b>${main[0]["main"]:,} for a main grandstand seat at the {e(main[0]["gp"])}</b>. A typical main grandstand ticket costs about ${med:,}. {len(V) - len(ga)} races sell no general admission at all, so a grandstand seat is the only way in.</p>
 <h3>Cheapest races to go to (3-day general admission)</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">From</th></tr></thead><tbody>{"".join(row(v, "ga") for v in ga[:5])}</tbody></table>
 <h3>Most expensive main grandstands</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">3 days</th></tr></thead><tbody>{"".join(row(v, "main") for v in main[:5])}</tbody></table>
 <h3>Planning tips</h3><ul><li><b>Book early:</b> the cheapest general admission tickets usually sell out first.</li><li><b>Hotels matter more than tickets</b> at expensive cities: the planner above adds hotels, food and flights for your home city.</li><li><b>Go for Friday too:</b> practice day is quieter, and you can explore the circuit on foot.</li></ul>
-<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May {YEAR}). The Bahrain GP, moved to Sepang for {YEAR}, is left out of these lists. See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a>.</p></section>"""
+<h3>Every {Y} race weekend and its cheapest ticket</h3><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>{Y} dates</th><th class="n">From</th></tr></thead><tbody>{bydate}</tbody></table>
+<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May {YEAR}).{" Prices for the " + " and the ".join(e(r["gp"]) for r in newv) + " are not published yet." if newv else ""} See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-{YEAR}/">{YEAR} calendar</a>.</p></section>"""
     if key == "title-fight":
         D, C = A["DRIVERS"], A["CONSTRUCTORS"]
         left = RACES[done:]
@@ -1563,6 +1872,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 - [{YEAR} results]({SITE}/f1-results-{YEAR}/): winner, podium, pole and sprint winner of every race so far
 - [{YEAR} season review]({SITE}/f1-{YEAR}-season-review/): how the {YEAR} title was won, with the points race round by round
 - [{YEAR} F1 stats]({SITE}/f1-stats-{YEAR}/): wins, podiums, poles, fastest laps, sprint wins and DNFs for every driver and team
+- [{YEAR + 1} calendar]({SITE}/f1-calendar-{YEAR + 1}/), [{YEAR + 1} driver line-ups]({SITE}/f1-{YEAR + 1}-grid/) and [{YEAR + 1} pre-season testing tracker]({SITE}/f1-{YEAR + 1}-testing/)
 - [Subscribe]({SITE}/subscribe/): the {YEAR} calendar as a live .ics feed ({SITE}/f1-{YEAR}.ics) and race stories by RSS ({SITE}/feed.xml)
 - [How fast is an F1 car?]({SITE}/how-fast-is-an-f1-car/): top speed, average speed and slowest corner at every circuit, from pole-lap telemetry
 - [Learn F1]({SITE}/learn-f1/): beginner's guide to track terms, tyres, the steering wheel and 2026 car tech (active aero, overtake mode, ERS)

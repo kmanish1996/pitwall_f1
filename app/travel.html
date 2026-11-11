@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>F1 race travel planner 2026: ticket prices and trip costs · Pit Wall F1</title>
-<meta name="description" content="Plan a trip to a Formula 1 race: 2026 ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.">
+<title>F1 2027 travel planner: race dates, ticket prices and trip costs · Pit Wall F1</title>
+<meta name="description" content="Plan a trip to a 2027 Formula 1 race: every race weekend&#x27;s dates, ticket prices for each circuit in 11 currencies, a trip cost planner and first-timer tips.">
 <link rel="canonical" href="https://pitwallf1.in/travel">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <meta name="keywords" content="Pit Wall F1, pitwallf1, F1 stats, F1, Formula 1, F1 2026, F1 standings, F1 results, next F1 race, F1 schedule, F1 live, Grand Prix, F1 for beginners, F1 explained, F1 games, fast cars, motorsport">
@@ -13,15 +13,15 @@
 <meta property="og:site_name" content="Pit Wall F1">
 <meta name="application-name" content="Pit Wall F1">
 <meta name="apple-mobile-web-app-title" content="Pit Wall F1">
-<meta property="og:title" content="F1 race travel planner 2026: ticket prices and trip costs · Pit Wall F1">
-<meta property="og:description" content="Plan a trip to a Formula 1 race: 2026 ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.">
+<meta property="og:title" content="F1 2027 travel planner: race dates, ticket prices and trip costs · Pit Wall F1">
+<meta property="og:description" content="Plan a trip to a 2027 Formula 1 race: every race weekend&#x27;s dates, ticket prices for each circuit in 11 currencies, a trip cost planner and first-timer tips.">
 <meta property="og:url" content="https://pitwallf1.in/travel">
 <meta property="og:image" content="https://pitwallf1.in/assets/og/calendar.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="F1 race travel planner 2026: ticket prices and trip costs · Pit Wall F1">
-<meta name="twitter:description" content="Plan a trip to a Formula 1 race: 2026 ticket prices for every circuit in 11 currencies, a trip cost planner and first-timer tips.">
+<meta name="twitter:title" content="F1 2027 travel planner: race dates, ticket prices and trip costs · Pit Wall F1">
+<meta name="twitter:description" content="Plan a trip to a 2027 Formula 1 race: every race weekend&#x27;s dates, ticket prices for each circuit in 11 currencies, a trip cost planner and first-timer tips.">
 <meta name="twitter:image" content="https://pitwallf1.in/assets/og/calendar.jpg">
 <meta name="theme-color" content="#0A0C11">
 <meta name="color-scheme" content="dark light">
@@ -32,6 +32,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <script src="/assets/diwali.js" defer></script>
+<script src="/assets/alerts.js" defer></script>
 <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Pit Wall F1: race stories">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Site summary for AI assistants">
 <link rel="alternate" type="application/json" href="/api/index.json" title="Pit Wall F1 open data">
@@ -42,7 +43,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
-<link rel="stylesheet" href="/assets/app/b5edf3708ac6.css">
+<link rel="stylesheet" href="/assets/app/2307bea24b6a.css">
 
 <header class="strip">
   <div class="strip-in">
@@ -64,7 +65,7 @@
 </header>
 
 <main class="wrap">
-  <h1 class="pw-h1">F1 race travel planner</h1>
+  <h1 class="pw-h1">F1 2027 race travel planner</h1>
   <div class="hero">
     <div class="next" id="nextCard">
       <div class="speed" aria-hidden="true"></div>
@@ -95,7 +96,7 @@
       <div class="cd-for" id="cdFor">Until <strong>Practice 1</strong></div>
       <div class="sessions" id="sessions"></div>
       <div class="tzline" id="tzline"></div>
-      <a class="cal-sub" href="/subscribe/">📅 Add every session to your calendar</a>
+      <div class="hero-subs"><a class="cal-sub" href="/subscribe/">📅 Add every session to your calendar</a><button type="button" class="cal-sub alerts-btn" data-alerts>🔔 Get race-live alerts</button></div>
     </div>
 
     <div class="hero-side">
@@ -165,7 +166,7 @@
       </div>
     </div>
     <div class="cal" id="cal"></div>
-    <p class="cal-note">The Saudi Arabian GP was cancelled. The Bahrain GP was relocated to Sepang, Malaysia, and run on 4 October. Times show in your local time zone. <a href="/subscribe/">Add every session to your calendar</a>.</p>
+    <p class="cal-note">The Saudi Arabian GP was cancelled. The Bahrain GP was relocated to Sepang, Malaysia, and run on 4 October. Times show in your local time zone. <a href="/subscribe/">Add every session to your calendar</a>. Looking ahead: the <a href="/f1-calendar-2027/">2027 calendar</a>, <a href="/f1-2027-grid/">grid</a> and <a href="/f1-2027-testing/">testing</a>.</p>
   </section>
 
   <!-- TITLE FIGHT -->
@@ -244,15 +245,15 @@
   <!-- TRAVEL -->
   <section class="panel" id="p-travel" hidden>
     <div class="tv-hero">
-      <div><div class="label">Tickets, trips and the race-weekend experience</div><h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Race travel</h2>
-        <p>Compare ticket prices across every circuit, cost a trip from your country, and learn how to get close to the drivers.</p></div>
+      <div><div class="label">Plan your 2027 race weekend</div><h2 style="font-size:clamp(28px,4.4vw,40px);font-weight:900;font-style:italic">Race travel 2027</h2>
+        <p>Every 2027 race weekend with its dates: compare ticket prices across the circuits, cost a trip from your country, and learn how to get close to the drivers. See the full <a href="/f1-calendar-2027/">2027 calendar</a>.</p></div>
       <div class="home"><span id="homeFlag"></span><label for="homeSel"><span class="label">Prices for fans in</span><select id="homeSel"></select></label></div>
     </div>
     <div class="answers" id="answers"></div>
 
     <div class="tv-sec" id="t-prices">
       <h3>Ticket prices by circuit</h3>
-      <div class="tv-sub"><p>Official 3-day prices for 2026, cheapest first. Select a race to cost a trip.</p>
+      <div class="tv-sub"><p>Official 3-day prices, cheapest first, with each race's 2027 dates. Prices are the published 2026 rates until 2027 tickets go on sale. Select a race to cost a trip.</p>
         <div class="seg" role="group" aria-label="Ticket type" id="tierSeg">
           <button type="button" data-t="ga" aria-pressed="false">General admission</button>
           <button type="button" data-t="cheap" aria-pressed="true">Grandstand</button>
@@ -260,6 +261,7 @@
         </div></div>
       <div class="pricebars" id="priceBars"></div>
       <p class="est" id="priciestNote" style="margin-top:8px"></p>
+      <p class="est" style="margin-top:4px">New for 2027: the Portuguese GP (Portimão, 18–20 Jun) and the Turkish GP (Istanbul Park, 1–3 Oct). Their ticket prices are not published yet.</p>
     </div>
 
     <div class="tv-sec" id="t-plan">
@@ -317,12 +319,14 @@
       </div>
     </div>
     <p class="tv-foot">Ticket prices are official 2026 circuit prices compiled by GP Destinations (May 2026, before fees). Currency conversion uses late-October 2026 rates. Hotel, food and flight figures are planning estimates, not quotes: race weekends often push hotel prices far above normal, so book early.</p>
-<style>.sec-about{margin:28px 0 8px;padding:20px 22px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}.sec-about h2{margin:0 0 8px;font-size:26px}.sec-about h3{margin:18px 0 6px;font-size:18px}.sec-about p,.sec-about li{color:var(--muted);line-height:1.55;max-width:80ch}.sec-about b{color:var(--fg)}.sec-about table{border-collapse:collapse;width:100%;max-width:640px;font-size:14px}.sec-about td,.sec-about th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.sec-about td.n,.sec-about th.n{text-align:right;font-family:var(--f-mono)}</style><section class="sec-about" aria-labelledby="secAboutT"><h2 id="secAboutT">What an F1 race weekend costs in 2026</h2>
-<p>Three-day tickets for 2026 Grands Prix range from <b>$68 for general admission at the Chinese GP</b> to <b>$2,051 for a main grandstand seat at the Las Vegas GP</b>. A typical main grandstand ticket costs about $951. 1 races sell no general admission at all, so a grandstand seat is the only way in.</p>
-<h3>Cheapest races to go to (3-day general admission)</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">From</th></tr></thead><tbody><tr><td>Chinese GP</td><td>Shanghai</td><td class="n">$68</td></tr><tr><td>Japanese GP</td><td>Suzuka</td><td class="n">$122</td></tr><tr><td>Italian GP</td><td>Monza</td><td class="n">$140</td></tr><tr><td>Azerbaijan GP</td><td>Baku</td><td class="n">$140</td></tr><tr><td>Qatar GP</td><td>Lusail</td><td class="n">$165</td></tr></tbody></table>
+<style>.sec-about{margin:28px 0 8px;padding:20px 22px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}.sec-about h2{margin:0 0 8px;font-size:26px}.sec-about h3{margin:18px 0 6px;font-size:18px}.sec-about p,.sec-about li{color:var(--muted);line-height:1.55;max-width:80ch}.sec-about b{color:var(--fg)}.sec-about table{border-collapse:collapse;width:100%;max-width:640px;font-size:14px}.sec-about td,.sec-about th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.sec-about td.n,.sec-about th.n{text-align:right;font-family:var(--f-mono)}</style><section class="sec-about" aria-labelledby="secAboutT"><h2 id="secAboutT">Planning a trip to a 2027 F1 race</h2>
+<p>The 2027 season has 24 races, from Bahrain in March to Abu Dhabi in December, with the Portuguese Grand Prix (18–20 Jun) and the Turkish Grand Prix (1–3 Oct) back on the calendar. Ticket prices below are the published 2026 rates, the best guide until each race puts 2027 tickets on sale.</p>
+<p>Three-day tickets range from <b>$68 for general admission at the Chinese GP</b> to <b>$2,051 for a main grandstand seat at the Las Vegas GP</b>. A typical main grandstand ticket costs about $800. 2 races sell no general admission at all, so a grandstand seat is the only way in.</p>
+<h3>Cheapest races to go to (3-day general admission)</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">From</th></tr></thead><tbody><tr><td>Chinese GP</td><td>Shanghai</td><td class="n">$68</td></tr><tr><td>Japanese GP</td><td>Suzuka</td><td class="n">$122</td></tr><tr><td>Italian GP</td><td>Monza</td><td class="n">$140</td></tr><tr><td>Azerbaijan GP</td><td>Baku</td><td class="n">$140</td></tr><tr><td>Saudi Arabian GP</td><td>Jeddah</td><td class="n">$140</td></tr></tbody></table>
 <h3>Most expensive main grandstands</h3><table><thead><tr><th>Grand Prix</th><th>City</th><th class="n">3 days</th></tr></thead><tbody><tr><td>Las Vegas GP</td><td>Las Vegas</td><td class="n">$2,051</td></tr><tr><td>Mexico City GP</td><td>Mexico City</td><td class="n">$1,678</td></tr><tr><td>Singapore GP</td><td>Singapore</td><td class="n">$1,384</td></tr><tr><td>Spanish GP</td><td>Madrid</td><td class="n">$1,360</td></tr><tr><td>United States GP</td><td>Austin</td><td class="n">$1,310</td></tr></tbody></table>
 <h3>Planning tips</h3><ul><li><b>Book early:</b> the cheapest general admission tickets usually sell out first.</li><li><b>Hotels matter more than tickets</b> at expensive cities: the planner above adds hotels, food and flights for your home city.</li><li><b>Go for Friday too:</b> practice day is quieter, and you can explore the circuit on foot.</li></ul>
-<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May 2026). The Bahrain GP, moved to Sepang for 2026, is left out of these lists. See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-2026/">2026 calendar</a>.</p></section>
+<h3>Every 2027 race weekend and its cheapest ticket</h3><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>2027 dates</th><th class="n">From</th></tr></thead><tbody><tr><td>1</td><td>Bahrain GP</td><td>12–14 Mar</td><td class="n">$186</td></tr><tr><td>2</td><td>Saudi Arabian GP</td><td>19–21 Mar</td><td class="n">$140</td></tr><tr><td>3</td><td>Australian GP</td><td>2–4 Apr</td><td class="n">$258</td></tr><tr><td>4</td><td>Japanese GP</td><td>9–11 Apr</td><td class="n">$122</td></tr><tr><td>5</td><td>Chinese GP</td><td>16–18 Apr</td><td class="n">$68</td></tr><tr><td>6</td><td>Miami GP</td><td>30 Apr–2 May</td><td class="n">$650</td></tr><tr><td>7</td><td>Canadian GP</td><td>21–23 May</td><td class="n">$299</td></tr><tr><td>8</td><td>Monaco GP</td><td>4–6 Jun</td><td class="n">$293</td></tr><tr><td>10</td><td>British GP</td><td>2–4 Jul</td><td class="n">$431</td></tr><tr><td>11</td><td>Austrian GP</td><td>9–11 Jul</td><td class="n">$184</td></tr><tr><td>12</td><td>Belgian GP</td><td>23–25 Jul</td><td class="n">$240</td></tr><tr><td>13</td><td>Hungarian GP</td><td>30 Jul–1 Aug</td><td class="n">$187</td></tr><tr><td>14</td><td>Italian GP</td><td>3–5 Sep</td><td class="n">$140</td></tr><tr><td>15</td><td>Spanish GP</td><td>10–12 Sep</td><td class="n">$325</td></tr><tr><td>16</td><td>Azerbaijan GP</td><td>24–26 Sep</td><td class="n">$140</td></tr><tr><td>18</td><td>Singapore GP</td><td>8–10 Oct</td><td class="n">$422</td></tr><tr><td>19</td><td>United States GP</td><td>22–24 Oct</td><td class="n">$355</td></tr><tr><td>20</td><td>Mexico City GP</td><td>29–31 Oct</td><td class="n">$215</td></tr><tr><td>21</td><td>São Paulo GP</td><td>5–7 Nov</td><td class="n">$182</td></tr><tr><td>22</td><td>Las Vegas GP</td><td>18–20 Nov</td><td class="n">$492</td></tr><tr><td>23</td><td>Qatar GP</td><td>3–5 Dec</td><td class="n">$165</td></tr><tr><td>24</td><td>Abu Dhabi GP</td><td>10–12 Dec</td><td class="n">$461</td></tr></tbody></table>
+<p>Prices are official circuit prices in US dollars before fees, compiled by GP Destinations (May 2026). Prices for the Portuguese Grand Prix and the Turkish Grand Prix are not published yet. See every track in our <a href="/circuits/">circuit guides</a> and the full <a href="/f1-calendar-2026/">2026 calendar</a>.</p></section>
   </section>
 
 
@@ -612,7 +616,7 @@
   <div id="drBody"></div>
 </aside>
 
-<script src="/assets/app/1568f6361728.js"></script>
+<script src="/assets/app/4c82e813e1d5.js"></script>
 
 </body>
 </html>
