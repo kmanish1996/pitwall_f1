@@ -80,6 +80,7 @@ def one_pass(push):
     sh("python3 scripts/update_sessions.py", check=False)
     sh("python3 scripts/update_schedule.py", check=False)
     sh("python3 scripts/update_testing.py", check=False)
+    sh("python3 scripts/update_highlights.py", check=False)
     if out("git status --porcelain data"):
         sh("python3 scripts/update_standings.py")
         sh("python3 scripts/build_pages.py")

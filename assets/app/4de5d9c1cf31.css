@@ -123,6 +123,33 @@ button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;curso
 .sess.has-res:hover{background:color-mix(in srgb,var(--red) 12%,var(--panel))}
 .sess.has-res .chip.res{color:#fff;background:var(--red);border-color:var(--red)}
 .sess.has-res .chip.res::after{content:" ›";font-weight:900}
+.sess.has-res{cursor:pointer}
+.sess .chip{min-width:92px;text-align:center;justify-content:center}
+@media (min-width:601px){#sessions.with-hl .sess{grid-template-columns:44px minmax(0,1fr) auto 128px auto}
+#sessions.with-hl .sess:not(.has-hl)>.chip{grid-column:5}}
+/* phones: name and status on the first line, time and the highlights button on the second */
+@media (max-width:600px){.sess>.hl-chip{grid-area:w;justify-self:end;padding:3px 7px;gap:0}.sess>.hl-chip span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.sess.has-hl>.when{margin-right:44px}.sess .chip{min-width:0}}
+
+/* highlights buttons and player */
+.hl-chip,.hl-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid color-mix(in srgb,#FF2D2D 55%,var(--line));background:color-mix(in srgb,#FF2D2D 12%,transparent);color:var(--fg);border-radius:3px;font-family:var(--f-display);font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;cursor:pointer;white-space:nowrap}
+.hl-chip svg,.hl-btn svg{width:17px;height:12px;color:#FF2D2D;flex:none}
+.hl-chip:hover,.hl-btn:hover{background:color-mix(in srgb,#FF2D2D 24%,transparent)}
+.hl-btn{font-size:12px;padding:7px 12px}.hl-btn.sm{font-size:11px;padding:6px 10px}
+
+.rc-top .hl-btn{align-self:flex-end;margin-left:auto;margin-right:10px}
+.hl-bg{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px;animation:pop .2s ease-out}
+.hl{width:min(960px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.hl-h{display:flex;align-items:flex-start;gap:12px;padding:14px 16px 10px}.hl-h>div{flex:1;min-width:0}
+.hl-h .label{display:flex;align-items:center;gap:7px}.hl-h .label svg{width:17px;height:12px;color:#FF2D2D}
+.hl-h h3{display:flex;align-items:center;gap:9px;font-size:22px;font-weight:800;margin-top:3px}
+.hl-x{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);color:var(--fg);font-size:16px;cursor:pointer;flex:none}
+.hl-tabs{display:flex;gap:4px;padding:0 16px 10px;overflow-x:auto}
+.hl-tabs button{font-family:var(--f-display);font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+.hl-tabs button[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.hl-frame{position:relative;aspect-ratio:16/9;background:#000}.hl-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hl-f{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:10px 16px 14px;font-size:12px;color:var(--muted)}
+.hl-yt{font-weight:700;color:var(--fg)}
+body.hl-open{overflow:hidden}
 .sr-head{display:grid;gap:4px;margin:6px 0 14px}
 .sr-head h3{font-size:30px;font-weight:900;font-style:italic;display:flex;align-items:center;gap:10px}
 .sr-head .sr-kind{display:inline-block;width:max-content;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:#fff;background:var(--red);padding:3px 8px}

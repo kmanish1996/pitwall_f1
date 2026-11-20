@@ -73,6 +73,14 @@ def nice_date(iso):
 
 
 CSS = """
+.hlw{margin:6px 0 18px}.hlbs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.hlb{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid var(--line);border-radius:4px;font-weight:700;font-size:14px;text-decoration:none;color:var(--fg)}
+.hlb svg{width:18px;height:13px}.hlb.on{border-color:#FF2D2D;background:rgba(255,45,45,.12)}
+.hlf{position:relative;display:block;width:100%;aspect-ratio:16/9;border:1px solid var(--line);border-radius:6px;background:radial-gradient(60% 80% at 50% 40%,#1c2230,#0a0c11);cursor:pointer;overflow:hidden;padding:0;color:var(--fg)}
+.hlf iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hlp{position:absolute;left:50%;top:44%;width:84px;height:58px;margin:-29px 0 0 -42px;border-radius:14px;background:#FF2D2D;box-shadow:0 10px 30px rgba(255,45,45,.35)}
+.hlp::after{content:"";position:absolute;left:34px;top:17px;border-left:22px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}
+.hlt{position:absolute;left:0;right:0;top:62%;text-align:center;font-weight:800;font-size:18px;letter-spacing:.02em}
 .h2h-win{color:#2FD480;font-weight:700}.h2h-lose{color:var(--muted)}main h3{margin:20px 0 8px;font-size:18px}
 :root{--bg:#0A0C11;--panel:#12161E;--panel2:#1A1F2A;--line:#262C39;--fg:#F1F3F7;--muted:#8C94A6;--red:#E10600;--purple:#B54BE8;
 --fd:"Saira Condensed","Arial Narrow",Impact,sans-serif;--fb:"Barlow","Segoe UI",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
@@ -364,11 +372,12 @@ def main():
         if csl: rec += f'<p class="note">About the track: <a href="/circuits/{csl}/">{e(r["circuit"])} map, facts and pole lap telemetry</a>, or <a href="/tracks/{csl}">explore it in 3D</a>.</p>'
         rp_links = " ".join(f'<a class="btn" href="{race_url(rd)}{"replay" if k == "Race" else "sprint-replay"}/">{"Race" if k == "Race" else "Sprint"} story &amp; lap chart →</a>' for k in ("Race", "Sprint") if have.get(k))
         if rp_links: rp_links = f'<p style="margin:14px 0">{rp_links}</p>'
+        hv = highlights_html(rd, name)
         prev = f'<a href="{race_url(RACES[i-1]["rd"])}">← {e(gp_long(RACES[i-1]))}</a>' if i else "<span></span>"
         nxt = f'<a href="{race_url(RACES[i+1]["rd"])}">{e(gp_long(RACES[i+1]))} →</a>' if i + 1 < len(RACES) else "<span></span>"
         body = f"""<h1>{e(name)} {YEAR}</h1>
 <p class="sub">Round {rd} of {total} · {e(r["circuit"])}, {e(r["place"])} · {e(r["dates"])} {YEAR}{" · Sprint weekend" if r["sprint"] else ""}</p>
-<p class="lead">{lead}</p>{rec}
+<p class="lead">{lead}</p>{hv}{rec}
 {rp_links}
 {''.join(secs) or '<p class="note">Results appear here about 30 to 45 minutes after each session ends.</p>'}
 <div class="pager">{prev}<a href="/f1-calendar-{YEAR}/">Full calendar</a>{nxt}</div>"""
@@ -885,6 +894,33 @@ class NameLinks(dict):
     """Driver name -> linked name, matching without accents (Hulkenberg = Hülkenberg)."""
     def get(self, k, default=None):
         return super().get(plain_name(k), default)
+
+
+HL_ORDER = ["Practice 1", "Practice 2", "Practice 3", "Sprint Qualifying", "Sprint", "Qualifying", "Race"]
+HL_SHORT = {"Practice 1": "FP1", "Practice 2": "FP2", "Practice 3": "FP3", "Sprint Qualifying": "Sprint Quali"}
+
+
+def highlights_html(rd, name):
+    """Official FORMULA 1 highlights for this weekend (data/highlights.json). The player loads only when a
+    session button is pressed (YouTube privacy-enhanced mode); without JavaScript the buttons open YouTube."""
+    p = os.path.join(ROOT, "data", "highlights.json")
+    H = (json.load(open(p, encoding="utf-8")).get("rounds", {}) if os.path.exists(p) else {}).get(str(rd)) or {}
+    ks = [k for k in HL_ORDER if k in H]
+    if not ks:
+        return ""
+    first = "Race" if "Race" in H else ks[-1]
+    btns = "".join(f'<a class="hlb{" on" if k == first else ""}" href="https://www.youtube.com/watch?v={e(H[k]["id"])}" data-yt="{e(H[k]["id"])}" rel="noopener" target="_blank">'
+                   f'<svg viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" rx="4" fill="#FF2D2D"/><path d="M8 4v6l5-3z" fill="#fff"/></svg>{e(HL_SHORT.get(k, k))}</a>' for k in ks)
+    return f"""<h2>Highlights</h2>
+<div class="hlw"><div class="hlbs">{btns}</div>
+<button type="button" class="hlf" aria-label="Play the {e(HL_SHORT.get(first, first).lower())} highlights"><span class="hlp"></span><span class="hlt">Play {e(HL_SHORT.get(first, first))} highlights</span></button>
+<p class="note">Official videos from the FORMULA 1 channel on YouTube. They load only when you press play.</p></div>
+<script>(function(){{var w=document.currentScript.previousElementSibling,f=w.querySelector(".hlf"),cur=w.querySelector(".hlb.on");
+function play(a){{w.querySelectorAll(".hlb").forEach(function(x){{x.classList.toggle("on",x===a)}});var d=document.createElement("div");d.className="hlf";
+d.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+a.getAttribute("data-yt")+'?autoplay=1&rel=0&playsinline=1" title="'+a.textContent+' highlights" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+var old=w.querySelector(".hlf");old.parentNode.replaceChild(d,old)}}
+f.addEventListener("click",function(){{play(cur)}});
+w.querySelectorAll(".hlb").forEach(function(a){{a.addEventListener("click",function(ev){{ev.preventDefault();cur=a;play(a)}})}})}})()</script>"""
 
 
 def next_season():
