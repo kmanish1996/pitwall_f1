@@ -5,7 +5,7 @@
   Cache-Control: public, max-age=300
 /data/*
   Access-Control-Allow-Origin: *
-  Cache-Control: public, max-age=600
+  Cache-Control: public, max-age=60, must-revalidate
 /f1-2026.ics
   Content-Type: text/calendar; charset=utf-8
   Cache-Control: public, max-age=3600
