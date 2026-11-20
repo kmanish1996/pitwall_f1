@@ -622,8 +622,8 @@ function renderCalendar(animate){
     let mid="";
     if(done){
       const w=byCode[r.win];const sp=SPRINT_WIN[r.rd];const s=sp&&byCode[sp[0]];
-      mid=`<div class="sc-win">${helmet(r.winTeam,w.no,46)}<div class="sc-who"><span class="sc-lab">Winner</span><div><b>${w.code}</b> ${FLAG(NAT_FLAG[w.nat],15)} <span>${esc(w.first)} ${esc(w.last)}</span></div><div class="sc-sm">${esc(TEAMS[r.winTeam].short)} · <span class="mono">${r.time}</span></div></div></div>`+
-        (s?`<div class="sc-spr" style="--t2:${tc(sp[1])}"><span class="sc-lab">Sprint</span><b>${s.code}</b> <span>${esc(s.last)} · ${esc(TEAMS[sp[1]].short)}</span></div>`:"")+
+      mid=`<div class="sc-win">${helmet(r.winTeam,w.no,46)}<div class="sc-who"><span class="sc-lab">${r.sprint?"Grand Prix winner":"Winner"}</span><div><b>${w.code}</b> ${FLAG(NAT_FLAG[w.nat],15)} <span>${esc(w.first)} ${esc(w.last)}</span></div><div class="sc-sm">${esc(TEAMS[r.winTeam].short)} · <span class="mono">${r.time}</span></div></div></div>`+
+        (s?`<div class="sc-spr" style="--t2:${tc(sp[1])}"><span class="sc-lab">Sprint winner</span><b>${s.code}</b> <span>${esc(s.last)} · ${esc(TEAMS[sp[1]].short)}</span></div>`:"")+
         `<dl class="sc-stats">${r.fl?`<div><dt>Fastest lap</dt><dd><b class="mono">${fmtLapRec(r.fl)}</b> ${esc(r.flBy||"")}</dd></div>`:""}${rec}</dl>`;
     }else if(pendingResult){
       mid=`<p class="sc-wait">Race finished. The result appears with the next data update.</p><dl class="sc-stats">${rec}</dl>`;
@@ -932,7 +932,7 @@ function roundForSession(s){
 }
 async function rcLoadIndex(){
   if(RCX.idx)return RCX.idx;
-  const res=await fetch("/data/index.json");RCX.idx=await res.json();
+  const res=await fetch("/data/index.json",{cache:"no-cache"});RCX.idx=await res.json();
   RCX.idx.forEach(s=>{s.round=roundForSession(s)});
   RCX.idx=RCX.idx.filter(s=>s.round).sort((a,b)=>new Date(b.date)-new Date(a.date));
   return RCX.idx;
@@ -2036,6 +2036,7 @@ function tkInit(){
   $("#tkEx").addEventListener("input",e=>{TK.ex=+e.target.value;$("#tkExV").textContent=TK.ex+"×";if(TK.three&&TK.data)tkBuildTrack3d();tkFrame(0,true)});
   $("#tkReset").addEventListener("click",()=>{if(TK.mode==="3d")tkCam("orbit",true);else tkFit2d();tkFrame(0,true)});
   new ResizeObserver(()=>tkResize()).observe($("#tkStage"));
+  document.querySelectorAll("#tkDragSeg [data-drag]").forEach(b=>b.addEventListener("click",()=>tkDrag(b.dataset.drag)));
   $("#tkWinBtn").addEventListener("click",()=>TK.full?tkExitFull():tkEnterFull(false));
   $("#tkFsBtn").addEventListener("click",()=>TK.full==="screen"?tkExitFull():tkEnterFull(true));
   $("#tkExit").addEventListener("click",()=>tkExitFull());
@@ -2093,8 +2094,8 @@ function tkPlayBtn(){const b=$("#tkPlay");b.textContent=TK.playing?"❚❚":"▶
 function tkMode(m){
   if(m==="3d"&&!TK.three)m="2d";
   TK.mode=m;$("#tk3dBtn").setAttribute("aria-pressed",m==="3d");$("#tk2dBtn").setAttribute("aria-pressed",m==="2d");
-  $("#tk3d").hidden=m!=="3d";$("#tk2d").hidden=m!=="2d";$("#tkCamSeg").hidden=m!=="3d";$("#tkExWrap").hidden=m!=="3d";
-  const touch=matchMedia("(pointer:coarse)").matches;$("#tkHint").textContent=touch?(m==="3d"?"Drag to rotate · Pinch to zoom · Two fingers to move":"Drag to move · Pinch to zoom · Twist to rotate"):(m==="3d"?"Drag to rotate · Right-drag to move · Scroll to zoom":"Drag to move · Scroll to zoom · Shift-drag to rotate");
+  $("#tk3d").hidden=m!=="3d";$("#tk2d").hidden=m!=="2d";$("#tkCamSeg").hidden=m!=="3d";$("#tkExWrap").hidden=m!=="3d";$("#tkDragSeg").hidden=m!=="3d";
+  const touch=matchMedia("(pointer:coarse)").matches;$("#tkHint").textContent=touch?(m==="3d"?(TK.drag==="move"?"Drag to move · Pinch to zoom · Tap Rotate to tilt again":"Drag to rotate · Pinch to zoom · Two fingers or Move to slide"):"Drag to move · Pinch to zoom · Twist to rotate"):(m==="3d"?(TK.drag==="move"?"Drag to move · Scroll to zoom · Shift-drag to rotate":"Drag to rotate · Shift-drag or Move to slide the map · Scroll to zoom"):"Drag to move · Scroll to zoom · Shift-drag to rotate");
   $("#tkHint").style.opacity=1;TK.hintT=0;
   tkResize();tkFrame(0,true);
 }
@@ -2166,10 +2167,12 @@ function tkSetup3d(){
   ground.rotation.x=-Math.PI/2;ground.position.y=-0.6;scene.add(ground);
   const grid=new THREE.GridHelper(8000,80,0x1d3d2a,0x163222);grid.position.y=-0.55;scene.add(grid);
   const ctr=new THREE.OrbitControls(cam,r.domElement);ctr.enableDamping=true;ctr.dampingFactor=0.08;ctr.maxPolarAngle=Math.PI*0.48;ctr.minDistance=15;
+  ctr.screenSpacePanning=false;ctr.panSpeed=1.2;  // move slides the map across the ground, like a map app
   ctr.addEventListener("start",()=>{$("#tkHint").style.opacity=0});
   const bc=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,60,8,1,true),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.5,depthWrite:false}));
   scene.add(bc);
   TK.three={r,scene,cam,ctr,track:null,car:null,beacon:bc};
+  if(TK.drag==="move")setTimeout(()=>tkDrag("move"),0);
   tkResize();tkApply3d();
 }
 /* everything in the 3D scene that depends on the circuit */
@@ -2241,6 +2244,14 @@ function tkCarModel(hex){
   const halo=new THREE.Mesh(new THREE.TorusGeometry(0.34,0.05,6,14,Math.PI),M(0x2b2f36));halo.rotation.set(-Math.PI/2,0,Math.PI/2);halo.position.set(0.45,0.82,0);g.add(halo);
   const helm=new THREE.Mesh(new THREE.SphereGeometry(0.19,12,10),M(0xf2f2f2));helm.position.set(0.1,0.8,0);g.add(helm);
   return g;
+}
+/* what a one-finger / left-button drag does in 3D: rotate (default) or move the map; the other gesture stays on Shift / right-drag */
+function tkDrag(mode){
+  TK.drag=mode;document.querySelectorAll("#tkDragSeg [data-drag]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.drag===mode));
+  const g=TK.three;if(g){const mv=mode==="move";g.ctr.mouseButtons={LEFT:mv?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:mv?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN};
+    g.ctr.touches={ONE:mv?THREE.TOUCH.PAN:THREE.TOUCH.ROTATE,TWO:THREE.TOUCH.DOLLY_PAN};
+    if(mv&&TK.cam!=="orbit")tkCam("orbit");}  // following the car would pull the view straight back
+  if(TK.mode)tkMode(TK.mode);
 }
 function tkCam(mode,reset){
   const g=TK.three;if(!g)return;TK.cam=mode;

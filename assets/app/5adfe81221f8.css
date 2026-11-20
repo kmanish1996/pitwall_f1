@@ -817,7 +817,7 @@ footer a{color:var(--muted)}
 .tk-pick small{color:var(--muted);font-size:12px}
 .tk-soon{color:var(--muted);font-size:12px;border:1px dashed var(--line);border-radius:4px;padding:10px 12px}
 .tk-viewer{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.tk-expand button{display:inline-flex;align-items:center;gap:6px}.tk-expand svg{width:13px;height:13px}
+.tk-expand button,.tk-drag button{display:inline-flex;align-items:center;gap:6px}.tk-expand svg,.tk-drag svg{width:13px;height:13px}
 /* full window / full screen: the track fills the view, details in a side panel (a bottom sheet on narrow screens) */
 .tk-viewer.tk-full{position:fixed;inset:0;z-index:2000;margin:0;border:0;border-radius:0;display:grid;grid-template-columns:minmax(0,1fr) min(360px,42vw);grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"bar side" "stage side" "play side";background:#07090d}
 .tk-viewer.tk-full .tk-bar{grid-area:bar}.tk-viewer.tk-full .tk-stage{grid-area:stage;height:auto}.tk-viewer.tk-full .tk-play{grid-area:play}
