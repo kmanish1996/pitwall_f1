@@ -43,7 +43,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
-<link rel="stylesheet" href="/assets/app/2307bea24b6a.css">
+<link rel="stylesheet" href="/assets/app/ffe15a7aa847.css">
 
 <header class="strip">
   <div class="strip-in">
@@ -55,7 +55,7 @@
       <a href="/standings">Standings</a>
       <a href="/race-centre">Race centre</a>
       <a href="/replay">Season replay</a>
-      <a href="/calendar">Calendar</a>
+      <a href="/schedule">Schedule</a>
       <a href="/tracks">Tracks</a>
       <a href="/title-fight">Title fight</a>
       <a href="/travel">Race travel</a>
@@ -155,10 +155,10 @@
     </div>
   </section>
 
-  <!-- CALENDAR -->
-  <section class="panel" id="p-calendar" hidden>
+  <!-- SCHEDULE (was "Calendar"; /calendar redirects here) -->
+  <section class="panel" id="p-schedule" hidden>
     <div class="p-head">
-      <div><div class="label">23 rounds · 6 sprints</div><h2>2026 Calendar</h2></div>
+      <div><div class="label">23 rounds · 6 sprints · times in your time zone</div><h2>2026 Schedule</h2></div>
       <div class="seg" role="group" aria-label="Filter races" id="calSeg">
         <button type="button" data-f="all" aria-pressed="true">All</button>
         <button type="button" data-f="up" aria-pressed="false">Upcoming</button>
@@ -351,6 +351,9 @@
         </div>
         <label class="tk-tog"><input type="checkbox" id="tkSpeedMap"> Speed map</label>
         <button type="button" class="tk-reset" id="tkReset">Reset view</button>
+        <div class="tk-seg tk-expand" role="group" aria-label="Expand the track">
+          <button type="button" id="tkWinBtn" aria-pressed="false" title="Fill this browser window (Esc to exit)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h12v12H2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2 5h12" stroke="currentColor" stroke-width="1.6"/></svg>Full window</button><button type="button" id="tkFsBtn" aria-pressed="false" title="Use the whole screen (Esc to exit)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 6V1.5H6M10 1.5h4.5V6M14.5 10v4.5H10M6 14.5H1.5V10" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Full screen</button>
+        </div>
       </div>
       <div class="tk-stage" id="tkStage">
         <div id="tk3d" class="tk-layer"></div>
@@ -376,6 +379,14 @@
         <label class="tk-ex" id="tkExWrap">Height <input type="range" id="tkEx" min="1" max="25" value="10" aria-label="Height exaggeration"><b class="mono" id="tkExV">10×</b></label>
       </div>
       <div class="tk-prof"><canvas id="tkProfile" aria-label="Elevation profile of the lap" role="img"></canvas></div>
+      <aside class="tk-side" id="tkSide" hidden aria-label="Circuit details">
+        <div class="tk-side-h"><div><div class="label" id="tkSideKick">Circuit</div><h3 id="tkSideName">–</h3></div><button type="button" class="tk-exit" id="tkExit" aria-label="Exit full view">✕</button></div>
+        <div class="tk-side-sec" data-slot="hud"><div class="label">Live from the pole lap</div></div>
+        <div class="tk-side-sec" data-slot="prof"><div class="label">Elevation · where the car is now</div></div>
+        <div class="tk-side-sec" data-slot="stats"><div class="label">The circuit</div></div>
+        <div class="tk-side-sec" data-slot="nums"></div>
+        <details class="tk-side-sec" data-slot="bits"><summary class="label">Interesting bits</summary></details>
+      </aside>
     </div>
 
     <div class="tk-facts">
@@ -616,7 +627,7 @@
   <div id="drBody"></div>
 </aside>
 
-<script src="/assets/app/3cd4677ca357.js"></script>
+<script src="/assets/app/d7a581e80bdc.js"></script>
 
 </body>
 </html>

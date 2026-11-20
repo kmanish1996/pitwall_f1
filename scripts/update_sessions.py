@@ -16,6 +16,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
 CACHE = os.path.join(ROOT, ".cache", "openf1")
 SETTLE_MIN = 20          # wait this long after a session ends before importing it (OpenF1 opens free access ~30 min after)
+NO_RESULT_HOURS = 3      # a practice session with laps but no classification after this long had no times set
 BACKFILL_HOURS = 12      # if laps look incomplete, keep waiting this long for OpenF1 to fill gaps
 RACE_KINDS = ("Race", "Sprint")
 WEEKEND = ("Practice 1", "Practice 2", "Practice 3", "Sprint Qualifying", "Qualifying", "Sprint", "Race")  # skips pre-season testing
@@ -185,6 +186,17 @@ def pack(sk, meta, raw, track):
         L[n] = rows
 
     res = raw["session_result"]
+    note = None
+    if not res and kind == "timed":
+        # no classification: list everyone who ran, by laps completed, and say why there are no times
+        best = {n: min((r[2] for r in rows if r[2] and not (len(r) > 8 and r[8])), default=None) for n, rows in L.items()}
+        timed = {n: b for n, b in best.items() if b and b < 240}  # a "lap" of half an hour is time spent in the garage
+        res = [{"position": None, "driver_number": n, "number_of_laps": len(rows), "duration": timed.get(n)} for n, rows in
+               sorted(L.items(), key=lambda kv: (kv[0] not in timed, timed.get(kv[0]) or 0, -len(kv[1])))]
+        msgs = " ".join((m.get("message") or "") for m in raw["race_control"]).upper()
+        wet = "WET TRACK" in msgs or any(w.get("rainfall") for w in raw["weather"])
+        note = (f"{'Wet track. ' if wet else ''}Only {sum(len(v) for v in L.values())} laps were run, mostly installation laps, "
+                f"and {'nobody' if not timed else len(timed)} set a representative lap time, so there is no official classification.")
     R = []
     for r in sorted(res, key=lambda r: r["position"] if isinstance(r.get("position"), int) else 99):
         st = "DNF" if r.get("dnf") else "DNS" if r.get("dns") else "DSQ" if r.get("dsq") else None
@@ -228,6 +240,8 @@ def pack(sk, meta, raw, track):
         "radio": [[rel(r["date"]), r["driver_number"], r["recording_url"]] for r in sorted(raw["team_radio"], key=lambda r: r["date"])],
         "result": R,
     }
+    if note:
+        out["note"] = note
     for s in raw["stints"]:
         out["stints"].setdefault(str(s["driver_number"]), []).append([s.get("lap_start"), s.get("lap_end"), (s.get("compound") or "UNKNOWN")[:1], s.get("tyre_age_at_start") or 0])
     for v in out["stints"].values(): v.sort(key=lambda x: x[0] or 0)
@@ -239,7 +253,14 @@ def complete_enough(meta, raw):
     laps = len([l for l in raw["laps"] if l.get("date_start")])
     expected = sum((r.get("number_of_laps") or 0) for r in raw["session_result"])
     waited = datetime.now(timezone.utc) - datetime.fromisoformat(meta["date_end"])
-    if laps == 0 or not raw["session_result"]:
+    if laps == 0:
+        return False
+    if not raw["session_result"]:
+        # Practice where nobody set a time (a wet track, say): OpenF1 never publishes a classification.
+        # Once it's clearly not coming, import the running we have, with a note, so the weekend isn't missing a session.
+        if "Practice" in meta["session_name"] and waited >= timedelta(hours=NO_RESULT_HOURS):
+            print(f"  no classification published after {NO_RESULT_HOURS} h; importing {laps} laps without times")
+            return True
         return False
     if expected and laps < 0.9 * expected and waited < timedelta(hours=BACKFILL_HOURS):
         print(f"  only {laps}/{expected} laps so far; waiting for OpenF1 to fill the gaps")
@@ -303,7 +324,7 @@ def main():
         json.dump(out, open(os.path.join(DATA, f"{sk}.json"), "w"), separators=(",", ":"))
         laps_max = max([r[2] or 0 for r in out["result"]] or [0])
         index = [s for s in index if s["sk"] != sk] + [{"sk": sk, "type": out["type"], "kind": out["kind"], "date": out["date"],
-                                                        "laps": laps_max, "radio": len(out["radio"])}]
+                                                        "laps": laps_max, "radio": len(out["radio"]), **({"note": 1} if out.get("note") else {})}]
         json.dump(index, open(idx_path, "w"), separators=(",", ":"))
         added += 1
         print(f"  added: {sum(len(v) for v in out['laps'].values())} laps, {len(out['radio'])} radio clips")

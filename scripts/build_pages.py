@@ -197,7 +197,7 @@ def page(path, title, desc, body, crumbs, ld=None, extra_head="", ld_list=None, 
 <header class="top"><div class="w">
 <a class="brand" href="/"><i aria-hidden="true"></i><span>Pit Wall <b>F1</b><small>The unofficial Formula 1 fan hub</small></span></a>
 {THEME_BTN}
-<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-results-{YEAR}/">Results</a><a href="/f1-stats-{YEAR}/">Stats</a><a href="/f1-calendar-{YEAR}/">Calendar</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
+<nav class="main" aria-label="Main"><a href="/next-f1-race/">Next race</a><a href="/formula-1-standings-{YEAR}/">Standings</a><a href="/f1-results-{YEAR}/">Results</a><a href="/f1-stats-{YEAR}/">Stats</a><a href="/f1-calendar-{YEAR}/">Schedule</a><a href="/circuits/">Circuits</a><a href="/learn-f1/">Learn F1</a><a href="/drivers/">Drivers</a><a href="/teams/">Teams</a><a href="/formula-1-world-champions/">Champions</a><a href="/f1-reaction-test/">Reaction test</a></nav>
 </div></header>
 <main class="w">
 <div class="crumbs">{crumb_html}</div>
@@ -294,7 +294,7 @@ def main():
 <p class="lead">The {YEAR} season runs from the {e(gp_long(RACES[0]))} in March to the {e(gp_long(RACES[-1]))} in December, with six sprint weekends. The Saudi Arabian Grand Prix was cancelled and the Bahrain Grand Prix moved to Sepang, Malaysia.</p>
 <div class="tbl"><table><thead><tr><th>Rd</th><th>Grand Prix</th><th>Circuit</th><th>Dates</th><th>Result</th></tr></thead><tbody>{''.join(crow)}</tbody></table></div>
 <p class="note" style="margin-top:16px"><b>Looking ahead?</b> The <a href="/f1-calendar-{YEAR + 1}/">{YEAR + 1} F1 calendar</a> is out, with 24 races and pre-season testing in Bahrain.</p>
-<p class="note" style="margin-top:8px">Session times in your own time zone, with live countdowns: <a href="/calendar">open the interactive calendar</a>. Or <a href="/subscribe/"><b>add every session to your calendar</b></a> (Google, Apple, Outlook): times update automatically.</p>"""
+<p class="note" style="margin-top:8px">Session times in your own time zone, with live countdowns: <a href="/schedule">open the interactive schedule</a>. Or <a href="/subscribe/"><b>add every session to your calendar</b></a> (Google, Apple, Outlook): times update automatically.</p>"""
     pages.append(page(f"/f1-calendar-{YEAR}/", f"F1 {YEAR} calendar: every Grand Prix, date and result | {BRAND}",
                       f"The full {YEAR} Formula 1 calendar: all {total} Grands Prix with circuits, dates, sprint weekends, winners and results.",
                       body, [(f"{YEAR} calendar", f"/f1-calendar-{YEAR}/")]))
@@ -302,6 +302,9 @@ def main():
     # ---------- races ----------
     def result_table(sk, kind):
         d = sdata(sk); dm = {x["n"]: x for x in d["drivers"]}
+        if d.get("note"):  # a session where nobody set a time: say so, and list who ran
+            ran = ", ".join(drv(dm[r[1]]["c"]) if dm[r[1]]["c"] in by_code else e(f'{dm[r[1]]["f"]} {dm[r[1]]["l"]}') for r in d["result"] if r[1] in dm)
+            return f'<p class="lead" style="margin:0">{e(d["note"])}</p><p class="note" style="margin-top:8px">Drivers who went out: {ran}.</p>'
         q = "Qualifying" in kind
         head = "<th class='n'>Q1</th><th class='n'>Q2</th><th class='n'>Q3</th>" if q else ("<th class='n'>Best lap</th><th class='n'>Gap</th>" if kind.startswith("Practice") else "<th class='n'>Time / gap</th><th class='n'>Points</th>")
         trs = []
@@ -1519,7 +1522,7 @@ def build_next_race(A, RACES, done, total, gp_long, race_url, drv):
 <div class="tiles"><div class="tile"><span>Lights out in</span><b id="cd">–</b></div><div class="tile"><span>Circuit</span><b style="font-size:16px">{e(nxt["circuit"])}</b></div>{f'<div class="tile"><span>Length</span><b>{I["length"]:.3f} km</b></div><div class="tile"><span>Race laps</span><b>{78 if I.get("rd") == 6 else math.ceil(305 / I["length"])}</b></div>' if I else ""}</div>
 <h2>Weekend schedule</h2>
 <div class="tbl"><table><thead><tr><th>Session</th><th>Day</th><th class="n">UTC</th><th class="n">Your time</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p style="margin-top:14px"><a class="btn primary" href="/subscribe/">📅 Add F1 {YEAR} to your calendar</a> <button type="button" class="btn" data-alerts style="margin-left:6px">🔔 Get race-live alerts</button> <a class="btn" href="/calendar" style="margin-left:6px">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
+<p style="margin-top:14px"><a class="btn primary" href="/subscribe/">📅 Add F1 {YEAR} to your calendar</a> <button type="button" class="btn" data-alerts style="margin-left:6px">🔔 Get race-live alerts</button> <a class="btn" href="/schedule" style="margin-left:6px">Live countdowns on Pit Wall</a> {f'<a class="btn" href="/circuits/{csl}/" style="margin-left:6px">About {e(I.get("name", "the circuit"))}</a> <a class="btn" href="/tracks/{csl}" style="margin-left:6px">Explore the track in 3D</a>' if csl else ''}</p>
 <h2>Championship so far</h2><p>After round {done}, see the <a href="/formula-1-standings-{YEAR}/">{YEAR} standings</a>, every <a href="/f1-results-{YEAR}/">race result</a>, and the <a href="{race_url(nxt["rd"])}">{e(name)} page</a> for results as each session finishes.</p>
 <script>
 (function(){{document.querySelectorAll("[data-local]").forEach(function(el){{var d=new Date(el.getAttribute("data-local"));el.textContent=el.dataset.full?d.toLocaleString([], {{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}})+" your time":d.toLocaleString([], {{weekday:"short",hour:"2-digit",minute:"2-digit"}})}});
@@ -1841,6 +1844,7 @@ def write_app_shells(APP):
            "# Clean URLs for the app's sections. Each one is the app with that section's own title, description and\n"
            "# canonical link (app/<section>.html). Real pages such as /circuits/ or /learn-f1/ are files and win.\n"
            + "# The homepage loads the same light copy (app/home.html); index.html stays as the full source.\n"
+           + f"{'/calendar':<26}{'/schedule':<34}301\n"
            + f"{'/':<26}{'/app/home.html':<34}200!\n"
            + "".join(f"{a:<26}{b:<34}200\n" for a, b in rules))
     rp = os.path.join(ROOT, "_redirects")
@@ -1884,7 +1888,7 @@ Current state (after round {done} of {total}, the {gp_long(last)}):
 ## Interactive app (JavaScript)
 - [Race centre]({SITE}/race-centre): every {YEAR} race and sprint replayed lap by lap, with timing tower, track map, race control and team radio
 - [Season replay]({SITE}/replay): the {YEAR} championship table animated race by race
-- [Calendar]({SITE}/calendar): live countdowns in your time zone and session replays
+- [Schedule]({SITE}/schedule): live countdowns in your time zone, results and session replays
 - [Tracks]({SITE}/tracks): every circuit in 3D, for example {SITE}/tracks/monza
 - [Title fight]({SITE}/title-fight): championship maths
 - [Race travel]({SITE}/travel): ticket prices and trip planner
