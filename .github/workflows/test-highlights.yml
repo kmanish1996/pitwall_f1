@@ -1,0 +1,13 @@
+name: TEMP test highlights finder
+on:
+  push:
+    branches: [feature/highlights]
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: python3 scripts/update_highlights.py && cat data/highlights.json | head -80
+      - run: curl -s "https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" | grep -o '<title>[^<]*</title>' | head -20
