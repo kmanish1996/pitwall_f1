@@ -2362,7 +2362,7 @@ const LN_TERMS=[
    ${lnTxt(160,30,"LESS DRAG IN THE WAKE · PULL OUT · PASS",{anchor:"middle"})}`)},
  {id:"runoff",name:"Run-off & gravel trap",short:"Space to stop when it goes wrong",
   body:"Outside many corners there's a <b>run-off area</b>: either paved asphalt or a <b>gravel trap</b>. Gravel slows a car quickly and keeps it out of the barriers, but a driver who goes in there is usually stuck. Asphalt run-off lets them rejoin, which is why track limits are policed so closely.",
-  svg:()=>lnScene(`${lnGrass}<path d="M200,0 Q330,30 330,180 L230,180 Q250,70 200,40 Z" fill="url(#lnGravel)"/>${lnRoad("M-10,140 H120 Q200,140 200,60 V-10",44,true)}
+  svg:()=>lnScene(`${lnGrass}<path d="M240,0 H320 V180 H150 Q245,178 240,60 Z" fill="#c8a574"/><g><circle cx="250" cy="20" r="1.2" fill="#a07d4c"/><circle cx="268" cy="34" r="1" fill="#e4cfa1"/><circle cx="290" cy="16" r="1.3" fill="#a07d4c"/><circle cx="306" cy="40" r="1" fill="#a07d4c"/><circle cx="258" cy="58" r="1.1" fill="#e4cfa1"/><circle cx="284" cy="62" r="1.2" fill="#a07d4c"/><circle cx="300" cy="84" r="1" fill="#e4cfa1"/><circle cx="272" cy="96" r="1.3" fill="#a07d4c"/><circle cx="252" cy="118" r="1" fill="#e4cfa1"/><circle cx="290" cy="120" r="1.2" fill="#a07d4c"/><circle cx="310" cy="138" r="1" fill="#a07d4c"/><circle cx="268" cy="146" r="1.1" fill="#e4cfa1"/><circle cx="236" cy="160" r="1.2" fill="#a07d4c"/><circle cx="212" cy="172" r="1" fill="#e4cfa1"/><circle cx="286" cy="166" r="1.3" fill="#a07d4c"/><circle cx="316" cy="170" r="1" fill="#e4cfa1"/><circle cx="244" cy="136" r="1" fill="#a07d4c"/><circle cx="304" cy="104" r="1.1" fill="#e4cfa1"/></g>${lnRoad("M-10,140 H120 Q200,140 200,60 V-10",44,true)}
    <path id="lnP6" d="M-10,140 H110 Q175,140 230,95 L262,70" fill="none"/>
    <g>${lnCarTop(LN_ORANGE,.78)}<animateMotion dur="3.6s" repeatCount="indefinite" rotate="auto" keyPoints="0;0.8;1;1" keyTimes="0;0.6;0.8;1" calcMode="linear"><mpath href="#lnP6"/></animateMotion></g>
    ${[0,1,2].map(i=>`<circle cx="${250+i*8}" cy="${78-i*5}" r="3" fill="#e3d6b8" opacity="0"><animate attributeName="r" values="2;9" keyTimes="0;1" dur="3.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.8;0" keyTimes="0;0.62;0.72;1" dur="3.6s" repeatCount="indefinite"/></circle>`).join("")}
@@ -2370,17 +2370,20 @@ const LN_TERMS=[
  {id:"limits",name:"Track limits",short:"The white lines are the edge",
   body:"The white lines at the edge define the track. If all four wheels go fully over the line, the driver has left the track. In qualifying that lap time is deleted; in a race, repeated offences bring a warning and then a penalty.",
   svg:()=>lnScene(`${lnGrass}${lnRoad("M-10,60 C120,60 200,130 330,130",56,false)}
-   <path id="lnP7" d="M-10,48 C120,48 210,150 330,150" fill="none"/>
-   ${lnMove("lnP7",3.4,LN_TEAL)}
-   <rect x="196" y="18" width="118" height="22" rx="3" fill="${LN_RED}" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.65;0.95;1" dur="3.4s" repeatCount="indefinite"/></rect>
-   <text x="255" y="33" class="ln-t w" text-anchor="middle" opacity="0">LAP DELETED<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.65;0.95;1" dur="3.4s" repeatCount="indefinite"/></text>`)},
+   <path id="lnP7" d="M-10.0,54.0 L-2.1,54.1 L5.6,54.3 L13.3,54.7 L20.8,55.3 L28.2,56.0 L35.5,56.8 L42.8,57.8 L49.9,58.9 L57.0,60.1 L64.0,61.4 L70.9,62.8 L77.7,64.3 L84.4,65.9 L91.1,67.6 L97.8,69.3 L104.3,71.1 L110.9,73.0 L117.4,74.9 L123.8,76.9 L130.2,78.9 L136.6,81.0 L142.9,83.0 L149.2,85.4 L154.7,89.9 L159.5,96.4 L163.9,104.2 L168.1,112.9 L172.1,122.0 L176.3,131.0 L180.8,139.4 L185.8,146.6 L191.5,152.1 L197.9,155.4 L204.8,157.4 L211.8,159.3 L218.9,161.2 L226.1,163.0 L233.4,164.7 L240.8,166.3 L248.6,166.3 L257.0,163.4 L265.7,158.5 L274.4,152.1 L283.0,145.0 L291.4,138.0 L299.5,131.6 L307.3,126.8 L314.9,124.1 L322.4,123.9 L330.0,124.0 L330.0,124.0" fill="none"/>
+   ${lnMove("lnP7",4.2,LN_TEAL,'calcMode="linear"')}
+   <text x="312" y="54" class="ln-t" text-anchor="end" fill="#fff" opacity="0" style="font-size:9px">ALL FOUR WHEELS OVER THE LINE<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.58;0.6;0.8;0.82;1" dur="4.2s" repeatCount="indefinite"/></text>
+   <rect x="196" y="18" width="118" height="22" rx="3" fill="${LN_RED}" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.63;0.97;1" dur="4.2s" repeatCount="indefinite"/></rect>
+   <text x="255" y="33" class="ln-t w" text-anchor="middle" opacity="0">LAP DELETED<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.63;0.97;1" dur="4.2s" repeatCount="indefinite"/></text>`)},
  {id:"pit",name:"Pit lane",short:"Tyres changed in about two seconds",
   body:"The <b>pit lane</b> runs alongside the main straight. Drivers must slow to the pit speed limit (usually 80 km/h) using the limiter button on the steering wheel, stop in their box for a tyre change that takes around two seconds, then rejoin. A stop costs about 20 seconds overall, so its timing is a big part of strategy.",
   svg:()=>lnScene(`<rect width="320" height="180" fill="#2a2e36"/>${lnRoad("M-10,50 H330",46,false)}<rect x="0" y="92" width="320" height="34" fill="#4a505b"/><path d="M0,92 H320" stroke="#f2f2f2" stroke-width="2" stroke-dasharray="10 6"/>
-   ${[0,1,2,3,4,5].map(i=>`<rect x="${20+i*50}" y="132" width="40" height="40" fill="#1b1e24" stroke="#3a3f48"/><rect x="${26+i*50}" y="138" width="28" height="4" fill="${[LN_TEAL,LN_RED,LN_BLUE,LN_ORANGE,"#229971","#9C9FA2"][i]}"/>`).join("")}
-   <rect x="70" y="96" width="30" height="14" fill="#f2f2f2"/><text x="85" y="107" class="ln-t k" text-anchor="middle">80</text>
+   ${[0,1,2,3,4,5].map(i=>`<rect x="${20+i*50}" y="132" width="40" height="40" fill="#1b1e24" stroke="#3a3f48"/><rect x="${26+i*50}" y="138" width="28" height="4" fill="${[LN_TEAL,LN_BLUE,LN_ORANGE,LN_RED,"#229971","#9C9FA2"][i]}"/>`).join("")}
+   <rect x="170" y="132" width="40" height="40" fill="rgba(225,6,0,.18)" stroke="${LN_RED}" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.4;0.45;0.62;0.66;1" dur="6s" repeatCount="indefinite"/></rect>
+   <text x="190" y="162" class="ln-t w" text-anchor="middle" opacity="0" style="font-size:10px">2.0 SEC<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.47;0.5;0.62;0.66;1" dur="6s" repeatCount="indefinite"/></text>
+   <rect x="112" y="77" width="30" height="13" fill="#f2f2f2"/><text x="127" y="87.5" class="ln-t k" text-anchor="middle">80</text>
    <path id="lnP8" d="M-10,50 H40 C70,50 70,109 100,109 H230 C260,109 260,50 290,50 H330" fill="none"/>
-   ${lnMove("lnP8",6,LN_RED,'keyPoints="0;0.2;0.52;0.52;0.8;1" keyTimes="0;0.12;0.45;0.62;0.88;1" calcMode="linear"')}
+   ${lnMove("lnP8",6,LN_RED,'keyPoints="0;0.2;0.5754;0.5754;0.8;1" keyTimes="0;0.12;0.45;0.62;0.88;1" calcMode="linear"')}
    ${lnTxt(160,22,"SLOW TO THE LIMIT · STOP · NEW TYRES · GO",{anchor:"middle"})}`)},
  {id:"sectors",name:"Sectors & timing colours",short:"Purple, green and yellow",
   body:"Every lap is split into three <b>sectors</b>. On timing screens a <b>purple</b> sector is the fastest anyone has gone, <b>green</b> is the driver's own best, and <b>yellow</b> is slower than their best. Three purples in a row usually means pole position.",
