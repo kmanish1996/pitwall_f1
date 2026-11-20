@@ -30,7 +30,7 @@ Current state (after round 20 of 23, the São Paulo Grand Prix):
 ## Interactive app (JavaScript)
 - [Race centre](https://pitwallf1.in/race-centre): every 2026 race and sprint replayed lap by lap, with timing tower, track map, race control and team radio
 - [Season replay](https://pitwallf1.in/replay): the 2026 championship table animated race by race
-- [Calendar](https://pitwallf1.in/calendar): live countdowns in your time zone and session replays
+- [Schedule](https://pitwallf1.in/schedule): live countdowns in your time zone, results and session replays
 - [Tracks](https://pitwallf1.in/tracks): every circuit in 3D, for example https://pitwallf1.in/tracks/monza
 - [Title fight](https://pitwallf1.in/title-fight): championship maths
 - [Race travel](https://pitwallf1.in/travel): ticket prices and trip planner

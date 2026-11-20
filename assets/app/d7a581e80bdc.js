@@ -265,7 +265,7 @@ function tickCountdown(){
   setNum("cdD",d);setNum("cdH",h);setNum("cdM",m);setNum("cdS",s);
   const sess=st.live||st.next;const rd=RACES.find(r=>r.rd===sess.rd);
   $("#cdFor").innerHTML=st.live?`<strong>${sess.n}</strong> is live now · time left in the session`:`Until <strong>${sess.n}</strong> · ${esc(rd.name)} · ${fmtDay.format(sess.start)}, ${fmtTime.format(sess.start)}`;
-  if(!tickCountdown.min||tickCountdown.min!==now.getMinutes()){tickCountdown.min=now.getMinutes();renderSessions(now);const nr=nextRound(now);if(!$("#p-calendar").hidden&&(nr&&nr.rd)!==calRd){calRd=nr&&nr.rd;renderCalendar(false)}}
+  if(!tickCountdown.min||tickCountdown.min!==now.getMinutes()){tickCountdown.min=now.getMinutes();renderSessions(now);const nr=nextRound(now);if(!$("#p-schedule").hidden&&(nr&&nr.rd)!==calRd){calRd=nr&&nr.rd;renderCalendar(false)}}
 }
 $("#tzline").textContent=`Times shown in your time zone${tz?" ("+tz.replace(/_/g," ")+")":""}.`;
 
@@ -601,24 +601,42 @@ function drawLegend(){
 let calFilter="all";
 let calRd=null;
 function renderCalendar(animate){
-  const now=new Date();const nr=nextRound(now);const box=$("#cal");box.innerHTML="";
-  RACES.forEach((r,i)=>{
+  /* Schedule: three calm columns. Races still to come first (in order), then results, latest first.
+     Each card: round, dates and status on one line; the Grand Prix; then either the winner (with the sprint
+     winner, fastest lap and lap record underneath) or the countdown; and one replay button with the other
+     sessions as small links. */
+  const now=new Date();const nr=nextRound(now);const box=$("#cal");box.innerHTML="";let i=0;
+  const up=RACES.filter(r=>r.rd>COMPLETED),past=RACES.filter(r=>r.rd<=COMPLETED).reverse();
+  const order=[];
+  if(calFilter!=="done"&&up.length)order.push(["Still to come",up.length+(up.length===1?" race":" races")],...up);
+  if(calFilter!=="up"&&past.length)order.push(["Results",`${past.length} rounds · latest first`],...past);
+  order.forEach(r=>{
+    if(Array.isArray(r)){box.appendChild(el("h3",{className:"sc-month",innerHTML:`${esc(r[0])} <small>${esc(r[1])}</small>`}));return}
     const done=r.rd<=COMPLETED;const pendingResult=!done&&now>r.race;
-    if(calFilter==="up"&&done)return;if(calFilter==="done"&&!done)return;
     const isNext=nr&&nr.rd===r.rd;
-    const c=el("article",{className:"rc"+(isNext?" is-next":""),style:animate?`animation-delay:${(i%12)*30}ms`:"animation:none"});
-    let foot="";
-    if(done){const row=(lab,code,team,time)=>{const w=byCode[code];return `<div class="res-row" style="--team:${tc(team)}"><span class="res-lab${lab==="Sprint"?" spr":""}">${lab}</span>${helmet(team,w.no,40)}<div style="min-width:0"><b>${w.code}</b> ${FLAG(NAT_FLAG[w.nat],16)} <span>${esc(w.last)} · ${esc(TEAMS[team].short)}</span>${time?`<div class="mono" style="font-size:11px;color:var(--muted)">${time}</div>`:""}</div></div>`};
-      const sp=SPRINT_WIN[r.rd];const rp=REPLAY[r.rd]||{};foot=`<div class="winner res">${sp?row("Sprint",sp[0],sp[1],"Saturday"):""}${row("Grand Prix",r.win,r.winTeam,(r.sprint?"Sunday · ":"")+"Race time "+r.time)}${r.fl?`<div class="fl-row"><span class="lrec-ic" aria-hidden="true"></span>Fastest lap <b class="mono">${fmtLapRec(r.fl)}</b> · ${esc(r.flBy||"")}</div>`:""}</div>`}
-    else if(pendingResult){foot=`<div class="winner"><span class="note">Race finished. The result appears with the next data update.</span></div>`}
-    else{const days=Math.ceil((r.race-now)/864e5);foot=`<div class="winner"><span class="togo">${days<=1?"<b>Race day</b>":`<b>${days}</b> days to lights out`} · ${fmtDay.format(r.race)} ${fmtTime.format(r.race)}</span></div>`}
+    const c=el("article",{className:"sc"+(done?" sc-done":isNext?" sc-next":" sc-up"),style:(done?`--team:${tc(r.winTeam)};`:"")+(animate?`animation-delay:${(i++%12)*30}ms`:"animation:none")});
+    const days=Math.ceil((r.race-now)/864e5);
+    const state=done?'<span class="sc-state ok">Result</span>':isNext?'<span class="sc-state nx">Next</span>':pendingResult?'<span class="sc-state">Finished</span>':`<span class="sc-state">${days} days</span>`;
+    const L=LAP_RECORD[r.rd];
+    const rec=L?`<div title="Fastest lap ever set in a Grand Prix at this circuit"><dt>Lap record${L[3]===2026?' <em>new</em>':""}</dt><dd><b class="mono">${L[0]}</b> ${esc(L[1].split(" ").slice(-1)[0])} ’${String(L[3]).slice(2)}</dd></div>`:"";
+    let mid="";
+    if(done){
+      const w=byCode[r.win];const sp=SPRINT_WIN[r.rd];const s=sp&&byCode[sp[0]];
+      mid=`<div class="sc-win">${helmet(r.winTeam,w.no,46)}<div class="sc-who"><span class="sc-lab">Winner</span><div><b>${w.code}</b> ${FLAG(NAT_FLAG[w.nat],15)} <span>${esc(w.first)} ${esc(w.last)}</span></div><div class="sc-sm">${esc(TEAMS[r.winTeam].short)} · <span class="mono">${r.time}</span></div></div></div>`+
+        (s?`<div class="sc-spr" style="--t2:${tc(sp[1])}"><span class="sc-lab">Sprint</span><b>${s.code}</b> <span>${esc(s.last)} · ${esc(TEAMS[sp[1]].short)}</span></div>`:"")+
+        `<dl class="sc-stats">${r.fl?`<div><dt>Fastest lap</dt><dd><b class="mono">${fmtLapRec(r.fl)}</b> ${esc(r.flBy||"")}</dd></div>`:""}${rec}</dl>`;
+    }else if(pendingResult){
+      mid=`<p class="sc-wait">Race finished. The result appears with the next data update.</p><dl class="sc-stats">${rec}</dl>`;
+    }else{
+      mid=`<div class="sc-cd"><b>${days<=1?"Race day":days}</b>${days<=1?"":` day${days===1?"":"s"} to go`}<div class="sc-sm">Lights out ${fmtDay.format(r.race)}, ${fmtTime.format(r.race)}</div></div><dl class="sc-stats">${rec}</dl>`;
+    }
     const sl=sessionsFor(r.rd);
-    if(sl.length)foot+=`<div class="replay-btns">${sl.map(x=>`<a href="/race-centre" class="replay-btn${x.type==="Race"||x.type==="Sprint"?"":" sm"}" data-replay="${x.sk}">${x.type==="Race"?"Race replay":x.type==="Sprint"?"Sprint replay":esc(SESSION_CODE[x.type]||x.type)}</a>`).join("")}</div>`;
-    const rpx=(sl.find(x=>x.type==="Race")||sl[sl.length-1]||{}).sk;if(rpx){c.dataset.replay=rpx;c.tabIndex=0;c.setAttribute("role","link");c.setAttribute("aria-label",`${r.name}: open the replay`);c.classList.add("has-replay")}
-    c.innerHTML=`<span class="rn">${String(r.rd).padStart(2,"0")}</span>
-      <h3>${FLAG(GP_FLAG[r.short],26)}<span>${esc(r.name)}</span></h3><div class="cir">${esc(r.circuit)} · ${esc(r.place)}</div>
-      ${(()=>{const L=LAP_RECORD[r.rd];if(!L)return "";return `<div class="lrec" style="--team:${L[4]}" title="Fastest lap ever set in a Grand Prix at this circuit"><span class="lrec-ic" aria-hidden="true"></span><span class="label">Lap record</span><b class="mono">${L[0]}</b><span class="lrec-who">${esc(L[1])} · ${esc(L[2])} · ${L[3]}</span>${L[3]===2026?'<em class="lrec-new">Set in 2026</em>':""}</div>`})()}
-      <div class="row"><span class="dates">${r.dates}</span>${r.sprint?'<span class="chip sprint">Sprint</span>':""}${done?'<span class="chip done">Result</span>':isNext?'<span class="chip nextup">Next</span>':""}</div>${foot}`;
+    const main=sl.find(x=>x.type==="Race")||sl.find(x=>x.type==="Sprint");
+    const rest=sl.filter(x=>x!==main);
+    const rp=sl.length?`<div class="sc-rp">${main?`<a href="/race-centre" class="sc-play" data-replay="${main.sk}">${main.type==="Race"?"Race replay":"Sprint replay"}</a>`:""}${rest.length?`<span class="sc-more">${main?"":"Replays: "}${rest.map(x=>`<a href="/race-centre" data-replay="${x.sk}" title="${esc(x.type)} replay">${esc(SESSION_CODE[x.type]||x.type)}</a>`).join("")}</span>`:""}</div>`:"";
+    if(main){c.dataset.replay=main.sk;c.tabIndex=0;c.setAttribute("role","link");c.setAttribute("aria-label",`${r.name}: open the replay`);c.classList.add("has-replay")}
+    c.innerHTML=`<div class="sc-top"><span class="sc-rd">R${String(r.rd).padStart(2,"0")}</span><span class="sc-date">${r.dates}</span>${r.sprint?'<span class="sc-tag">Sprint</span>':""}${state}</div>
+      <h4>${FLAG(GP_FLAG[r.short],24)}<span>${esc(r.name)}</span></h4><div class="sc-cir">${esc(r.circuit)} · ${esc(r.place)}</div>${mid}${rp}`;
     box.appendChild(c);
   });
 }
@@ -1242,7 +1260,8 @@ async function rcOpen(sk){
     rcStopRadio();rcBuildShell(d);RCX.t=d.tMin;rcRender(true);$("#rcLoading").hidden=true;
     const w=d.result&&d.result[0]&&d.dm[d.result[0][1]];
     $("#rcResult").innerHTML=(d.result||[]).slice(0,10).map(r=>{const x=d.dm[r[1]];if(!x)return "";const best=Array.isArray(r[6])?r[6].filter(v=>v!=null).pop():d.timed?r[6]:null;return `<span class="rr-chip" style="--team:${x.col}"><b>${r[0]??"–"}</b>${x.c}${best?` <span class="mono rr-t">${fmtLap(best)}</span>`:""}</span>`}).join("");
-    $("#rcResH").textContent=d.timed?"Classification · top 10":"Final classification · top 10";
+    $("#rcResH").textContent=d.note?"No times set":d.timed?"Classification · top 10":"Final classification · top 10";
+    if(d.note)$("#rcResult").innerHTML=`<p class="note rc-note">${esc(d.note)}</p>`;
     rcPlay();
   }catch(e){$("#rcLoading").hidden=false;$("#rcLoading").textContent="This replay couldn't load. Check your connection and pick the session again."}
 }
@@ -2017,6 +2036,13 @@ function tkInit(){
   $("#tkEx").addEventListener("input",e=>{TK.ex=+e.target.value;$("#tkExV").textContent=TK.ex+"×";if(TK.three&&TK.data)tkBuildTrack3d();tkFrame(0,true)});
   $("#tkReset").addEventListener("click",()=>{if(TK.mode==="3d")tkCam("orbit",true);else tkFit2d();tkFrame(0,true)});
   new ResizeObserver(()=>tkResize()).observe($("#tkStage"));
+  $("#tkWinBtn").addEventListener("click",()=>TK.full?tkExitFull():tkEnterFull(false));
+  $("#tkFsBtn").addEventListener("click",()=>TK.full==="screen"?tkExitFull():tkEnterFull(true));
+  $("#tkExit").addEventListener("click",()=>tkExitFull());
+  if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))$("#tkFsBtn").hidden=true;  // iPhone: no element full screen; full window still works
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&TK.full&&!document.fullscreenElement)tkExitFull()});
+  const fsc=()=>{if(TK.full==="screen"&&!(document.fullscreenElement||document.webkitFullscreenElement))tkExitFull()};
+  document.addEventListener("fullscreenchange",fsc);document.addEventListener("webkitfullscreenchange",fsc);
   document.addEventListener("visibilitychange",()=>{if(tkVisible())tkLoop()});
   tkPlayBtn();tkSetup2d();
   tkLoad(tkSlugFromHash()||tkDefaultSlug(),true);
@@ -2072,6 +2098,37 @@ function tkMode(m){
   $("#tkHint").style.opacity=1;TK.hintT=0;
   tkResize();tkFrame(0,true);
 }
+/* full window / full screen: move the HUD, elevation profile, stats and lap numbers into the side panel, put them back on exit */
+function tkEnterFull(screen){
+  const v=$("#tkViewer"),side=$("#tkSide");if(!v)return;
+  if(!TK.full){
+    TK.moved=[];
+    const put=(node,slot)=>{if(!node)return;const mark=document.createComment("tk");node.parentNode.insertBefore(mark,node);TK.moved.push([node,mark]);side.querySelector(`[data-slot="${slot}"]`).appendChild(node)};
+    // wide screens: the live HUD moves to the panel; phones keep it on the track so the sheet stays short
+    const wide=!matchMedia("(max-width:600px),(max-aspect-ratio:1/1)").matches;
+    if(wide)put($("#tkHud"),"hud");side.querySelector('[data-slot="hud"]').hidden=!wide;
+    put(v.querySelector(".tk-prof"),"prof");put($("#tkStats"),"stats");
+    const cards=document.querySelectorAll(".tk-cols .tk-card");put(cards[1],"nums");put(cards[0]&&cards[0].querySelector(".tk-bits"),"bits");
+    side.hidden=false;v.classList.add("tk-full");document.body.classList.add("tk-locked");
+  }
+  TK.full=screen?"screen":"window";
+  if(screen){const rq=v.requestFullscreen||v.webkitRequestFullscreen;if(rq)try{const p=rq.call(v);if(p&&p.catch)p.catch(()=>{TK.full="window";tkFullBtns()})}catch(e){TK.full="window"}}
+  else if(document.fullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+  tkSideTitle();tkFullBtns();setTimeout(tkRefit,120);
+  try{pwTrack("tracks/"+TK.full)}catch(e){}
+}
+function tkExitFull(){
+  const v=$("#tkViewer");if(!TK.full||!v)return;
+  if(document.fullscreenElement||document.webkitFullscreenElement){try{(document.exitFullscreen||document.webkitExitFullscreen).call(document)}catch(e){}}
+  (TK.moved||[]).forEach(([node,mark])=>{mark.parentNode.insertBefore(node,mark);mark.remove()});TK.moved=[];
+  v.classList.remove("tk-full");$("#tkSide").hidden=true;document.body.classList.remove("tk-locked");TK.full=null;tkFullBtns();
+  setTimeout(tkRefit,120);
+}
+function tkRefit(){tkResize();tkDrawProfile();if(!TK.data)return;if(TK.mode==="3d"){if(TK.cam==="orbit")tkCam("orbit",true)}else tkFit2d();tkFrame(0,true)}
+function tkFullBtns(){$("#tkWinBtn").setAttribute("aria-pressed",TK.full==="window");$("#tkFsBtn").setAttribute("aria-pressed",TK.full==="screen");
+  $("#tkWinBtn").lastChild.textContent=TK.full?"Exit full view":"Full window"}
+function tkSideTitle(){const d=TK.data;if(!d||typeof TRACK_INFO==="undefined")return;const I=TRACK_INFO[d.slug];if(!I)return;
+  $("#tkSideKick").textContent=`${I.city||""}${I.length?" · "+I.length.toFixed(3)+" km":""}`;$("#tkSideName").textContent=I.full||I.name||d.slug}
 function tkResize(){
   const st=$("#tkStage");if(!st)return;const w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;
   const dpr=Math.min(devicePixelRatio||1,2);
@@ -2288,6 +2345,7 @@ function tkFacts(){
   const raceCard=win?[`${YEAR_NOW} winner`,`${win.first[0]}. ${win.last}`,race.time||""]:race?[`${YEAR_NOW} race`,race.race.toLocaleDateString(undefined,{day:"numeric",month:"short"}),race.rd===COMPLETED+1?"Next race":"Coming up"]:["Race","–",""];
   const cards=[["Length",I.length.toFixed(3)+" km",`${laps} laps · ${(I.length*laps).toFixed(3)} km race`],["Corners",I.turns,I.full],
     ["Race lap record",rec?rec[0]:"–",rec?`${rec[1]}, ${rec[3]}`:""],[`${d.source.year} pole`,lts,d.source.driverName],raceCard,["First F1 race here",I.firstGP,I.city]];
+  if(TK.full)tkSideTitle();
   $("#tkStats").innerHTML=cards.map(([k,v,s])=>`<div class="tk-stat"><span class="label">${k}</span><b>${esc(String(v))}</b><small>${esc(s)}</small></div>`).join("");
   const fill=b=>b.replace(/{ELEV}/g,st.elev).replace(/{VMAX}/g,st.vmax).replace(/{VMIN}/g,st.vmin).replace(/{FT}/g,st.fullThrottle).replace(/{DRV}/g,esc(d.source.driverName)).replace(/{GEARS}/g,st.gearChanges).replace(/{YEAR}/g,d.source.year);
   $("#tkBits").innerHTML=I.bits.map(b=>`<li>${fill(b)}</li>`).join("");
@@ -3124,9 +3182,9 @@ function themeApply(t,save){
 })();
 
 /* ================= ROUTING ================= */
-const ROUTES=["standings","race-centre","replay","calendar","tracks","title-fight","travel","games","learn"];
+const ROUTES=["standings","race-centre","replay","schedule","tracks","title-fight","travel","games","learn"];
 /* each section's title and description: the browser tab here, and each address's own <head> (scripts/build_pages.py reads this line) */
-const ROUTE_META={"standings":{"t":"F1 2026 standings live: drivers' and constructors' table","d":"Live Formula 1 2026 drivers' and constructors' standings, the next race countdown in your time zone, and the 2026 world champion.","h":"F1 2026 standings, live","og":"standings","c":"/formula-1-standings-2026/"},"race-centre":{"t":"F1 race replays 2026: every race lap by lap with team radio","d":"Replay every 2026 Formula 1 race and sprint lap by lap: live timing tower, track map, gaps, tyres, pit stops, race control messages and team radio.","h":"F1 race centre: every 2026 race replayed lap by lap","og":"results","sm":1},"replay":{"t":"F1 2026 season replay: the championship race by race","d":"Watch the 2026 Formula 1 championship unfold race by race: the points table animated from Australia to the latest Grand Prix.","h":"F1 2026 season replay","og":"standings","sm":1},"calendar":{"t":"F1 2026 calendar with countdowns, results and replays","d":"Every round of the 2026 F1 calendar with dates, start times in your time zone, winners, lap records and replays of every session.","h":"F1 2026 calendar","og":"calendar","c":"/f1-calendar-2026/"},"tracks":{"t":"Every F1 circuit in 3D: explore all 2026 tracks","d":"Spin, zoom and fly around every 2026 Formula 1 circuit in 3D, built from real pole-lap telemetry: speed, gears, elevation and corner names.","h":"Every F1 circuit in 3D","og":"circuits","c":"/circuits/"},"title-fight":{"t":"F1 2026 title fight: championship maths and points left","d":"The 2026 Formula 1 title maths: how the championship was decided, points still available and the fights for second place in both championships.","h":"F1 2026 title fight","og":"champions","sm":1},"travel":{"t":"F1 2027 travel planner: race dates, ticket prices and trip costs","d":"Plan a trip to a 2027 Formula 1 race: every race weekend's dates, ticket prices for each circuit in 11 currencies, a trip cost planner and first-timer tips.","h":"F1 2027 race travel planner","og":"calendar","sm":1},"games":{"t":"Free F1 games: reaction test and qualifying game","d":"Two free Formula 1 games: the lights-out reaction test and Pit Wall Dash, a three-lap qualifying game against the 2026 grid.","h":"F1 games","og":"reaction","c":"/f1-reaction-test/"},"games/reaction-test":{"t":"F1 reaction test: can you beat Bottas's 0.201s?","d":"Free F1 reaction time test with the real five-light start. Beat Valtteri Bottas's famous 0.201s start and share your time.","h":"F1 reaction test","og":"reaction","c":"/f1-reaction-test/"},"games/qualifying":{"t":"F1 qualifying game: three laps to beat the 2026 grid","d":"Pit Wall Dash, a free browser F1 qualifying game: three flying laps, a ghost car and the whole 2026 grid on the timing sheet.","h":"F1 qualifying game","og":"quali","c":"/f1-qualifying-game/"},"learn":{"t":"Learn F1: Formula 1 explained for beginners","d":"Formula 1 explained for beginners, with animations: what F1 is, race weekends and points, trophies, track terms, tyres, the steering wheel, 2026 car tech and the people of F1.","h":"Learn F1","og":"learn","c":"/learn-f1/"},"learn/about":{"t":"What is Formula 1? F1 explained for beginners","h":"What is Formula 1?","og":"learn-about","c":"/learn-f1/what-is-formula-1/"},"learn/weekend":{"t":"F1 race weekend explained: practice, qualifying, sprint and points","h":"F1 race weekend explained","og":"learn-weekend","c":"/learn-f1/race-weekend-format/"},"learn/trophies":{"t":"F1 trophies and championships explained","h":"F1 trophies and championships","og":"learn-trophies","c":"/learn-f1/trophies-and-championships/"},"learn/track":{"t":"F1 terms explained: apex, kerbs, chicanes, VSC and flags","h":"F1 track terms explained","og":"learn-track","c":"/learn-f1/track-terms/"},"learn/tyres":{"t":"F1 tyres explained: soft, medium, hard, inters and wets","h":"F1 tyres explained","og":"learn-tyres","c":"/learn-f1/f1-tyres-explained/"},"learn/wheel":{"t":"F1 steering wheel explained: every button and dial in 3D","h":"F1 steering wheel explained","og":"learn-wheel","c":"/learn-f1/f1-steering-wheel-buttons/"},"learn/tech":{"t":"2026 F1 car tech explained: active aero, overtake mode and ERS","h":"2026 F1 car tech explained","og":"learn-tech","c":"/learn-f1/f1-car-technology-2026/"},"learn/people":{"t":"Who's who in F1: drivers, engineers, pit crews and marshals","h":"The people of F1","og":"learn-people","c":"/learn-f1/people-of-f1/"},"privacy":{"t":"Privacy Policy","h":"Privacy Policy"},"terms":{"t":"Terms and Conditions","h":"Terms and Conditions"},"contact":{"t":"Contact us","h":"Contact us"},"about":{"t":"About Pit Wall F1","h":"About Pit Wall F1"}};
+const ROUTE_META={"standings":{"t":"F1 2026 standings live: drivers' and constructors' table","d":"Live Formula 1 2026 drivers' and constructors' standings, the next race countdown in your time zone, and the 2026 world champion.","h":"F1 2026 standings, live","og":"standings","c":"/formula-1-standings-2026/"},"race-centre":{"t":"F1 race replays 2026: every race lap by lap with team radio","d":"Replay every 2026 Formula 1 race and sprint lap by lap: live timing tower, track map, gaps, tyres, pit stops, race control messages and team radio.","h":"F1 race centre: every 2026 race replayed lap by lap","og":"results","sm":1},"replay":{"t":"F1 2026 season replay: the championship race by race","d":"Watch the 2026 Formula 1 championship unfold race by race: the points table animated from Australia to the latest Grand Prix.","h":"F1 2026 season replay","og":"standings","sm":1},"schedule":{"t":"F1 2026 schedule: countdowns, results and replays","d":"The 2026 F1 schedule, round by round: dates and start times in your time zone, winners, fastest laps, lap records and replays of every session.","h":"F1 2026 schedule","og":"calendar","c":"/f1-calendar-2026/"},"tracks":{"t":"Every F1 circuit in 3D: explore all 2026 tracks","d":"Spin, zoom and fly around every 2026 Formula 1 circuit in 3D, built from real pole-lap telemetry: speed, gears, elevation and corner names.","h":"Every F1 circuit in 3D","og":"circuits","c":"/circuits/"},"title-fight":{"t":"F1 2026 title fight: championship maths and points left","d":"The 2026 Formula 1 title maths: how the championship was decided, points still available and the fights for second place in both championships.","h":"F1 2026 title fight","og":"champions","sm":1},"travel":{"t":"F1 2027 travel planner: race dates, ticket prices and trip costs","d":"Plan a trip to a 2027 Formula 1 race: every race weekend's dates, ticket prices for each circuit in 11 currencies, a trip cost planner and first-timer tips.","h":"F1 2027 race travel planner","og":"calendar","sm":1},"games":{"t":"Free F1 games: reaction test and qualifying game","d":"Two free Formula 1 games: the lights-out reaction test and Pit Wall Dash, a three-lap qualifying game against the 2026 grid.","h":"F1 games","og":"reaction","c":"/f1-reaction-test/"},"games/reaction-test":{"t":"F1 reaction test: can you beat Bottas's 0.201s?","d":"Free F1 reaction time test with the real five-light start. Beat Valtteri Bottas's famous 0.201s start and share your time.","h":"F1 reaction test","og":"reaction","c":"/f1-reaction-test/"},"games/qualifying":{"t":"F1 qualifying game: three laps to beat the 2026 grid","d":"Pit Wall Dash, a free browser F1 qualifying game: three flying laps, a ghost car and the whole 2026 grid on the timing sheet.","h":"F1 qualifying game","og":"quali","c":"/f1-qualifying-game/"},"learn":{"t":"Learn F1: Formula 1 explained for beginners","d":"Formula 1 explained for beginners, with animations: what F1 is, race weekends and points, trophies, track terms, tyres, the steering wheel, 2026 car tech and the people of F1.","h":"Learn F1","og":"learn","c":"/learn-f1/"},"learn/about":{"t":"What is Formula 1? F1 explained for beginners","h":"What is Formula 1?","og":"learn-about","c":"/learn-f1/what-is-formula-1/"},"learn/weekend":{"t":"F1 race weekend explained: practice, qualifying, sprint and points","h":"F1 race weekend explained","og":"learn-weekend","c":"/learn-f1/race-weekend-format/"},"learn/trophies":{"t":"F1 trophies and championships explained","h":"F1 trophies and championships","og":"learn-trophies","c":"/learn-f1/trophies-and-championships/"},"learn/track":{"t":"F1 terms explained: apex, kerbs, chicanes, VSC and flags","h":"F1 track terms explained","og":"learn-track","c":"/learn-f1/track-terms/"},"learn/tyres":{"t":"F1 tyres explained: soft, medium, hard, inters and wets","h":"F1 tyres explained","og":"learn-tyres","c":"/learn-f1/f1-tyres-explained/"},"learn/wheel":{"t":"F1 steering wheel explained: every button and dial in 3D","h":"F1 steering wheel explained","og":"learn-wheel","c":"/learn-f1/f1-steering-wheel-buttons/"},"learn/tech":{"t":"2026 F1 car tech explained: active aero, overtake mode and ERS","h":"2026 F1 car tech explained","og":"learn-tech","c":"/learn-f1/f1-car-technology-2026/"},"learn/people":{"t":"Who's who in F1: drivers, engineers, pit crews and marshals","h":"The people of F1","og":"learn-people","c":"/learn-f1/people-of-f1/"},"privacy":{"t":"Privacy Policy","h":"Privacy Policy"},"terms":{"t":"Terms and Conditions","h":"Terms and Conditions"},"contact":{"t":"Contact us","h":"Contact us"},"about":{"t":"About Pit Wall F1","h":"About Pit Wall F1"}};
 const HOME_TITLE="Pit Wall F1 · Every F1 Stat, Every Lap, Every Track",HOME_H1="Pit Wall F1: live Formula 1 2026 standings, stats, race replays and 3D tracks";
 function routeMeta(h){const m=ROUTE_META[h];if(m)return m;const t=h.match(/^tracks\/([\w-]+)/);if(t&&typeof TRACK_INFO!=="undefined"&&TRACK_INFO[t[1]]){const I=TRACK_INFO[t[1]];return{t:`${I.full} in 3D: F1 track map and pole lap`,h:`${I.full} in 3D`,c:`/circuits/${t[1]}/`}}return ROUTE_META[h.split("/")[0]]||null}
 function setRouteMeta(h){const m=h?routeMeta(h):null;document.title=m?`${m.t} · Pit Wall F1`:HOME_TITLE;const e=document.querySelector(".pw-h1");if(e)e.textContent=m?m.h:HOME_H1;
@@ -3146,11 +3204,11 @@ function route(){
   document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.getAttribute("href")==="/"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   if(r==="standings")renderTower();
   if(r==="replay"){if(!replayDrawn){replayDrawn=true;rd=0;drawReplay();setTimeout(()=>{if(!playing)play()},500)}drawLine()}
-  if(r==="calendar")renderCalendar(true);
+  if(r==="schedule")renderCalendar(true);
   if(r==="title-fight"){renderAlive();if(champDecided())renderTitleDecided();else evalScenario(false)}
   if(r==="travel"){renderTravel(true);renderChecklist()}
   if(r==="games")gmInit();else gmLeave();
-  if(r==="tracks")tkInit();
+  if(r==="tracks")tkInit();else if(typeof TK!=="undefined"&&TK.full)tkExitFull();
   if(r==="learn")lnInit();
   if(r==="race-centre")rcInit();else if(typeof rcPause==="function"&&RCX.playing){rcPause()}
 }
@@ -3189,10 +3247,11 @@ renderLastRace();
 /* ?embed=dash shows only Pit Wall Dash (used inside /f1-qualifying-game/) */
 if(document.documentElement.classList.contains("embed"))GM_STORE.set("pw_gm_tab","race");
 /* old #section links (shared before clean URLs) still work: #tracks/monza becomes /tracks/monza */
+if(/^\/calendar\/?$/.test(location.pathname)||location.hash==="#calendar")history.replaceState(null,"","/schedule"+location.search);  // the section was renamed
 {const m=(location.hash||"").match(/^#([\w-]+(?:\/[\w-]+)?)$/);if(m&&APP_PATH.test("/"+m[1])&&!document.documentElement.classList.contains("embed"))history.replaceState(null,"","/"+m[1]+location.search)}
 renderFooter();renderPulse();renderPicks();
 try{const q=new URLSearchParams(location.search).get("replay");if(q&&/^\d+$/.test(q)){RCX.pending=+q;history.replaceState(null,"","/race-centre")}}catch(e){}
-rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-calendar").hidden)renderCalendar(false);renderSessions(new Date())}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());
+rcLoadIndex().then(idx=>{SESSIONS_BY_RD={};idx.slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x=>{(SESSIONS_BY_RD[x.round.rd]=SESSIONS_BY_RD[x.round.rd]||[]).push(x)});if(!$("#p-schedule").hidden)renderCalendar(false);renderSessions(new Date())}).catch(()=>{});drawLegend();drawReplay();renderSessions(new Date());
 route();tickCountdown();setInterval(tickCountdown,1000);
 if(!reduce)setTimeout(()=>runLights(false),400);
 })();

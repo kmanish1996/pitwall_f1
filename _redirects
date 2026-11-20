@@ -2,11 +2,12 @@
 # Clean URLs for the app's sections. Each one is the app with that section's own title, description and
 # canonical link (app/<section>.html). Real pages such as /circuits/ or /learn-f1/ are files and win.
 # The homepage loads the same light copy (app/home.html); index.html stays as the full source.
+/calendar                 /schedule                         301
 /                         /app/home.html                    200!
 /standings                /app/standings.html               200
 /race-centre              /app/race-centre.html             200
 /replay                   /app/replay.html                  200
-/calendar                 /app/calendar.html                200
+/schedule                 /app/schedule.html                200
 /tracks                   /app/tracks.html                  200
 /title-fight              /app/title-fight.html             200
 /travel                   /app/travel.html                  200
