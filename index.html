@@ -181,20 +181,8 @@ button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;curso
 .hl-chip:hover,.hl-btn:hover{background:color-mix(in srgb,#FF2D2D 24%,transparent)}
 .hl-btn{font-size:12px;padding:7px 12px}.hl-btn.sm{font-size:11px;padding:6px 10px}
 
-.rc-top .hl-btn{align-self:flex-end;margin-left:auto;margin-right:10px}
-.hl-bg{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px;animation:pop .2s ease-out}
-.hl{width:min(960px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
-.hl-h{display:flex;align-items:flex-start;gap:12px;padding:14px 16px 10px}.hl-h>div{flex:1;min-width:0}
-.hl-h .label{display:flex;align-items:center;gap:7px}.hl-h .label svg{width:17px;height:12px;color:#FF2D2D}
-.hl-h h3{display:flex;align-items:center;gap:9px;font-size:22px;font-weight:800;margin-top:3px}
-.hl-x{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);color:var(--fg);font-size:16px;cursor:pointer;flex:none}
-.hl-tabs{display:flex;gap:4px;padding:0 16px 10px;overflow-x:auto}
-.hl-tabs button{font-family:var(--f-display);font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
-.hl-tabs button[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
-.hl-frame{position:relative;aspect-ratio:16/9;background:#000}.hl-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.hl-f{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:10px 16px 14px;font-size:12px;color:var(--muted)}
-.hl-yt{font-weight:700;color:var(--fg)}
-body.hl-open{overflow:hidden}
+.rc-top .rc-hl{align-self:flex-end;margin-left:auto;margin-right:10px}
+.hl-chip,.hl-btn{text-decoration:none}.hl-chip::after,.hl-btn::after{content:"↗";font-size:11px;opacity:.7;margin-left:1px}
 .sr-head{display:grid;gap:4px;margin:6px 0 14px}
 .sr-head h3{font-size:30px;font-weight:900;font-style:italic;display:flex;align-items:center;gap:10px}
 .sr-head .sr-kind{display:inline-block;width:max-content;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:#fff;background:var(--red);padding:3px 8px}
@@ -2028,7 +2016,7 @@ function renderSessions(now){
     const row=el("div",{className:"sess"+(done?" is-done":"")+(isNext||live?" is-next":"")+(res?" has-res":"")+(hv?" has-hl":"")});
     if(res){row.dataset.sess=res.sk;row.tabIndex=0;row.setAttribute("role","button");row.setAttribute("aria-label",`${s.n}: show results`)}
     row.innerHTML=`<span class="k">${s.k}</span><span>${s.n}</span><span class="when mono">${fmtDay.format(s.start)} · ${fmtTime.format(s.start)}</span>`+
-      `${hv?`<button type="button" class="hl-chip" data-hl="${rd.rd}|${esc(hk)}" aria-label="${esc(s.n)}: watch highlights">${HL_ICON}<span>Highlights</span></button>`:""}<span class="chip ${live?"live":res?"res":done?"done":isNext?"nextup":""}"${done&&!res?' title="Results appear about 30 to 45 minutes after the session ends"':""}>${live?"Live":res?"Results":done?"Results soon":isNext?"Next":"Upcoming"}</span>`;
+      `${hv?hlLink(rd.rd,hk,"hl-chip","Highlights"):""}<span class="chip ${live?"live":res?"res":done?"done":isNext?"nextup":""}"${done&&!res?' title="Results appear about 30 to 45 minutes after the session ends"':""}>${live?"Live":res?"Results":done?"Results soon":isNext?"Next":"Upcoming"}</span>`;
     box.appendChild(row);
   });
   if(list.length===1){box.appendChild(el("div",{className:"sess"},`<span class="k"></span><span class="when" style="grid-column:2/-1">Practice and qualifying times for this weekend arrive with the next data update.</span>`))}
@@ -2306,7 +2294,7 @@ async function openSessionResults(sk,from){
     <span class="note">${R.circuit?esc(R.circuit)+" · ":""}${new Date(d.date).toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"})}${lead&&!d.note?` · ${isRace?"Winner":"Fastest"}: <b style="color:var(--fg)">${esc(lead.f)} ${esc(lead.l)}</b>`:""}</span></div>
     ${d.note?`<p class="note" style="margin:10px 0">${esc(d.note)}</p>`:""}
     <div class="sr-scroll"><table class="sr-tab"><thead><tr><th>Pos</th><th>Driver</th>${head}<th>Laps</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <div class="sr-act"><a href="/race-centre" class="btn primary" data-replay="${sk}">Watch the replay</a>${R.rd&&hlFor(R.rd)[d.type]?`<button type="button" class="hl-btn" data-hl="${R.rd}|${esc(d.type)}">${HL_ICON}<span>Highlights</span></button>`:""}<span class="note">${d.note?"Laps run, from F1 timing via OpenF1.":"Official classification from F1 timing via OpenF1."}</span></div>`;
+    <div class="sr-act"><a href="/race-centre" class="btn primary" data-replay="${sk}">Watch the replay</a>${R.rd?hlLink(R.rd,d.type,"hl-btn","Highlights"):""}<span class="note">${d.note?"Laps run, from F1 timing via OpenF1.":"Official classification from F1 timing via OpenF1."}</span></div>`;
 }
 document.addEventListener("click",e=>{const b=e.target.closest("#sessions [data-sess]");if(!b)return;openSessionResults(+b.dataset.sess,b)});
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#sessions [data-sess]")){e.preventDefault();openSessionResults(+e.target.dataset.sess,e.target)}});
@@ -2422,7 +2410,7 @@ function renderCalendar(animate){
     const main=sl.find(x=>x.type==="Race")||sl.find(x=>x.type==="Sprint");
     const rest=sl.filter(x=>x!==main);
     const hb=hlBest(r.rd);
-    const hlb=hb?`<button type="button" class="hl-btn sm" data-hl="${r.rd}|${esc(hb)}" title="Official ${esc(HL_SHORT[hb]||hb)} highlights">${HL_ICON}<span>Highlights</span></button>`:"";
+    const hlb=hb?hlLink(r.rd,hb,"hl-btn sm",hb==="Race"?"Race highlights":(HL_SHORT[hb]||hb)+" highlights"):"";
     const rp=sl.length||hb?`<div class="sc-rp">${hlb}${main?`<a href="/race-centre" class="sc-play" data-replay="${main.sk}">${main.type==="Race"?"Race replay":"Sprint replay"}</a>`:""}${rest.length?`<span class="sc-more">${main?"":"Replays: "}${rest.map(x=>`<a href="/race-centre" data-replay="${x.sk}" title="${esc(x.type)} replay">${esc(SESSION_CODE[x.type]||x.type)}</a>`).join("")}</span>`:""}</div>`:"";
     if(main){c.dataset.replay=main.sk;c.tabIndex=0;c.setAttribute("role","link");c.setAttribute("aria-label",`${r.name}: open the replay`);c.classList.add("has-replay")}
     c.innerHTML=`<div class="sc-top"><span class="sc-rd">R${String(r.rd).padStart(2,"0")}</span><span class="sc-date">${r.dates}</span>${r.sprint?'<span class="sc-tag">Sprint</span>':""}${state}</div>
@@ -3123,7 +3111,7 @@ LEGAL.privacy=()=>`
 <h3>Race alerts (only if you turn them on)</h3>
 <p>If you turn on race alerts, your browser gives us a push subscription: an anonymous web address at your browser's push service (Google, Mozilla, Apple or Microsoft) plus encryption keys, and we store it with the alerts you picked. It contains no name, email or location. We use it only to send the alerts you chose, and delete it when you turn alerts off or when the push service tells us it no longer works. It is stored with our host, Netlify.</p>
 <h3>Highlights videos</h3>
-<p>Highlights are official videos from the FORMULA 1 channel, played by YouTube in its privacy-enhanced mode. Nothing is loaded from YouTube until you open a video; once you do, YouTube's own privacy policy applies to it.</p>
+<p>Highlights buttons link to official videos on the FORMULA 1 YouTube channel, which open on YouTube in a new tab. Nothing is loaded from YouTube on this site; on YouTube, its own privacy policy applies.</p>
 <h3>Information collected automatically</h3>
 <p>Like any website, our hosting provider records standard server logs when your browser requests a page: IP address, browser type, the page requested, referring page and time. These logs are used for security and to keep the site running, and are deleted on the host's normal schedule.</p>
 ${SITE.analytics?`<p>We use ${esc(SITE.analytics)}, a privacy-friendly visitor counter, to see how many people visit and which pages they use. It sets no cookies and doesn't store your IP address or any personal data: it counts page views along with the referring site, browser, screen size and country. Blocking it in your browser doesn't affect the site.</p>`:`<p>We do not use analytics, advertising trackers or tracking cookies. If that changes, we will update this policy first.</p>`}
@@ -5041,7 +5029,7 @@ function renderLastRace(){
     box.innerHTML=`<div class="lr-head"><div><div class="label">Last race · Round ${L.round} · ${esc(day)}</div><h2 id="lrTitle">${esc(L.name)}</h2></div></div>
       <div class="lr-pod">${L.podium.map(p=>`<div class="lr-p" style="--c:${esc(p.col||"#888")}"><span class="pos">P${p.pos}</span><b>${esc(p.code)}</b><small>${p.pos===1?(L.time?esc(L.time):esc(p.team||"")):esc(p.gap||"")}</small></div>`).join("")}</div>
       <div class="lr-meta">${L.pole?`<span>Pole <b>${esc(L.pole)}</b></span>`:""}${L.fastestLap?`<span>Fastest lap <b>${esc(L.fastestLap.code)}</b> ${esc(L.fastestLap.time)}</span>`:""}${L.laps?`<span>${L.laps} laps</span>`:""}</div>
-      <div class="lr-links"><a class="pri" href="${esc(L.links.story)}">Race story</a><a href="${esc(L.links.replay)}" data-replay="${(L.links.replay.match(/replay=(\d+)/)||[])[1]||""}">Watch replay</a><a href="${esc(L.links.results)}">Full results</a>${hlFor(L.round).Race?`<button type="button" class="hl-btn" data-hl="${L.round}|Race">${HL_ICON}<span>Race highlights</span></button>`:""}</div>`;
+      <div class="lr-links"><a class="pri" href="${esc(L.links.story)}">Race story</a><a href="${esc(L.links.replay)}" data-replay="${(L.links.replay.match(/replay=(\d+)/)||[])[1]||""}">Watch replay</a><a href="${esc(L.links.results)}">Full results</a>${hlLink(L.round,"Race","hl-btn","Race highlights")}</div>`;
     box.hidden=false;
   }).catch(()=>{});
 }
@@ -5066,37 +5054,19 @@ function hlLoad(){
     renderLastRace();
   }).catch(()=>{});
 }
-function pwVideo(rd,sess){
-  const h=hlFor(rd);sess=h[sess]?sess:hlBest(rd);if(!sess)return;
-  const R=RACES.find(r=>r.rd==rd);const name=(LONG_NAMES[rd]||(R&&R.name)||"").replace(/ GP$/," Grand Prix");
-  let bg=$(".hl-bg");if(bg)bg.remove();
-  bg=el("div",{className:"hl-bg"});
-  const tabs=HL_ORDER.filter(k=>h[k]);
-  bg.innerHTML=`<div class="hl" role="dialog" aria-modal="true" aria-labelledby="hlT">
-    <div class="hl-h"><div><div class="label">${HL_ICON} Highlights · Round ${rd}</div><h3 id="hlT">${R?FLAG(GP_FLAG[R.short],22):""}<span>${esc(name)}</span></h3></div><button type="button" class="hl-x" aria-label="Close">✕</button></div>
-    ${tabs.length>1?`<div class="hl-tabs" role="tablist">${tabs.map(k=>`<button type="button" role="tab" data-k="${esc(k)}">${esc(HL_SHORT[k]||k)}</button>`).join("")}</div>`:""}
-    <div class="hl-frame"></div>
-    <div class="hl-f"><a class="hl-yt" target="_blank" rel="noopener">Watch on YouTube ↗</a><span>Official video from the FORMULA 1 channel on YouTube. Pit Wall is an unofficial fan site.</span></div></div>`;
-  document.body.appendChild(bg);document.body.classList.add("hl-open");
-  const show=k=>{const v=h[k];
-    bg.querySelectorAll(".hl-tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===k));
-    bg.querySelector(".hl-frame").innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1" title="${esc(HL_SHORT[k]||k)} highlights: ${esc(name)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-    bg.querySelector(".hl-yt").href=`https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}`;
-    pwTrack(`highlights/r${rd}-${k.toLowerCase().replace(/\s+/g,"-")}`)};
-  show(sess);
-  const close=()=>{bg.remove();document.body.classList.remove("hl-open");document.removeEventListener("keydown",onKey)};
-  const onKey=e=>{if(e.key==="Escape")close()};document.addEventListener("keydown",onKey);
-  bg.addEventListener("click",e=>{if(e.target===bg||e.target.closest(".hl-x"))return close();const t=e.target.closest(".hl-tabs button");if(t)show(t.dataset.k)});
-  bg.querySelector(".hl-x").focus();
+/* F1 doesn't allow its highlights to play inside other websites, so every button is a plain link that
+   opens the video on YouTube in a new tab. */
+function hlLink(rd,k,cls,label){
+  const v=hlFor(rd)[k];if(!v)return "";
+  return `<a class="${cls}" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}" target="_blank" rel="noopener" data-hlt="r${rd}-${esc(k.toLowerCase().replace(/\s+/g,"-"))}" title="Watch the official ${esc(HL_SHORT[k]||k)} highlights on YouTube (opens a new tab)" aria-label="${esc(HL_SHORT[k]||k)} highlights on YouTube (opens a new tab)">${HL_ICON}<span>${esc(label)}</span></a>`;
 }
-document.addEventListener("click",e=>{const b=e.target.closest("[data-hl]");if(!b)return;e.preventDefault();e.stopPropagation();const [rd,k]=b.dataset.hl.split("|");pwVideo(+rd,k)},true);
+document.addEventListener("click",e=>{const a=e.target.closest("[data-hlt]");if(a){e.stopPropagation();pwTrack("highlights/"+a.dataset.hlt)}},true);
 function rcHlBtn(){
   const old=$("#rcHl");if(old)old.remove();
   const meta=RCX.d&&(RCX.idx||[]).find(s=>s.sk==RCX.d.sk);if(!meta||!meta.round)return;
-  const h=hlFor(meta.round.rd);const k=h[meta.type]?meta.type:null;if(!k&&!hlBest(meta.round.rd))return;
-  const b=el("button",{type:"button",className:"hl-btn",id:"rcHl"});b.dataset.hl=`${meta.round.rd}|${k||""}`;
-  b.innerHTML=`${HL_ICON}<span>${k?esc(HL_SHORT[k]||k)+" highlights":"Weekend highlights"}</span>`;
-  $(".rc-top").insertBefore(b,$(".rc-pick"));
+  const k=hlFor(meta.round.rd)[meta.type]?meta.type:hlBest(meta.round.rd);if(!k)return;
+  const w=el("span",{id:"rcHl",className:"rc-hl"});w.innerHTML=hlLink(meta.round.rd,k,"hl-btn",`${HL_SHORT[k]||k} highlights`);
+  $(".rc-top").insertBefore(w,$(".rc-pick"));
 }
 
 /* ================= BOOT ================= */
