@@ -16,7 +16,7 @@ Grand Prix, and names the session (FP1, Qualifying, Sprint, Race ...). Extended 
 
 Usage: python3 scripts/update_highlights.py [--year 2026]
 """
-import argparse, html, json, os, re, sys, urllib.parse, urllib.request
+import argparse, html, json, os, re, sys, unicodedata, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,12 +52,29 @@ def races():
     import build_pages as B
     A = B.app_data()
     long = lambda r: A["LONG_NAMES"].get(str(r["rd"])) or r["name"].replace(" GP", " Grand Prix")
-    return [{"rd": r["rd"], "names": {long(r).lower(), r["name"].lower().replace(" gp", " grand prix")}} for r in A["RACES"]], A
+    out = []
+    for r in A["RACES"]:
+        names = {plain(long(r)), plain(r["name"].replace(" GP", " Grand Prix"))}
+        names |= {plain(x) for x in ALIASES.get(plain(r["name"].replace(" GP", " Grand Prix")), [])}
+        out.append({"rd": r["rd"], "names": names, "race": r.get("race")})
+    return out, A
+
+
+def plain(s):
+    """lower case without accents, so "São Paulo" matches "Sao Paulo" """
+    return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
+
+
+# other names F1 uses in video titles
+ALIASES = {"sao paulo grand prix": ["brazilian grand prix", "brazil grand prix", "sao paulo gp"],
+           "mexico city grand prix": ["mexican grand prix", "mexico grand prix"],
+           "united states grand prix": ["us grand prix", "usa grand prix"],
+           "barcelona-catalunya grand prix": ["barcelona grand prix", "catalunya grand prix"]}
 
 
 def match(title, year, R):
     t = html.unescape(title)
-    tl = t.lower()
+    tl = plain(t)
     if "highlight" not in tl or str(year) not in tl or SKIP.search(t):
         return None
     rd = next((r["rd"] for r in R if any(n in tl for n in r["names"])), None)
@@ -110,17 +127,31 @@ def main():
     except Exception as e:
         print("highlights: RSS feed not available:", str(e)[:120])
     key = os.environ.get("YOUTUBE_API_KEY")
-    if key and not old.get("backfilled"):
+    # with a key: read the season once, then again only while a race that finished over a day ago
+    # still has no race highlights (back to just before the oldest such race)
+    import datetime as _dt
+    now = _dt.datetime.now(_dt.timezone.utc)
+    gaps = [r for r in R if r.get("race") and str(r["rd"]) not in rounds or (r.get("race") and "Race" not in rounds.get(str(r["rd"]), {}))]
+    gaps = [r for r in gaps if r.get("race") and _dt.datetime.fromisoformat(r["race"].replace("Z", "+00:00")) < now - _dt.timedelta(days=1)]
+    since = None if old.get("backfilled") else f"{a.year}-01-01"
+    if old.get("backfilled") and gaps:
+        since = min(_dt.datetime.fromisoformat(r["race"].replace("Z", "+00:00")) for r in gaps) - _dt.timedelta(days=4)
+        since = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+    if key and since:
         try:
-            found += from_api(key, f"{a.year}-01-01")
+            got = from_api(key, since)
+            found += got
             old["backfilled"] = True
-            print(f"highlights: read {len(found)} uploads with the API")
+            print(f"highlights: read {len(got)} uploads with the API (since {since[:10]})")
         except Exception as e:
             print("highlights: API not available:", str(e)[:160])
     added = 0
     for v in sorted(found, key=lambda v: v["p"]):   # oldest first, so a later re-upload doesn't replace the original
         m = match(v["t"], a.year, R)
         if not m:
+            tl = v["t"].lower()
+            if "highlight" in tl and str(a.year) in tl and not SKIP.search(v["t"]):
+                print(f"highlights: not matched: {v['t']}")   # a new title style worth a look
             continue
         rd, sess = str(m[0]), m[1]
         if sess not in rounds.get(rd, {}):
