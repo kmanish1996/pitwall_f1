@@ -8,14 +8,6 @@
   {
    "round": 21,
    "gp": "Las Vegas Grand Prix",
-   "key": "FP1",
-   "name": "Practice 1",
-   "start": "2026-11-20T00:30:00.000Z",
-   "minutes": 60
-  },
-  {
-   "round": 21,
-   "gp": "Las Vegas Grand Prix",
    "key": "FP2",
    "name": "Practice 2",
    "start": "2026-11-20T04:00:00.000Z",
