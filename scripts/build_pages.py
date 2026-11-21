@@ -901,26 +901,17 @@ HL_SHORT = {"Practice 1": "FP1", "Practice 2": "FP2", "Practice 3": "FP3", "Spri
 
 
 def highlights_html(rd, name):
-    """Official FORMULA 1 highlights for this weekend (data/highlights.json). The player loads only when a
-    session button is pressed (YouTube privacy-enhanced mode); without JavaScript the buttons open YouTube."""
+    """Official FORMULA 1 highlights for this weekend (data/highlights.json), as links that open on YouTube.
+    F1 blocks its videos from playing inside other websites, so there is no player here."""
     p = os.path.join(ROOT, "data", "highlights.json")
     H = (json.load(open(p, encoding="utf-8")).get("rounds", {}) if os.path.exists(p) else {}).get(str(rd)) or {}
     ks = [k for k in HL_ORDER if k in H]
     if not ks:
         return ""
-    first = "Race" if "Race" in H else ks[-1]
-    btns = "".join(f'<a class="hlb{" on" if k == first else ""}" href="https://www.youtube.com/watch?v={e(H[k]["id"])}" data-yt="{e(H[k]["id"])}" rel="noopener" target="_blank">'
-                   f'<svg viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" rx="4" fill="#FF2D2D"/><path d="M8 4v6l5-3z" fill="#fff"/></svg>{e(HL_SHORT.get(k, k))}</a>' for k in ks)
+    btns = "".join(f'<a class="hlb{" on" if k == "Race" else ""}" href="https://www.youtube.com/watch?v={e(H[k]["id"])}" target="_blank" rel="noopener">'
+                   f'<svg viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" rx="4" fill="#FF2D2D"/><path d="M8 4v6l5-3z" fill="#fff"/></svg>{e(HL_SHORT.get(k, k))} highlights <span aria-hidden="true">↗</span></a>' for k in ks)
     return f"""<h2>Highlights</h2>
-<div class="hlw"><div class="hlbs">{btns}</div>
-<button type="button" class="hlf" aria-label="Play the {e(HL_SHORT.get(first, first).lower())} highlights"><span class="hlp"></span><span class="hlt">Play {e(HL_SHORT.get(first, first))} highlights</span></button>
-<p class="note">Official videos from the FORMULA 1 channel on YouTube. They load only when you press play.</p></div>
-<script>(function(){{var w=document.currentScript.previousElementSibling,f=w.querySelector(".hlf"),cur=w.querySelector(".hlb.on");
-function play(a){{w.querySelectorAll(".hlb").forEach(function(x){{x.classList.toggle("on",x===a)}});var d=document.createElement("div");d.className="hlf";
-d.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+a.getAttribute("data-yt")+'?autoplay=1&rel=0&playsinline=1" title="'+a.textContent+' highlights" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
-var old=w.querySelector(".hlf");old.parentNode.replaceChild(d,old)}}
-f.addEventListener("click",function(){{play(cur)}});
-w.querySelectorAll(".hlb").forEach(function(a){{a.addEventListener("click",function(ev){{ev.preventDefault();cur=a;play(a)}})}})}})()</script>"""
+<div class="hlw"><div class="hlbs">{btns}</div><p class="note">Official videos from the FORMULA 1 channel. They open on YouTube in a new tab.</p></div>"""
 
 
 def next_season():
