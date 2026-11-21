@@ -1,0 +1,53 @@
+name: Update highlights
+
+# Links each session to its official highlights video on the FORMULA 1 YouTube channel
+# (scripts/update_highlights.py). F1 posts highlights within an hour or two of each session, so this
+# checks the channel's feed every hour from Friday to Monday and every six hours otherwise. The race
+# weekend watcher also checks after each pass.
+#
+# Optional: add a free YouTube Data API v3 key as the repository secret YOUTUBE_API_KEY and run this
+# once by hand to find the highlights of every earlier round too (the feed only lists the newest videos).
+on:
+  schedule:
+    - cron: "17 * * * 5,6,0,1"
+    - cron: "17 */6 * * 2,3,4"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-highlights
+  cancel-in-progress: false
+
+jobs:
+  highlights:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Find new highlights and rebuild the pages if any
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          python3 scripts/update_highlights.py
+          if [ -n "$(git status --porcelain data/highlights.json)" ]; then
+            pip install --quiet pillow
+            python3 scripts/build_pages.py
+            git config user.name "pitwall-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -q -m "Add new highlights videos"
+            for i in 1 2 3; do git push -q && break; git pull -q --rebase || { git rebase --abort; exit 1; }; done
+          else
+            echo "No new highlights"
+          fi
