@@ -255,58 +255,6 @@ URL:https://pitwallf1.in/races/mexico-city-grand-prix-2026/
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:2026-r20-fp1@pitwallf1.in
-DTSTAMP:20260101T000000Z
-DTSTART:20261106T153000Z
-DTEND:20261106T163000Z
-SUMMARY:São Paulo Grand Prix: Practice 1
-LOCATION:Autódromo José Carlos Pace\, São Paulo
-DESCRIPTION:Round 20 of 23\, Autódromo José Carlos Pace\, São Paulo. Res
- ults\, replay and lap-by-lap story after the session: https://pitwallf1.in
- /races/sao-paulo-grand-prix-2026/
-URL:https://pitwallf1.in/races/sao-paulo-grand-prix-2026/
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:2026-r20-fp2@pitwallf1.in
-DTSTAMP:20260101T000000Z
-DTSTART:20261106T190000Z
-DTEND:20261106T200000Z
-SUMMARY:São Paulo Grand Prix: Practice 2
-LOCATION:Autódromo José Carlos Pace\, São Paulo
-DESCRIPTION:Round 20 of 23\, Autódromo José Carlos Pace\, São Paulo. Res
- ults\, replay and lap-by-lap story after the session: https://pitwallf1.in
- /races/sao-paulo-grand-prix-2026/
-URL:https://pitwallf1.in/races/sao-paulo-grand-prix-2026/
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:2026-r20-fp3@pitwallf1.in
-DTSTAMP:20260101T000000Z
-DTSTART:20261107T143000Z
-DTEND:20261107T153000Z
-SUMMARY:São Paulo Grand Prix: Practice 3
-LOCATION:Autódromo José Carlos Pace\, São Paulo
-DESCRIPTION:Round 20 of 23\, Autódromo José Carlos Pace\, São Paulo. Res
- ults\, replay and lap-by-lap story after the session: https://pitwallf1.in
- /races/sao-paulo-grand-prix-2026/
-URL:https://pitwallf1.in/races/sao-paulo-grand-prix-2026/
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:2026-r20-q@pitwallf1.in
-DTSTAMP:20260101T000000Z
-DTSTART:20261107T180000Z
-DTEND:20261107T190000Z
-SUMMARY:São Paulo Grand Prix: Qualifying
-LOCATION:Autódromo José Carlos Pace\, São Paulo
-DESCRIPTION:Round 20 of 23\, Autódromo José Carlos Pace\, São Paulo. Res
- ults\, replay and lap-by-lap story after the session: https://pitwallf1.in
- /races/sao-paulo-grand-prix-2026/
-URL:https://pitwallf1.in/races/sao-paulo-grand-prix-2026/
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
 UID:2026-r20-gp@pitwallf1.in
 DTSTAMP:20260101T000000Z
 DTSTART:20261108T170000Z

@@ -123,11 +123,6 @@ const COMPLETED=21, TOTAL=23;
 
 // Weekend sessions from OpenF1, written by scripts/update_schedule.py
 const SESSIONS=[
- {rd:20,k:"FP1",n:"Practice 1",t:"2026-11-06T15:30Z",m:60},
- {rd:20,k:"FP2",n:"Practice 2",t:"2026-11-06T19:00Z",m:60},
- {rd:20,k:"FP3",n:"Practice 3",t:"2026-11-07T14:30Z",m:60},
- {rd:20,k:"Q",n:"Qualifying",t:"2026-11-07T18:00Z",m:60},
- {rd:20,k:"GP",n:"Grand Prix",t:"2026-11-08T17:00Z",m:120},
  {rd:21,k:"FP1",n:"Practice 1",t:"2026-11-20T00:30Z",m:60},
  {rd:21,k:"FP2",n:"Practice 2",t:"2026-11-20T04:00Z",m:60},
  {rd:21,k:"FP3",n:"Practice 3",t:"2026-11-21T00:30Z",m:60},
