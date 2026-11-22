@@ -2,25 +2,9 @@
  "source": "https://pitwallf1.in",
  "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
  "season": 2026,
- "afterRound": 20,
+ "afterRound": 21,
  "rounds": 23,
  "sessions": [
-  {
-   "round": 21,
-   "gp": "Las Vegas Grand Prix",
-   "key": "FP3",
-   "name": "Practice 3",
-   "start": "2026-11-21T00:30:00.000Z",
-   "minutes": 60
-  },
-  {
-   "round": 21,
-   "gp": "Las Vegas Grand Prix",
-   "key": "Q",
-   "name": "Qualifying",
-   "start": "2026-11-21T04:00:00.000Z",
-   "minutes": 60
-  },
   {
    "round": 21,
    "gp": "Las Vegas Grand Prix",

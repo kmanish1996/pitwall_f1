@@ -2,7 +2,7 @@
  "source": "https://pitwallf1.in",
  "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
  "season": 2026,
- "afterRound": 20,
+ "afterRound": 21,
  "rounds": 23,
  "champion": "Kimi Antonelli",
  "drivers": [
@@ -23,7 +23,7 @@
    "number": 3,
    "team": "Red Bull Racing",
    "points": 279,
-   "wins": 3,
+   "wins": 4,
    "url": "https://pitwallf1.in/drivers/max-verstappen/"
   },
   {

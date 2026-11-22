@@ -2,7 +2,7 @@
  "source": "https://pitwallf1.in",
  "licence": "Free to use with a link to pitwallf1.in. Unofficial; not associated with Formula 1.",
  "season": 2026,
- "afterRound": 20,
+ "afterRound": 21,
  "rounds": 23,
  "races": [
   {
@@ -273,9 +273,9 @@
    "dates": "19–21 Nov",
    "raceStart": "2026-11-22T04:00:00.000Z",
    "sprint": false,
-   "winner": null,
-   "winnerTeam": null,
-   "raceTime": null,
+   "winner": "VER",
+   "winnerTeam": "Red Bull Racing",
+   "raceTime": "1:27:39.624",
    "url": "https://pitwallf1.in/races/las-vegas-grand-prix-2026/"
   },
   {
