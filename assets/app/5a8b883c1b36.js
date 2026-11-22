@@ -221,10 +221,40 @@ function nextRound(now){
   // the round whose race hasn't finished yet
   return RACES.find(r=>r.rd>COMPLETED && now < new Date(r.race.getTime()+2*3600e3)) || null;
 }
+// after a race the card keeps that weekend (results and highlights) for two more days, so fans in every
+// time zone can catch up, with the next race in a short note below. It gives way early if a session
+// of the next weekend is live or about to start.
+const RECAP_HOURS=48;
+function recapRound(now){
+  const after=r=>r.race.getTime()+2*3600e3;
+  const r=[...RACES].reverse().find(r=>r.race&&now>=after(r));
+  if(!r||now>=after(r)+RECAP_HOURS*3600e3)return null;
+  const st=currentState(now);
+  if(st.live||(st.next&&st.next.start-now<12*3600e3))return null;
+  return r;
+}
+function cdShort(ms){
+  ms=Math.max(0,ms);const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  return d?`${d}d ${h}h ${String(m).padStart(2,"0")}m`:`${h}h ${String(m).padStart(2,"0")}m`;
+}
+function renderUpNext(now){
+  const box=$("#nxUp");if(!box)return;
+  const rc=recapRound(now);box.hidden=!rc;if(!rc)return;
+  const nr=nextRound(now)&&nextRound(now).rd!==rc.rd?nextRound(now):RACES.find(r=>r.rd>rc.rd);
+  if(!nr){box.innerHTML=`<span class="label">Season complete</span><span>That was the final race of ${YEAR_NOW}. See you next season.</span>`;return}
+  const first=SESSIONS.filter(s=>s.rd===nr.rd).sort((a,b)=>a.start-b.start)[0];
+  const t=first||{n:"Grand Prix",start:nr.race};
+  box.innerHTML=`<span class="label">Up next</span><span>Round ${nr.rd} · <b>${esc(LONG_NAMES[nr.rd]||nr.name)}</b> · ${esc(t.n)} in <span class="mono">${cdShort(t.start-now)}</span> · ${fmtDay.format(t.start)}, ${fmtTime.format(t.start)}</span><a href="/schedule">Full schedule</a>`;
+}
 function renderSessions(now){
-  const rd=nextRound(now);
+  const rc=recapRound(now);
+  const rd=rc||nextRound(now);
+  $("#nextCard").classList.toggle("is-recap",!!rc);
   if(!rd){$("#nxName").textContent="Season complete";$("#sessions").innerHTML="";return}
-  $("#nxRound").textContent=`Round ${rd.rd} of ${TOTAL} · Next up`;
+  $("#nxRound").textContent=`Round ${rd.rd} of ${TOTAL} · ${rc?"Weekend recap":"Next up"}`;
+  const win=$("#nxWin"),wd=rc&&rd.win&&DRIVERS.find(z=>z.code===rd.win);
+  win.hidden=!wd;
+  if(wd){win.style.setProperty("--win",tc(wd.team));win.innerHTML=`<span class="tr" aria-hidden="true">🏆</span><span>Winner <b>${esc(wd.first)} ${esc(wd.last)}</b></span><small>${esc(rd.winTeam||wd.team)}${rd.time?" · "+esc(rd.time):""}</small>`}
   $("#nxName").textContent=LONG_NAMES[rd.rd]||rd.name;
   $("#nxCircuit").textContent=`${rd.circuit} · ${rd.place}`;
   const list=SESSIONS.filter(s=>s.rd===rd.rd);
@@ -245,7 +275,9 @@ function renderSessions(now){
   if(list.length===1){box.appendChild(el("div",{className:"sess"},`<span class="k"></span><span class="when" style="grid-column:2/-1">Practice and qualifying times for this weekend arrive with the next data update.</span>`))}
   const chip=$("#nxStatus");
   if(st.live&&st.live.rd===rd.rd){chip.className="chip live";chip.textContent=st.live.n+" live"}
+  else if(rc){chip.className="chip";chip.textContent="Weekend complete"}
   else{chip.className="chip";chip.textContent=rd.sprint?"Sprint weekend":"Race weekend"}
+  renderUpNext(now);
 }
 let lastDigits={};
 function setNum(id,val){

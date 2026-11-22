@@ -200,6 +200,19 @@ button.sess{width:100%;border:0;text-align:left;color:inherit;font:inherit;curso
 .sr-scroll{overflow-x:auto;margin:0 -4px}
 .sr-act{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .tzline{position:relative;z-index:1;margin-top:8px;font-size:12px;color:var(--muted)}
+@media (max-width:600px){.recap-win small{flex-basis:100%;padding-left:26px}.up-next{grid-template-columns:1fr auto}.up-next>span:nth-child(2){grid-column:1/-1;grid-row:2}}
+/* weekend recap: for 2 days after the race the card keeps the finished weekend (results and highlights), with the next race below */
+.next.is-recap .lights,.next.is-recap .count,.next.is-recap .cd-for{display:none}
+.next.is-recap .sess.is-done{opacity:1}
+.next.is-recap .sess.is-done:not(.has-res) .chip{opacity:.6}
+.recap-win{position:relative;z-index:1;display:flex;width:fit-content;max-width:100%;flex-wrap:wrap;align-items:center;gap:2px 10px;margin-top:14px;padding:7px 12px;border-radius:3px;background:color-mix(in srgb,var(--win,#FFC906) 14%,var(--panel-2));border:1px solid color-mix(in srgb,var(--win,#FFC906) 45%,var(--line));font-size:14px}
+.recap-win .tr{font-size:16px}.recap-win b{white-space:nowrap;font-family:var(--f-display);font-weight:800;font-size:17px;text-transform:uppercase;letter-spacing:.02em}
+.recap-win small{color:var(--muted);font-family:var(--f-mono);font-size:12px}
+.up-next{position:relative;z-index:1;margin-top:12px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 14px;padding:11px 14px;border:1px dashed var(--line);border-radius:3px;background:var(--panel-2);font-size:14px;color:var(--muted)}
+.up-next .label{color:var(--red)}
+.up-next b{color:var(--fg);font-weight:600}
+.up-next .mono{color:var(--fg);font-family:var(--f-mono)}
+.up-next a{white-space:nowrap;justify-self:end;color:var(--fg);font-weight:600;text-decoration:none;border-bottom:1px solid var(--red)}
 .hero-subs{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:4px 18px}
 .alerts-btn{background:none;border:0;padding:0;font-family:inherit;cursor:pointer}
 .cal-sub{position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--fg);text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px}
@@ -1225,6 +1238,7 @@ nav.tabs a:first-child{padding-left:0}
         </div>
         <span class="chip" id="nxStatus">Upcoming</span>
       </div>
+      <div class="recap-win" id="nxWin" hidden></div>
 
       <div class="lights" aria-label="Start lights">
         <div class="gantry" id="gantry" aria-hidden="true"></div>
@@ -1243,6 +1257,7 @@ nav.tabs a:first-child{padding-left:0}
       </div>
       <div class="cd-for" id="cdFor">Until <strong>Practice 1</strong></div>
       <div class="sessions" id="sessions"></div>
+      <div class="up-next" id="nxUp" hidden></div>
       <div class="tzline" id="tzline"></div>
       <div class="hero-subs"><a class="cal-sub" href="/subscribe/">📅 Add every session to your calendar</a><button type="button" class="cal-sub alerts-btn" data-alerts>🔔 Get race-live alerts</button></div>
     </div>
@@ -1993,10 +2008,40 @@ function nextRound(now){
   // the round whose race hasn't finished yet
   return RACES.find(r=>r.rd>COMPLETED && now < new Date(r.race.getTime()+2*3600e3)) || null;
 }
+// after a race the card keeps that weekend (results and highlights) for two more days, so fans in every
+// time zone can catch up, with the next race in a short note below. It gives way early if a session
+// of the next weekend is live or about to start.
+const RECAP_HOURS=48;
+function recapRound(now){
+  const after=r=>r.race.getTime()+2*3600e3;
+  const r=[...RACES].reverse().find(r=>r.race&&now>=after(r));
+  if(!r||now>=after(r)+RECAP_HOURS*3600e3)return null;
+  const st=currentState(now);
+  if(st.live||(st.next&&st.next.start-now<12*3600e3))return null;
+  return r;
+}
+function cdShort(ms){
+  ms=Math.max(0,ms);const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  return d?`${d}d ${h}h ${String(m).padStart(2,"0")}m`:`${h}h ${String(m).padStart(2,"0")}m`;
+}
+function renderUpNext(now){
+  const box=$("#nxUp");if(!box)return;
+  const rc=recapRound(now);box.hidden=!rc;if(!rc)return;
+  const nr=nextRound(now)&&nextRound(now).rd!==rc.rd?nextRound(now):RACES.find(r=>r.rd>rc.rd);
+  if(!nr){box.innerHTML=`<span class="label">Season complete</span><span>That was the final race of ${YEAR_NOW}. See you next season.</span>`;return}
+  const first=SESSIONS.filter(s=>s.rd===nr.rd).sort((a,b)=>a.start-b.start)[0];
+  const t=first||{n:"Grand Prix",start:nr.race};
+  box.innerHTML=`<span class="label">Up next</span><span>Round ${nr.rd} · <b>${esc(LONG_NAMES[nr.rd]||nr.name)}</b> · ${esc(t.n)} in <span class="mono">${cdShort(t.start-now)}</span> · ${fmtDay.format(t.start)}, ${fmtTime.format(t.start)}</span><a href="/schedule">Full schedule</a>`;
+}
 function renderSessions(now){
-  const rd=nextRound(now);
+  const rc=recapRound(now);
+  const rd=rc||nextRound(now);
+  $("#nextCard").classList.toggle("is-recap",!!rc);
   if(!rd){$("#nxName").textContent="Season complete";$("#sessions").innerHTML="";return}
-  $("#nxRound").textContent=`Round ${rd.rd} of ${TOTAL} · Next up`;
+  $("#nxRound").textContent=`Round ${rd.rd} of ${TOTAL} · ${rc?"Weekend recap":"Next up"}`;
+  const win=$("#nxWin"),wd=rc&&rd.win&&DRIVERS.find(z=>z.code===rd.win);
+  win.hidden=!wd;
+  if(wd){win.style.setProperty("--win",tc(wd.team));win.innerHTML=`<span class="tr" aria-hidden="true">🏆</span><span>Winner <b>${esc(wd.first)} ${esc(wd.last)}</b></span><small>${esc(rd.winTeam||wd.team)}${rd.time?" · "+esc(rd.time):""}</small>`}
   $("#nxName").textContent=LONG_NAMES[rd.rd]||rd.name;
   $("#nxCircuit").textContent=`${rd.circuit} · ${rd.place}`;
   const list=SESSIONS.filter(s=>s.rd===rd.rd);
@@ -2017,7 +2062,9 @@ function renderSessions(now){
   if(list.length===1){box.appendChild(el("div",{className:"sess"},`<span class="k"></span><span class="when" style="grid-column:2/-1">Practice and qualifying times for this weekend arrive with the next data update.</span>`))}
   const chip=$("#nxStatus");
   if(st.live&&st.live.rd===rd.rd){chip.className="chip live";chip.textContent=st.live.n+" live"}
+  else if(rc){chip.className="chip";chip.textContent="Weekend complete"}
   else{chip.className="chip";chip.textContent=rd.sprint?"Sprint weekend":"Race weekend"}
+  renderUpNext(now);
 }
 let lastDigits={};
 function setNum(id,val){
