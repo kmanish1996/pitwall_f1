@@ -6,14 +6,6 @@
  "rounds": 23,
  "sessions": [
   {
-   "round": 21,
-   "gp": "Las Vegas Grand Prix",
-   "key": "GP",
-   "name": "Grand Prix",
-   "start": "2026-11-22T04:00:00.000Z",
-   "minutes": 120
-  },
-  {
    "round": 22,
    "gp": "Qatar Grand Prix",
    "key": "FP1",
